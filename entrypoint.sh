@@ -7,10 +7,10 @@ echo "Commit Messages: $COMMIT_MESSAGES"
 
 # Use the provided command to extract information.
 if [ -n "$INPUT_EXTRACT_COMMAND" ]; then
-  # Using eval to execute the command, ensuring the command is wrapped in quotes for proper handling
-  ENVIRONMENT=$(echo "$COMMIT_MESSAGES" | eval "$INPUT_EXTRACT_COMMAND")
+	# Using eval to execute the command, ensuring the command is wrapped in quotes for proper handling
+	ENVIRONMENT=$(echo "$COMMIT_MESSAGES" | eval "$INPUT_EXTRACT_COMMAND")
 else
-  ENVIRONMENT="$COMMIT_MESSAGES"
+	ENVIRONMENT="$COMMIT_MESSAGES"
 fi
 
 echo "Extracted Environment: $ENVIRONMENT"
@@ -20,10 +20,10 @@ OUTPUT_VAR=${INPUT_OUTPUT_VARIABLE:-ENVIRONMENT}
 
 # Conditional handling for GitHub Actions or local execution
 if [ -n "$GITHUB_ENV" ]; then
-  # GitHub Actions environment
-  echo "$OUTPUT_VAR=$ENVIRONMENT" >> $GITHUB_ENV
-  echo "::set-output name=$OUTPUT_VAR::$ENVIRONMENT"
+	# GitHub Actions environment
+	echo "$OUTPUT_VAR=$ENVIRONMENT" >> "$GITHUB_ENV"
+	echo "$OUTPUT_VAR=$ENVIRONMENT" >> "$GITHUB_OUTPUT"
 else
-  # Local execution
-  echo "Final Environment Variable ($OUTPUT_VAR): $ENVIRONMENT"
+	# Local execution
+	echo "Final Environment Variable ($OUTPUT_VAR): $ENVIRONMENT"
 fi

@@ -2,9 +2,9 @@ name: Continuous Integration
 
 on:
   pull_request:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
 
 permissions:
   contents: read
@@ -42,11 +42,13 @@ jobs:
       - name: Run the Container
         run: |
           docker run \
-            --env INPUT_COMMIT_LIMIT="10" \
-            --env INPUT_EXTRACT_COMMAND="grep -oP '\\bCommit\\b'" \
-            --env INPUT_PRETTY="true" \
-            --env INPUT_OUTPUT_VARIABLE="extracted_info" \
-            --rm ${{ env.TEST_TAG }}
+          --env INPUT_COMMIT_LIMIT="10" \
+          --env INPUT_EXTRACT_COMMAND="grep -oP '\\bCommit\\b'" \
+          --env INPUT_PRETTY="true" \
+          --env INPUT_OUTPUT_VARIABLE="extracted_info" \
+          -v ${{ github.workspace }}:/repo \
+          --workdir /repo \
+          --rm ${{ env.TEST_TAG }}
 
   test-action:
     name: Test Extract Commit Action
@@ -56,13 +58,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set safe directory
+        run: git config --global --add safe.directory ${{ github.workspace }}
+
       - name: Test Local Action
         uses: ./
         with:
-          commit_limit: "10"
-          extract_command: "grep -oP '\\bInitial\\b'"
-          pretty: "true"
-          output_variable: "EXTRACTED_ENV"
+          commit_limit: 10
+          extract_command: grep -oP \\bInitial\\b
+          pretty: true
+          output_variable: EXTRACTED_ENV
 
       - name: Print Output
         run: |
