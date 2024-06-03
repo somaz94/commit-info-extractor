@@ -1,21 +1,28 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
-
-# Define your inputs here.
+name: 'Extract Commit Action'
+description: 'Extracts information from commit messages.'
 inputs:
-  who-to-greet:
-    description: 'Your input description here'
+  commit_limit:
+    description: 'Number of commits to retrieve.'
     required: true
-    default: 'World'
-
-# Define your outputs here.
+  extract_command:
+    description: 'Command to extract information from commit messages.'
+    required: false
+  pretty:
+    description: 'Whether to use pretty format for git log.'
+    required: false
+    default: 'false'
+  output_variable:
+    description: 'The name of the output variable to set.'
+    required: true
+    default: 'ENVIRONMENT'
 outputs:
-  greeting:
-    description: 'Your output description here'
-
+  environment:
+    description: 'Extracted environment information.'
 runs:
-  using: docker
-  image: Dockerfile
+  using: 'docker'
+  image: 'Dockerfile'
   env:
-    INPUT_WHO_TO_GREET: ${{ inputs.who-to-greet }}
+    INPUT_COMMIT_LIMIT: ${{ inputs.commit_limit }}
+    INPUT_EXTRACT_COMMAND: ${{ inputs.extract_command }}
+    INPUT_PRETTY: ${{ inputs.pretty }}
+    INPUT_OUTPUT_VARIABLE: ${{ inputs.output_variable }}

@@ -1,12 +1,29 @@
-#!/bin/sh -l
+#!/bin/sh
 
-# Use INPUT_<INPUT_NAME> to get the value of an input
-GREETING="Hello, $INPUT_WHO_TO_GREET!"
+# Fetch commit messages with optional pretty formatting
+COMMIT_MESSAGES=$(git log -$INPUT_COMMIT_LIMIT ${INPUT_PRETTY:+--pretty=%B})
 
-# Use workflow commands to do things like set debug messages
-echo "::notice file=entrypoint.sh,line=7::$GREETING"
+echo "Commit Messages: $COMMIT_MESSAGES"
 
-# Write outputs to the $GITHUB_OUTPUT file
-echo "greeting=$GREETING" >>"$GITHUB_OUTPUT"
+# Use the provided command to extract information.
+if [ -n "$INPUT_EXTRACT_COMMAND" ]; then
+  # Using eval to execute the command, ensuring the command is wrapped in quotes for proper handling
+  ENVIRONMENT=$(echo "$COMMIT_MESSAGES" | eval "$INPUT_EXTRACT_COMMAND")
+else
+  ENVIRONMENT="$COMMIT_MESSAGES"
+fi
 
-exit 0
+echo "Extracted Environment: $ENVIRONMENT"
+
+# Set the output variable name, defaulting to 'ENVIRONMENT' if not specified
+OUTPUT_VAR=${INPUT_OUTPUT_VARIABLE:-ENVIRONMENT}
+
+# Conditional handling for GitHub Actions or local execution
+if [ -n "$GITHUB_ENV" ]; then
+  # GitHub Actions environment
+  echo "$OUTPUT_VAR=$ENVIRONMENT" >> $GITHUB_ENV
+  echo "::set-output name=$OUTPUT_VAR::$ENVIRONMENT"
+else
+  # Local execution
+  echo "Final Environment Variable ($OUTPUT_VAR): $ENVIRONMENT"
+fi
