@@ -65,4 +65,5 @@ jobs:
           output_variable: "EXTRACTED_ENV"
 
       - name: Print Output
-        run: echo "Extracted Environment: ${{ steps.test-action.outputs.environment }}"
+        run: |
+          echo "Extracted Environment: ${{ steps.test-action.outputs.environment }}"
