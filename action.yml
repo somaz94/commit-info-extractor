@@ -12,6 +12,9 @@ inputs:
     description: 'The name of the output variable to set, defaults to "ENVIRONMENT".'
     required: false
     default: 'ENVIRONMENT'
+  extract_command:  
+    description: 'The command to use for extracting information from commit messages.'
+    required: false
 outputs:
   ENVIRONMENT:
     description: 'Extracted environment information.'
@@ -20,6 +23,6 @@ runs:
   image: 'Dockerfile'
   env:
     INPUT_COMMIT_LIMIT: ${{ inputs.commit_limit }}
-    INPUT_EXTRACT_COMMAND: ${{ inputs.extract_command }}
     INPUT_PRETTY: ${{ inputs.pretty }}
     INPUT_OUTPUT_VARIABLE: ${{ inputs.output_variable }}
+    INPUT_EXTRACT_COMMAND: ${{ inputs.extract_command }}
