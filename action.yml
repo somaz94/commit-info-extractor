@@ -1,22 +1,19 @@
 name: 'Extract Commit Action'
-description: 'Extracts information from commit messages.'
+description: 'Extracts information from commit messages. Defaults output variable name to "ENVIRONMENT" if not specified.'
 inputs:
   commit_limit:
     description: 'Number of commits to retrieve.'
     required: true
-  extract_command:
-    description: 'Command to extract information from commit messages.'
-    required: false
   pretty:
     description: 'Whether to use pretty format for git log.'
     required: false
     default: 'false'
   output_variable:
-    description: 'The name of the output variable to set.'
-    required: true
+    description: 'The name of the output variable to set, defaults to "ENVIRONMENT".'
+    required: false
     default: 'ENVIRONMENT'
 outputs:
-  environment:
+  ENVIRONMENT:
     description: 'Extracted environment information.'
 runs:
   using: 'docker'
