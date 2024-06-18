@@ -46,8 +46,8 @@ jobs:
         id: extract_commit
         uses: ./
         with:
-          commit_limit: 50
-          extract_command: grep -oP \\bInitial\\b
+          commit_limit: 10
+          extract_command: grep -oP \\bfix\\b
           pretty: true
           output_variable: EXTRACTED_ENV
 
