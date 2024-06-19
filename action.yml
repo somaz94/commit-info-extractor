@@ -18,6 +18,8 @@ inputs:
 outputs:
   output_variable:
     description: 'Extracted output variable information.'
+  input_variable:
+    description: 'Debugging input variable used in the action.'
 runs:
   using: 'docker'
   image: 'Dockerfile'

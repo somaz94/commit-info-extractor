@@ -49,7 +49,7 @@ jobs:
           INPUT_COMMIT_LIMIT: 10
           INPUT_EXTRACT_COMMAND: grep -oP \\bfix\\b
           INPUT_PRETTY: true
-          INPUT_OUTPUT_VARIABLE: environment
+          INPUT_OUTPUT_VARIABLE: extracted_info
         run: |
           docker run \
           --env INPUT_COMMIT_LIMIT="${{ env.INPUT_COMMIT_LIMIT }}" \

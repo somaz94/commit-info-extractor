@@ -41,7 +41,7 @@ echo "Input Variable: $OUTPUT_VAR"
 # Conditional handling for GitHub Actions or local execution
 if [ -n "$GITHUB_ENV" ]; then
 	# GitHub Actions environment
-	echo "output_variable=$ENVIRONMENT" >> "$GITHUB_ENV"
+	echo "output_variable=$ENVIRONMENT" >>"$GITHUB_ENV"
 	echo "::set-output name=output_variable::$ENVIRONMENT"
 	echo "::set-output name=input_variable::$OUTPUT_VAR"
 else
@@ -50,3 +50,4 @@ else
 fi
 
 exit 0
+
