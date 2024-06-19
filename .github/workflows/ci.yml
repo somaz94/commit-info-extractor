@@ -26,7 +26,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 50
+          fetch-depth: 10
 
       - name: Configure Git Safe Directory
         run: git config --global --add safe.directory ${{ github.workspace }}
@@ -46,7 +46,7 @@ jobs:
 
       - name: Run the Container
         env:
-          INPUT_COMMIT_LIMIT: 50
+          INPUT_COMMIT_LIMIT: 10
           INPUT_EXTRACT_COMMAND: grep -oP \\bfix\\b
           INPUT_PRETTY: true
           INPUT_OUTPUT_VARIABLE: environment

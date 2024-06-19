@@ -10,7 +10,8 @@ if [ -d ".git" ]; then
         echo "Error fetching commit messages"
         exit 1
     fi
-    echo "Commit Messages: $COMMIT_MESSAGES"
+    echo "Commit Messages:"
+    echo "$COMMIT_MESSAGES"
 else
     echo "No git repository available."
     COMMIT_MESSAGES="No commit messages available."
@@ -18,13 +19,13 @@ fi
 
 # Use the provided command to extract information.
 if [ -n "$INPUT_EXTRACT_COMMAND" ]; then
-	# Using eval to execute the command, ensuring the command is wrapped in quotes for proper handling
-	if ! ENVIRONMENT=$(echo "$COMMIT_MESSAGES" | eval "$INPUT_EXTRACT_COMMAND"); then
-		echo "Error extracting environment information"
-		exit 1
-	fi
+    # Using eval to execute the command, ensuring the command is wrapped in quotes for proper handling
+    if ! ENVIRONMENT=$(echo "$COMMIT_MESSAGES" | eval "$INPUT_EXTRACT_COMMAND" | sort -u); then
+        echo "Error extracting environment information"
+        exit 1
+    fi
 else
-	ENVIRONMENT="$COMMIT_MESSAGES"
+    ENVIRONMENT="$COMMIT_MESSAGES"
 fi
 
 echo "Extracted Environment: $ENVIRONMENT"
@@ -34,12 +35,12 @@ OUTPUT_VAR=${INPUT_OUTPUT_VARIABLE:-ENVIRONMENT}
 
 # Conditional handling for GitHub Actions or local execution
 if [ -n "$GITHUB_ENV" ]; then
-	# GitHub Actions environment
-	echo "$OUTPUT_VAR=$ENVIRONMENT" >>"$GITHUB_ENV"
-	echo "::set-output name=$OUTPUT_VAR::$ENVIRONMENT"
+    # GitHub Actions environment
+    echo "$OUTPUT_VAR=$ENVIRONMENT" >>"$GITHUB_ENV"
+    echo "::set-output name=$OUTPUT_VAR::$ENVIRONMENT"
 else
-	# Local execution
-	echo "Final Environment Variable ($OUTPUT_VAR): $ENVIRONMENT"
+    # Local execution
+    echo "Final Environment Variable ($OUTPUT_VAR): $ENVIRONMENT"
 fi
 
 exit 0
