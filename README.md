@@ -48,7 +48,7 @@ steps:
       fetch-depth: 10
 
   - name: Extract Commit Information
-    uses: your-github-username/commit-info-extractor@v1
+    uses: somaz94/commit-info-extractor@v1
     with:
       commit_limit: 10
       extract_command: "grep -oP '\\bfix\\b'" # Use regex for values
