@@ -83,4 +83,4 @@ jobs:
 
       - name: Print Output
         run: |
-          echo "Extracted Environment: ${{ steps.extract_commit.outputs.output_variable }}"
+          echo "Extracted variable: ${{ steps.extract_commit.outputs.input_variable }} : ${{ steps.extract_commit.outputs.output_variable }}"
