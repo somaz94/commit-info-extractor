@@ -58,13 +58,13 @@ steps:
 
 ## Configuration
 
-- commit_limit: Set this to limit the number of commits 
+- **commit_limit**: Set this to limit the number of commits 
 the action will consider.
-- pretty: Set this to true if you want the commit messages 
+- **pretty**: Set this to true if you want the commit messages 
 to be fetched in a pretty format.
-- output_variable: Define a custom environment variable 
+- **output_variable**: Define a custom environment variable 
 to store the extracted information.
-- extract_command: Customize the command to extract specific 
+- **extract_command**: Customize the command to extract specific 
 information from the commit messages.
 
 ## Example Workflow
