@@ -2,6 +2,8 @@
 
 # Allow git operations in the current directory
 git config --global --add safe.directory /usr/src
+# Explicitly set safe directory for git operations
+git config --global --add safe.directory /github/workspace
 
 # Check if .git directory exists
 if [ -d ".git" ]; then
