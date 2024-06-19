@@ -1,12 +1,17 @@
 #!/bin/sh
 
-# Fetch commit messages with optional pretty formatting
-if ! COMMIT_MESSAGES=$(git log -"$INPUT_COMMIT_LIMIT" "${INPUT_PRETTY:+--pretty=%B}"); then
-	echo "Error fetching commit messages"
-	exit 1
+# Check if .git directory exists
+if [ -d ".git" ]; then
+    # Fetch commit messages with optional pretty formatting
+    if ! COMMIT_MESSAGES=$(git log -"$INPUT_COMMIT_LIMIT" "${INPUT_PRETTY:+--pretty=%B}"); then
+        echo "Error fetching commit messages"
+        exit 1
+    fi
+    echo "Commit Messages: $COMMIT_MESSAGES"
+else
+    echo "No git repository available."
+    COMMIT_MESSAGES="No commit messages available."
 fi
-
-echo "Commit Messages: $COMMIT_MESSAGES"
 
 # Use the provided command to extract information.
 if [ -n "$INPUT_EXTRACT_COMMAND" ]; then
