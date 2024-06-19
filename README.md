@@ -5,11 +5,10 @@
 
 ## Description
 
-The **Extract Commit Action** is designed to extract information from commit messages
-within your GitHub repository. It can be configured to limit the number of commits 
-analyzed, apply custom extraction commands, and output the results to a variable. 
-This Action is ideal for workflows that need to analyze or react based on commit 
-message content.
+The **Extract Commit Action** extracts information from commit messages.
+It can be configured to limit the number of commits analyzed, apply custom 
+extraction commands, and output the results to a variable. This Action is ideal
+for workflows that need to analyze or react based on commit message content.
 
 ## Features
 
