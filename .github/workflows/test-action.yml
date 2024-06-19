@@ -8,8 +8,10 @@ on:
         required: true
         default: "true"
 
-jobs:
+permissions:
+  contents: read
 
+jobs:
   acton-module:
     runs-on: ubuntu-latest
     steps:
@@ -20,8 +22,13 @@ jobs:
     
       - name: Extract Commit Information
         uses: somaz94/commit-info-extractor@v1.0.0
+        id: extract_commit
         with:
           commit_limit: 10
           extract_command: "grep -oP '\\bfix\\b'" # Use regex for values
           pretty: true
           output_variable: 'CUSTOM_ENV' # Key
+
+      - name: Print Output
+        run: |
+          echo "Extracted variable: ${{ steps.extract_commit.outputs.input_variable }} = ${{ steps.extract_commit.outputs.output_variable }}"          
