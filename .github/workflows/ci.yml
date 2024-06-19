@@ -46,12 +46,10 @@ jobs:
       - name: Run the Container
         run: |
           docker run \
-          --env INPUT_COMMIT_LIMIT="10" \
-          --env INPUT_EXTRACT_COMMAND="grep -oP '\\bCommit\\b'" \
+          --env INPUT_COMMIT_LIMIT="50" \
+          --env INPUT_EXTRACT_COMMAND="grep -oP '\\bfix\\b'" \
           --env INPUT_PRETTY="true" \
-          --env INPUT_OUTPUT_VARIABLE="extracted_info" \
-          -v ${{ github.workspace }}:/repo \
-          --workdir /repo \
+          --env INPUT_OUTPUT_VARIABLE="environment" \
           --rm ${{ env.TEST_TAG }}
 
   test-action:
@@ -71,7 +69,7 @@ jobs:
         uses: ./
         with:
           commit_limit: 50
-          extract_command: grep -oP \\bInitial\\b
+          extract_command: grep -oP \\bfix\\b
           pretty: true
           output_variable: environment
 
