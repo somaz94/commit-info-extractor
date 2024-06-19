@@ -69,10 +69,12 @@ jobs:
         with:
           fetch-depth: 50
 
+      - name: Configure Git Safe Directory
+        run: git config --global --add safe.directory ${{ github.workspace }}
+
       - name: Test Local Action
         id: extract_commit
         uses: ./
-        run : git config --global --add safe.directory ${{ github.workspace }}
         with:
           commit_limit: 50
           extract_command: grep -oP \\bfix\\b
