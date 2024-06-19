@@ -68,8 +68,8 @@ jobs:
           commit_limit: 50
           extract_command: grep -oP \\bInitial\\b
           pretty: true
-          output_variable: EXTRACTED_ENV
+          output_variable: environment
 
       - name: Print Output
         run: |
-          echo "Extracted Environment: ${{ steps.extract_commit.outputs.ENVIRONMENT }}"
+          echo "Extracted Environment: ${{ steps.extract_commit.outputs.output_variable }}"
