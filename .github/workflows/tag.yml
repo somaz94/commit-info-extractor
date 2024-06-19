@@ -1,0 +1,24 @@
+name: Update Major Version Tags
+
+on:
+  push:
+    tags:
+      - 'v1.*.*'
+      - 'v2.*.*'
+      - 'v3.*.*'
+      - 'v4.*.*'
+
+jobs:
+  update-major-version-tags:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Update Major Version Tags
+        run: |
+          TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+          MAJOR_VERSION=$(echo $TAG | grep -oP 'v[0-9]+')
+          git tag -fa $MAJOR_VERSION -m "Update $MAJOR_VERSION tag to $TAG"
+          git push -f origin $MAJOR_VERSION

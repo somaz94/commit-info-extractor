@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 10
     
       - name: Extract Commit Information
-        uses: somaz94/commit-info-extractor@v1.0.0
+        uses: somaz94/commit-info-extractor@v1
         id: extract_commit
         with:
           commit_limit: 10
