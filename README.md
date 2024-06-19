@@ -10,28 +10,21 @@ It can be configured to limit the number of commits analyzed, apply custom
 extraction commands, and output the results to a variable. This Action is ideal
 for workflows that need to analyze or react based on commit message content.
 
-## Features
-
-- **Commit Limit**: Define how many recent commits to analyze.
-- **Pretty Formatting**: Optional pretty formatting for `git log`.
-- **Custom Extraction**: Apply any command to extract data from commit messages.
-- **Dynamic Output**: Specify the output variable name dynamically.
-
 ## Inputs
 
 | **Input Name**    | **Description**                               | **Required** | **Default**  |
 |-------------------|-----------------------------------------------|----------|---------------|
 | `commit_limit`    | Number of commits to retrieve.                | Yes      | N/A           |
 | `pretty`          | Use pretty format for git logs.               | No       | `false`       |
-| `output_variable` | Name of the output variable to set.           | No       | `ENVIRONMENT` |
+| `output_variable` | Name of the key variable to set.              | No       | `ENVIRONMENT` |
 | `extract_command` | Command to use for extracting info from commits. | No       | N/A           |
 
 ## Outputs
 
 | **Output Name**    | **Description**                          |
 |--------------------|-------------------------------------------|
-| `output_variable`  | Extracted output variable information.    |
-| `input_variable`   | Debugging input variable used in the action. |
+| `output_variable`  | Extracted value variable used in the action. |
+| `input_variable`   | Extracted key variable used in the action. |
 
 ## Usage
 
@@ -58,14 +51,12 @@ steps:
 
 ## Configuration
 
-- **commit_limit**: Set this to limit the number of commits
-  the action will consider.
-- **pretty**: Set this to true if you want the commit messages
-  to be fetched in a pretty format.
-- **output_variable**: Define a custom environment variable
-  to store the extracted information.
-- **extract_command**: Customize the command to extract specific
-  information from the commit messages.
+- **commit_limit**: Specifies the number of commits to retrieve.
+- **pretty**: Option to use pretty formatting for git logs.
+- **output_variable**: The name of the variable where the extracted 
+  value will be stored (key).
+- **extract_command**: The command to be used for extracting 
+  information from the commits.
 
 ## Example Workflow
 
