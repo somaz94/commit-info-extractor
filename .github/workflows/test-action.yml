@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       run:
-        description: "workflow run`"
+        description: "workflow run"
         required: true
         default: "true"
 
@@ -19,7 +19,7 @@ jobs:
           fetch-depth: 10
     
       - name: Extract Commit Information
-        uses: somaz94/commit-info-extractor@v1
+        uses: somaz94/commit-info-extractor@v1.0.0
         with:
           commit_limit: 10
           extract_command: "grep -oP '\\bfix\\b'" # Use regex for values
