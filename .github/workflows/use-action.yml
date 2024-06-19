@@ -1,4 +1,4 @@
-name: Test Github Action Module
+name: Example Workflow using Extract Commit Action
 
 on:
   workflow_dispatch:
