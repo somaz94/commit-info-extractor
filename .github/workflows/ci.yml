@@ -53,7 +53,7 @@ jobs:
         run: |
           docker run \
           --env INPUT_COMMIT_LIMIT="${{ env.INPUT_COMMIT_LIMIT }}" \
-          --env INPUT_EXTRACT_COMMAND="${{ env.INPUT_EXTRACT_COMMAND }}" \
+          --env INPUT_EXTRACT_COMMAND=${{ env.INPUT_EXTRACT_COMMAND }} \
           --env INPUT_PRETTY="${{ env.INPUT_PRETTY }}" \
           --env INPUT_OUTPUT_VARIABLE="${{ env.INPUT_OUTPUT_VARIABLE }}" \
           --volume ${{ github.workspace }}:/usr/src \
@@ -67,7 +67,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 50
+          fetch-depth: 10
 
       - name: Configure Git Safe Directory
         run: git config --global --add safe.directory ${{ github.workspace }}
@@ -76,11 +76,11 @@ jobs:
         id: extract_commit
         uses: ./
         with:
-          commit_limit: 50
+          commit_limit: 10
           extract_command: grep -oP \\bfix\\b
           pretty: true
           output_variable: environment
 
       - name: Print Output
         run: |
-          echo "Extracted variable: ${{ steps.extract_commit.outputs.input_variable }} : ${{ steps.extract_commit.outputs.output_variable }}"
+          echo "Extracted variable: ${{ steps.extract_commit.outputs.input_variable }} = ${{ steps.extract_commit.outputs.output_variable }}"
