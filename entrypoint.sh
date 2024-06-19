@@ -33,3 +33,5 @@ else
 	# Local execution
 	echo "Final Environment Variable ($OUTPUT_VAR): $ENVIRONMENT"
 fi
+
+exit 0

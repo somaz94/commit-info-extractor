@@ -39,17 +39,18 @@ jobs:
           push: true
           tags: ${{ env.TEST_TAG }}
 
-      - name: Set safe directory
-        run: |
-          git config --global --add safe.directory ${{ github.workspace }}
-
       - name: Run the Container
+        env:
+          INPUT_COMMIT_LIMIT: 50
+          INTPUT_EXTRACT_COMMAND: grep -oP \\bfix\\b
+          INPUT_PRETTY: true
+          INPUT_OUTPUT_VARIABLE: environment
         run: |
           docker run \
-          --env INPUT_COMMIT_LIMIT="50" \
-          --env INPUT_EXTRACT_COMMAND="grep -oP '\\bfix\\b'" \
-          --env INPUT_PRETTY="true" \
-          --env INPUT_OUTPUT_VARIABLE="environment" \
+          --env INPUT_COMMIT_LIMIT="${{ env.INPUT_COMMIT_LIMIT }}" \
+          --env INPUT_EXTRACT_COMMAND="${{ env.INTPUT_EXTRACT_COMMAND }}" \
+          --env INPUT_PRETTY="${{ env.INPUT_PRETTY }}" \
+          --env INPUT_OUTPUT_VARIABLE="${{ env.INPUT_OUTPUT_VARIABLE }}" \
           --rm ${{ env.TEST_TAG }}
 
   test-action:
@@ -59,10 +60,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Set safe directory
-        run: |
-          git config --global --add safe.directory ${{ github.workspace }}
 
       - name: Test Local Action
         id: extract_commit
