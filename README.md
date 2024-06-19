@@ -19,7 +19,7 @@ for workflows that need to analyze or react based on commit message content.
 
 ## Inputs
 
-| Input Name        | Description                                   | Required | Default       |
+| **Input Name**    | **Description**                               | **Required** | **Default**  |
 |-------------------|-----------------------------------------------|----------|---------------|
 | `commit_limit`    | Number of commits to retrieve.                | Yes      | N/A           |
 | `pretty`          | Use pretty format for git logs.               | No       | `false`       |
@@ -28,7 +28,7 @@ for workflows that need to analyze or react based on commit message content.
 
 ## Outputs
 
-| Output Name        | Description                               |
+| **Output Name**    | **Description **                          |
 |--------------------|-------------------------------------------|
 | `output_variable`  | Extracted output variable information.    |
 | `input_variable`   | Debugging input variable used in the action. |
@@ -51,7 +51,7 @@ steps:
     uses: your-github-username/commit-info-extractor@v1
     with:
       commit_limit: 10
-      extract_command: "grep -oP '\\bfix\\b'" # Use regular expressions to extract values
+      extract_command: "grep -oP '\\bfix\\b'" # Use regex for values
       pretty: true
       output_variable: 'CUSTOM_ENV' # Key
 ```
@@ -59,13 +59,13 @@ steps:
 ## Configuration
 
 - **commit_limit**: Set this to limit the number of commits 
-the action will consider.
+  the action will consider.
 - **pretty**: Set this to true if you want the commit messages 
-to be fetched in a pretty format.
+  to be fetched in a pretty format.
 - **output_variable**: Define a custom environment variable 
-to store the extracted information.
+  to store the extracted information.
 - **extract_command**: Customize the command to extract specific 
-information from the commit messages.
+  information from the commit messages.
 
 ## Example Workflow
 
@@ -87,7 +87,7 @@ jobs:
         uses: somaz94/commit-info-extractor@v1
         with:
           commit_limit: 20
-          extract_command: "grep -oP '\\bfix\\b'" # Use regular expressions to extract values
+          extract_command: "grep -oP '\\bfix\\b'" # Use regex for values
           pretty: false
           output_variable: 'FIXES_FOUND' # Key
 
