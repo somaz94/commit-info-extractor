@@ -43,7 +43,7 @@ if [ -n "$GITHUB_ENV" ]; then
 	# GitHub Actions environment
 	echo "output_variable=$ENVIRONMENT" >> "$GITHUB_ENV"
 	echo "::set-output name=output_variable::$ENVIRONMENT"
-	echo "::set-output name=input_variable::$OUTPUT_VAR"  # 추가된 부분
+	echo "::set-output name=input_variable::$OUTPUT_VAR"
 else
 	# Local execution
 	echo "Final Environment Variable ($OUTPUT_VAR): $ENVIRONMENT"

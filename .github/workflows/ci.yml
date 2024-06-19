@@ -53,7 +53,7 @@ jobs:
         run: |
           docker run \
           --env INPUT_COMMIT_LIMIT="${{ env.INPUT_COMMIT_LIMIT }}" \
-          --env INPUT_EXTRACT_COMMAND=${{ env.INPUT_EXTRACT_COMMAND }} \
+          --env INPUT_EXTRACT_COMMAND="${{ env.INPUT_EXTRACT_COMMAND }}" \
           --env INPUT_PRETTY="${{ env.INPUT_PRETTY }}" \
           --env INPUT_OUTPUT_VARIABLE="${{ env.INPUT_OUTPUT_VARIABLE }}" \
           --volume ${{ github.workspace }}:/usr/src \
