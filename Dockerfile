@@ -9,6 +9,8 @@ RUN apk add --no-cache \
     perl=5.38.2-r0 \
     grep=3.11-r0
 
+RUN git config --global --add safe.directory /repo
+
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 

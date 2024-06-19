@@ -42,7 +42,6 @@ jobs:
       - name: Set safe directory
         run: |
           git config --global --add safe.directory ${{ github.workspace }}
-          git config --global --list
 
       - name: Run the Container
         run: |
@@ -66,7 +65,6 @@ jobs:
       - name: Set safe directory
         run: |
           git config --global --add safe.directory ${{ github.workspace }}
-          git config --global --list
 
       - name: Test Local Action
         id: extract_commit
