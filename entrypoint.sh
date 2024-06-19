@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Allow git operations in the current directory
+git config --global --add safe.directory /usr/src
+
 # Check if .git directory exists
 if [ -d ".git" ]; then
     # Fetch commit messages with optional pretty formatting
