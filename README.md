@@ -53,9 +53,9 @@ steps:
 
 - **commit_limit**: Specifies the number of commits to retrieve.
 - **pretty**: Option to use pretty formatting for git logs.
-- **output_variable**: The name of the variable where the extracted 
+- **output_variable**: The name of the variable where the extracted
   value will be stored (key).
-- **extract_command**: The command to be used for extracting 
+- **extract_command**: The command to be used for extracting
   information from the commits.
 
 ## Example Workflow
