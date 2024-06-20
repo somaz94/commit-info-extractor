@@ -28,3 +28,6 @@ runs:
     INPUT_PRETTY: ${{ inputs.pretty }}
     INPUT_KEY_VARIABLE: ${{ inputs.key_variable }}
     INPUT_EXTRACT_COMMAND: ${{ inputs.extract_command }}
+branding:
+  icon: 'check-circle'
+  color: 'yellow'
