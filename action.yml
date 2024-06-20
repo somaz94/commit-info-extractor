@@ -1,5 +1,6 @@
 name: 'Extract Commit Action'
 description: 'Extracts information from commit messages. Defaults output variable name to "ENVIRONMENT" if not specified.'
+author: 'somaz94'
 inputs:
   commit_limit:
     description: 'Number of commits to retrieve.'
