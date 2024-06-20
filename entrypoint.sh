@@ -44,7 +44,7 @@ if [ -n "$GITHUB_ENV" ]; then
 	echo "value_variable=$ENVIRONMENT" >>"$GITHUB_ENV"
 	echo "::set-output name=value_variable::$ENVIRONMENT"
 	echo "::set-output name=key_variable::$OUTPUT_VAR"
-  echo "Final Environment Variable ($OUTPUT_VAR): $ENVIRONMENT"
+	echo "Final Environment Variable ($OUTPUT_VAR): $ENVIRONMENT"
 else
 	# Local execution
 	echo "Final Environment Variable ($OUTPUT_VAR): $ENVIRONMENT"
