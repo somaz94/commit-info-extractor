@@ -49,13 +49,13 @@ jobs:
           INPUT_COMMIT_LIMIT: 10
           INPUT_EXTRACT_COMMAND: grep -oP \\bfix\\b
           INPUT_PRETTY: true
-          INPUT_OUTPUT_VARIABLE: extracted_info
+          INPUT_KEY_VARIABLE: extracted_info
         run: |
           docker run \
           --env INPUT_COMMIT_LIMIT="${{ env.INPUT_COMMIT_LIMIT }}" \
           --env INPUT_EXTRACT_COMMAND="${{ env.INPUT_EXTRACT_COMMAND }}" \
           --env INPUT_PRETTY="${{ env.INPUT_PRETTY }}" \
-          --env INPUT_OUTPUT_VARIABLE="${{ env.INPUT_OUTPUT_VARIABLE }}" \
+          --env INPUT_KEY_VARIABLE="${{ env.INPUT_KEY_VARIABLE }}" \
           --volume ${{ github.workspace }}:/usr/src \
           --rm ${{ env.TEST_TAG }}
 
@@ -79,8 +79,8 @@ jobs:
           commit_limit: 10
           extract_command: grep -oP \\bfix\\b
           pretty: true
-          output_variable: environment
+          key_variable: environment
 
       - name: Print Output
         run: |
-          echo "Extracted variable: ${{ steps.extract_commit.outputs.input_variable }} = ${{ steps.extract_commit.outputs.output_variable }}"
+          echo "Extracted variable: ${{ steps.extract_commit.outputs.key_variable }} = ${{ steps.extract_commit.outputs.value_variable }}"

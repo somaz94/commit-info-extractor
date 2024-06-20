@@ -33,17 +33,17 @@ fi
 echo "Extracted Environment: $ENVIRONMENT"
 
 # Set the output variable name, defaulting to 'ENVIRONMENT' if not specified
-OUTPUT_VAR=${INPUT_OUTPUT_VARIABLE:-ENVIRONMENT}
+OUTPUT_VAR=${INPUT_KEY_VARIABLE:-ENVIRONMENT}
 
 # Echo input variable for debugging or further use
-echo "Input Variable: $OUTPUT_VAR"
+echo "Input Key Variable: $OUTPUT_VAR"
 
 # Conditional handling for GitHub Actions or local execution
 if [ -n "$GITHUB_ENV" ]; then
 	# GitHub Actions environment
-	echo "output_variable=$ENVIRONMENT" >>"$GITHUB_ENV"
-	echo "::set-output name=output_variable::$ENVIRONMENT"
-	echo "::set-output name=input_variable::$OUTPUT_VAR"
+	echo "value_variable=$ENVIRONMENT" >>"$GITHUB_ENV"
+	echo "::set-output name=value_variable::$ENVIRONMENT"
+	echo "::set-output name=key_variable::$OUTPUT_VAR"
 else
 	# Local execution
 	echo "Final Environment Variable ($OUTPUT_VAR): $ENVIRONMENT"

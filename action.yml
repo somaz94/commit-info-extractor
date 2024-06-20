@@ -8,23 +8,23 @@ inputs:
     description: 'Whether to use pretty format for git log.'
     required: false
     default: 'false'
-  output_variable:
-    description: 'The name of the output variable to set, defaults to "ENVIRONMENT".'
+  key_variable:
+    description: 'The name of the key variable to set, defaults to "ENVIRONMENT".'
     required: false
     default: 'ENVIRONMENT'
   extract_command:  
     description: 'The command to use for extracting information from commit messages.'
     required: false
 outputs:
-  output_variable:
-    description: 'Extracted output variable information.'
-  input_variable:
-    description: 'Debugging input variable used in the action.'
+  key_variable:
+    description: 'Extracted output key variable information.'
+  value_variable:
+    description: 'Extracted output value variable information.'
 runs:
   using: 'docker'
   image: 'Dockerfile'
   env:
     INPUT_COMMIT_LIMIT: ${{ inputs.commit_limit }}
     INPUT_PRETTY: ${{ inputs.pretty }}
-    INPUT_OUTPUT_VARIABLE: ${{ inputs.output_variable }}
+    INPUT_KEY_VARIABLE: ${{ inputs.key_variable }}
     INPUT_EXTRACT_COMMAND: ${{ inputs.extract_command }}

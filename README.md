@@ -16,15 +16,15 @@ for workflows that need to analyze or react based on commit message content.
 |-------------------|-----------------------------------------------|----------|---------------|
 | `commit_limit`    | Number of commits to retrieve.                | Yes      | N/A           |
 | `pretty`          | Use pretty format for git logs.               | No       | `false`       |
-| `output_variable` | Name of the key variable to set.              | No       | `ENVIRONMENT` |
+| `key_variable`    | Name of the key variable to set.              | No       | `ENVIRONMENT` |
 | `extract_command` | Command to use for extracting info from commits. | No       | N/A           |
 
 ## Outputs
 
 | **Output Name**    | **Description**                          |
 |--------------------|-------------------------------------------|
-| `output_variable`  | Extracted value variable used in the action. |
-| `input_variable`   | Extracted key variable used in the action. |
+| `key_variable`  | Extracted key variable used in the action. |
+| `value_variable`   | Extracted value variable used in the action. |
 
 ## Usage
 
@@ -46,7 +46,7 @@ steps:
       commit_limit: 10
       extract_command: "grep -oP '\\bfix\\b'" # Use regex for values
       pretty: true
-      output_variable: 'CUSTOM_ENV' # Key
+      key_variable: 'CUSTOM_ENV' # Key
 ```
 
 ## Configuration
@@ -80,11 +80,11 @@ jobs:
           commit_limit: 20
           extract_command: "grep -oP '\\bfix\\b'" # Use regex for values
           pretty: false
-          output_variable: 'FIXES_FOUND' # Key
+          key_variable: 'FIXES_FOUND' # Key
 
       - name: Print Output
         run: |
-          echo "Extracted variable: ${{ steps.extract_commit.outputs.input_variable }} = ${{ steps.extract_commit.outputs.output_variable }}"
+          echo "Extracted variable: ${{ steps.extract_commit.outputs.key_variable }} = ${{ steps.extract_commit.outputs.value_variable }}"
 ```
 
 ### License
