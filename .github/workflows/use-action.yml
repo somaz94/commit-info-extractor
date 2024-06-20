@@ -27,8 +27,8 @@ jobs:
           commit_limit: 10
           extract_command: "grep -oP '\\bfix\\b'" # Use regex for values
           pretty: true
-          output_variable: 'CUSTOM_ENV' # Key
+          key_variable: 'CUSTOM_ENV' # Key
 
       - name: Print Output
         run: |
-          echo "Extracted variable: ${{ steps.extract_commit.outputs.input_variable }} = ${{ steps.extract_commit.outputs.output_variable }}"          
+          echo "Extracted variable: ${{ steps.extract_commit.outputs.key_variable }} = ${{ steps.extract_commit.outputs.value_variable }}"          
