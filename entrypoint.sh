@@ -42,8 +42,8 @@ echo "Input Key Variable: $OUTPUT_VAR"
 if [ -n "$GITHUB_ENV" ]; then
 	# GitHub Actions environment
 	echo "value_variable=$ENVIRONMENT" >>"$GITHUB_ENV"
-	echo "value_variable=$ENVIRONMENT" >> $GITHUB_OUTPUT
-	echo "key_variable=$OUTPUT_VAR" >> $GITHUB_OUTPUT
+	echo "value_variable=$ENVIRONMENT" >>$GITHUB_OUTPUT
+	echo "key_variable=$OUTPUT_VAR" >>$GITHUB_OUTPUT
 	echo "Final Environment Variable ($OUTPUT_VAR): $ENVIRONMENT"
 else
 	# Local execution
