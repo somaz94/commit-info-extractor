@@ -46,7 +46,7 @@ steps:
       commit_limit: 10
       extract_command: "grep -oP '\\bfix\\b'" # Use regex for values
       pretty: true
-      key_variable: 'CUSTOM_ENV' # Key
+      key_variable: 'CUSTOM_ENV' # Key (default ENVIRONMENT)
 ```
 
 ## Configuration
@@ -80,7 +80,7 @@ jobs:
           commit_limit: 20
           extract_command: "grep -oP '\\bfix\\b'" # Use regex for values
           pretty: false
-          key_variable: 'FIXES_FOUND' # Key
+          key_variable: 'CUSTOM_ENV' # Key (default ENVIRONMENT)
 
       - name: Print Output
         run: |
