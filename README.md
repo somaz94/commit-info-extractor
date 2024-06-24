@@ -87,6 +87,6 @@ jobs:
           echo "Extracted variable: ${{ steps.extract_commit.outputs.key_variable }} = ${{ steps.extract_commit.outputs.value_variable }}"
 ```
 
-### License
+## License
 
 This project is licensed under the [MIT License](LICENSE) file for details.
