@@ -18,7 +18,7 @@ for workflows that need to analyze or react based on commit message content.
 | **Input Name**    | **Description**                               | **Required** | **Default**  |
 |-------------------|-----------------------------------------------|----------|---------------|
 | `commit_limit`    | Number of commits to retrieve.                | Yes      | N/A           |
-| `pretty`          | Use pretty format for git logs.               | No       | `false`       |
+| `pretty`          | Use pretty format for Git logs.               | No       | `false`       |
 | `key_variable`    | Name of the key variable to set.              | No       | `ENVIRONMENT` |
 | `extract_command` | Command to use for extracting info from commits. | No       | N/A           |
 
@@ -55,7 +55,7 @@ steps:
 ## Configuration
 
 - **commit_limit**: Specifies the number of commits to retrieve.
-- **pretty**: Option to use pretty formatting for git logs.
+- **pretty**: Option to use pretty formatting for Git logs.
 - **output_variable**: The name of the variable where the extracted
   value will be stored (key).
 - **extract_command**: The command to be used for extracting
