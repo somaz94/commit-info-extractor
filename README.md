@@ -1,7 +1,10 @@
 # Extract Commit Action
 
-[![GitHub Super-Linter](https://github.com/actions/container-action/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
-![CI](https://github.com/actions/container-action/actions/workflows/ci.yml/badge.svg)
+[![GitHub Super-Linter](https://github.com/somaz94/commit-info-extractor/actions/workflows/linter.yml/badge.svg)](https://github.com/somaz94/commit-info-extractor)
+![CI](https://github.com/somaz94/commit-info-extractor/actions/workflows/ci.yml/badge.svg)
+[![License](https://img.shields.io/github/license/somaz94/commit-info-extractor)](https://github.com/somaz94/container-action)
+![Latest Tag](https://img.shields.io/github/v/tag/somaz94/commit-info-extractor)
+![Top Language](https://img.shields.io/github/languages/top/somaz94/commit-info-extractor?color=green&logo=terraform&logoColor=blue)
 
 ## Description
 
