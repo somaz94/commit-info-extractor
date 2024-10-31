@@ -8,26 +8,26 @@
 
 ## Description
 
-The **Extract Commit Action** extracts information from commit messages.
-It can be configured to limit the number of commits analyzed, apply custom
-extraction commands, and output the results to a variable. This Action is ideal
-for workflows that need to analyze or react based on commit message content.
+The **Extract Commit Action** extracts information from commit messages. It can
+be configured to limit the number of commits analyzed, apply custom extraction
+commands, and output the results to a variable. This Action is ideal for
+workflows that need to analyze or react based on commit message content.
 
 ## Inputs
 
-| **Input Name**    | **Description**                               | **Required** | **Default**  |
-|-------------------|-----------------------------------------------|----------|---------------|
-| `commit_limit`    | Number of commits to retrieve.                | Yes      | N/A           |
-| `pretty`          | Use pretty format for Git logs.               | No       | `false`       |
-| `key_variable`    | Name of the key variable to set.              | No       | `ENVIRONMENT` |
-| `extract_command` | Command to use for extracting info from commits. | No       | N/A           |
+| **Input Name**    | **Description**                                  | **Required** | **Default**   |
+| ----------------- | ------------------------------------------------ | ------------ | ------------- |
+| `commit_limit`    | Number of commits to retrieve.                   | Yes          | N/A           |
+| `pretty`          | Use pretty format for Git logs.                  | No           | `false`       |
+| `key_variable`    | Name of the key variable to set.                 | No           | `ENVIRONMENT` |
+| `extract_command` | Command to use for extracting info from commits. | No           | N/A           |
 
 ## Outputs
 
-| **Output Name**    | **Description**                          |
-|--------------------|-------------------------------------------|
-| `key_variable`  | Extracted key variable used in the action. |
-| `value_variable`   | Extracted value variable used in the action. |
+| **Output Name**  | **Description**                              |
+| ---------------- | -------------------------------------------- |
+| `key_variable`   | Extracted key variable used in the action.   |
+| `value_variable` | Extracted value variable used in the action. |
 
 ## Usage
 
@@ -56,10 +56,10 @@ steps:
 
 - **commit_limit**: Specifies the number of commits to retrieve.
 - **pretty**: Option to use pretty formatting for Git logs.
-- **output_variable**: The name of the variable where the extracted
-  value will be stored (key).
-- **extract_command**: The command to be used for extracting
-  information from the commits.
+- **output_variable**: The name of the variable where the extracted value will
+  be stored (key).
+- **extract_command**: The command to be used for extracting information from
+  the commits.
 
 ## Example Workflow
 

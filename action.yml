@@ -1,5 +1,7 @@
 name: 'Extract Commit Action'
-description: 'Extracts information from commit messages. Defaults output variable name to "ENVIRONMENT" if not specified.'
+description:
+  'Extracts information from commit messages. Defaults output variable name to
+  "ENVIRONMENT" if not specified.'
 author: 'somaz94'
 inputs:
   commit_limit:
@@ -10,11 +12,13 @@ inputs:
     required: false
     default: 'false'
   key_variable:
-    description: 'The name of the key variable to set, defaults to "ENVIRONMENT".'
+    description:
+      'The name of the key variable to set, defaults to "ENVIRONMENT".'
     required: false
     default: 'ENVIRONMENT'
-  extract_command:  
-    description: 'The command to use for extracting information from commit messages.'
+  extract_command:
+    description:
+      'The command to use for extracting information from commit messages.'
     required: false
 outputs:
   key_variable:

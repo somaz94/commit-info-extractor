@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       run:
-        description: "workflow run"
+        description: 'workflow run'
         required: true
-        default: "true"
+        default: 'true'
 
 permissions:
   contents: read
@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 10
-    
+
       - name: Extract Commit Information
         uses: somaz94/commit-info-extractor@v1
         id: extract_commit
@@ -31,4 +31,4 @@ jobs:
 
       - name: Print Output
         run: |
-          echo "Extracted variable: ${{ steps.extract_commit.outputs.key_variable }} = ${{ steps.extract_commit.outputs.value_variable }}"          
+          echo "Extracted variable: ${{ steps.extract_commit.outputs.key_variable }} = ${{ steps.extract_commit.outputs.value_variable }}"
