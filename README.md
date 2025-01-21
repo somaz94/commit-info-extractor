@@ -1,6 +1,6 @@
 # Extract Commit Action
 
-[![GitHub Super-Linter](https://github.com/somaz94/commit-info-extractor/actions/workflows/linter.yml/badge.svg)](https://github.com/somaz94/commit-info-extractor)
+<!-- [![GitHub Super-Linter](https://github.com/somaz94/commit-info-extractor/actions/workflows/linter.yml/badge.svg)](https://github.com/somaz94/commit-info-extractor) -->
 ![CI](https://github.com/somaz94/commit-info-extractor/actions/workflows/ci.yml/badge.svg)
 [![License](https://img.shields.io/github/license/somaz94/commit-info-extractor)](https://github.com/somaz94/container-action)
 ![Latest Tag](https://img.shields.io/github/v/tag/somaz94/commit-info-extractor)
