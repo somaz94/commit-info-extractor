@@ -1,18 +1,14 @@
 # Changelog
 
-## [v1](https://github.com/somaz94/commit-info-extractor/tree/v1) (2025-02-03)
+## [v1.0.4](https://github.com/somaz94/commit-info-extractor/tree/v1.0.4) (2025-02-05)
 
-[Full Changelog](https://github.com/somaz94/commit-info-extractor/compare/v1...v1)
+[Full Changelog](https://github.com/somaz94/commit-info-extractor/compare/v1.0.4...v1.0.4)
 
 **Merged pull requests:**
 
 - build\(deps\): bump janheinrichmerker/action-github-changelog-generator from 2.3 to 2.4 in the actions-minor group [\#4](https://github.com/somaz94/commit-info-extractor/pull/4) ([dependabot[bot]](https://github.com/apps/dependabot))
 - build\(deps\): bump alpine from 3.20 to 3.21 in the docker-minor group [\#3](https://github.com/somaz94/commit-info-extractor/pull/3) ([dependabot[bot]](https://github.com/apps/dependabot))
 - build\(deps\): bump super-linter/super-linter from 6 to 7 [\#2](https://github.com/somaz94/commit-info-extractor/pull/2) ([dependabot[bot]](https://github.com/apps/dependabot))
-
-## [v1](https://github.com/somaz94/commit-info-extractor/tree/v1) (2024-06-24)
-
-[Full Changelog](https://github.com/somaz94/commit-info-extractor/compare/v1.0.4...v1)
 
 ## [v1.0.4](https://github.com/somaz94/commit-info-extractor/tree/v1.0.4) (2024-06-24)
 
