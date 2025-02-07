@@ -2,24 +2,24 @@
 
 # Function to print headers
 print_header() {
-	echo "\n=================================================="
-	echo "🚀 $1"
-	echo "==================================================\n"
+	printf "\n%s\n" "=================================================="
+	printf "🚀 %s\n" "$1"
+	printf "%s\n\n" "=================================================="
 }
 
 # Function to print sections
 print_section() {
-	echo "\n📋 $1:"
+	printf "\n📋 %s:\n" "$1"
 }
 
 # Function to print success messages
 print_success() {
-	echo "✅ $1"
+	printf "✅ %s\n" "$1"
 }
 
 # Function to print error messages
 print_error() {
-	echo "❌ $1"
+	printf "❌ %s\n" "$1"
 	exit 1
 }
 
@@ -38,10 +38,10 @@ fetch_commit_messages() {
 		if ! COMMIT_MESSAGES=$(git log -"$INPUT_COMMIT_LIMIT" "${INPUT_PRETTY:+--pretty=%B}"); then
 			print_error "Failed to fetch commit messages"
 		fi
-		echo "  • Last $INPUT_COMMIT_LIMIT commits:"
-		echo "$COMMIT_MESSAGES" | sed 's/^/    /'
+		printf "  • Last %s commits:\n" "$INPUT_COMMIT_LIMIT"
+		printf "%s\n" "$COMMIT_MESSAGES" | sed 's/^/    /'
 	else
-		echo "  • No git repository available"
+		printf "  • No git repository available\n"
 		COMMIT_MESSAGES="No commit messages available."
 	fi
 }
@@ -50,39 +50,39 @@ fetch_commit_messages() {
 extract_environment() {
 	print_section "Extracting Environment Information"
 	if [ -n "$INPUT_EXTRACT_COMMAND" ]; then
-		echo "  • Using extract command: $INPUT_EXTRACT_COMMAND"
-		if ! ENVIRONMENT=$(echo "$COMMIT_MESSAGES" | eval "$INPUT_EXTRACT_COMMAND" | sort -u); then
+		printf "  • Using extract command: %s\n" "$INPUT_EXTRACT_COMMAND"
+		if ! ENVIRONMENT=$(printf "%s" "$COMMIT_MESSAGES" | eval "$INPUT_EXTRACT_COMMAND" | sort -u); then
 			print_error "Failed to extract environment information"
 		fi
 	else
 		ENVIRONMENT="$COMMIT_MESSAGES"
 	fi
-	echo "  • Extracted value: $ENVIRONMENT"
+	printf "  • Extracted value: %s\n" "$ENVIRONMENT"
 }
 
 # Function to set output variables
 set_output_variables() {
 	print_section "Setting Output Variables"
 	OUTPUT_VAR=${INPUT_KEY_VARIABLE:-ENVIRONMENT}
-	echo "  • Key Variable: $OUTPUT_VAR"
+	printf "  • Key Variable: %s\n" "$OUTPUT_VAR"
 	
 	if [ -n "$GITHUB_ENV" ]; then
 		# GitHub Actions environment
 		{
-			echo "value_variable=$ENVIRONMENT"
-			echo "key_variable=$OUTPUT_VAR"
+			printf "value_variable=%s\n" "$ENVIRONMENT"
+			printf "key_variable=%s\n" "$OUTPUT_VAR"
 		} >> "$GITHUB_ENV"
 		
 		{
-			echo "value_variable=$ENVIRONMENT"
-			echo "key_variable=$OUTPUT_VAR"
+			printf "value_variable=%s\n" "$ENVIRONMENT"
+			printf "key_variable=%s\n" "$OUTPUT_VAR"
 		} >> "$GITHUB_OUTPUT"
 		
 		print_success "Variables set in GitHub Actions environment"
 	else
 		# Local execution
 		print_success "Local execution - variables would be set as:"
-		echo "  • $OUTPUT_VAR=$ENVIRONMENT"
+		printf "  • %s=%s\n" "$OUTPUT_VAR" "$ENVIRONMENT"
 	fi
 }
 

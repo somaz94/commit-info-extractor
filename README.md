@@ -14,6 +14,17 @@ be configured to limit the number of commits analyzed, apply custom extraction
 commands, and output the results to a variable. This Action is ideal for
 workflows that need to analyze or react based on commit message content.
 
+## Features
+
+- 🔍 Flexible commit message analysis
+- 🎯 Customizable extraction patterns
+- 📊 Configurable commit depth
+- 🔄 Support for pretty formatting
+- 🎨 Custom variable naming
+- 🛠️ Regex pattern support
+- 📝 Detailed output logging
+
+
 ## Inputs
 
 | **Input Name**    | **Description**                                  | **Required** | **Default**   |
@@ -30,12 +41,9 @@ workflows that need to analyze or react based on commit message content.
 | `key_variable`   | Extracted key variable used in the action.   |
 | `value_variable` | Extracted value variable used in the action. |
 
-## Usage
+## Common Use Cases
 
-### Setup Action
-
-To integrate this action into your workflow, add the following step to your
-`.github/workflows` YAML file:
+### 1. Extract Environment Information
 
 ```yaml
 steps:
@@ -48,48 +56,85 @@ steps:
     uses: somaz94/commit-info-extractor@v1
     with:
       commit_limit: 10
-      extract_command: "grep -oP '\\bfix\\b'" # Use regex for values
+      extract_command: "grep -oP 'env:(\\w+)'" # Use regex for values
       pretty: true
-      key_variable: 'CUSTOM_ENV' # Key (default ENVIRONMENT)
+      key_variable: 'DEPLOY_ENV' # Key (default ENVIRONMENT)
 ```
 
-## Configuration
-
-- **commit_limit**: Specifies the number of commits to retrieve.
-- **pretty**: Option to use pretty formatting for Git logs.
-- **output_variable**: The name of the variable where the extracted value will
-  be stored (key).
-- **extract_command**: The command to be used for extracting information from
-  the commits.
-
-## Example Workflow
-
-Here's a full workflow example using the Extract Commit Action:
+### 2. Find Feature Tags
 
 ```yaml
-name: Analyze Commit Messages
-
-on: [push]
-
-jobs:
-  analyze_commits:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Extract Fixes from Commits
-        uses: somaz94/commit-info-extractor@v1
-        with:
-          commit_limit: 20
-          extract_command: "grep -oP '\\bfix\\b'" # Use regex for values
-          pretty: false
-          key_variable: 'CUSTOM_ENV' # Key (default ENVIRONMENT)
-
-      - name: Print Output
-        run: |
-          echo "Extracted variable: ${{ steps.extract_commit.outputs.key_variable }} = ${{ steps.extract_commit.outputs.value_variable }}"
+steps:
+...
+  - name: Extract Commit Information
+    uses: somaz94/commit-info-extractor@v1
+    with:
+      commit_limit: 10
+      extract_command: "grep -oP 'feature:(\\w+)'"
+      pretty: true
+      key_variable: 'FEATURE_TAG'
 ```
+
+### 3. Extract Version Numbers
+
+```yaml
+steps:
+...
+  - name: Extract Commit Information
+    uses: somaz94/commit-info-extractor@v1
+    with:
+      commit_limit: 10
+      extract_command: "grep -oP 'v\\d+\\.\\d+\\.\\d+'"
+      pretty: true
+      key_variable: 'VERSION'
+```
+
+
+## Extract Command Examples
+
+| Purpose | Command | Example Match |
+|---------|---------|---------------|
+| Environment | `grep -oP 'env:(\w+)'` | `env:production` |
+| Fix IDs | `grep -oP 'fix-\d+'` | `fix-123` |
+| Versions | `grep -oP 'v\d+\.\d+\.\d+'` | `v1.2.3` |
+| Features | `grep -oP 'feature:(\w+)'` | `feature:login` |
+| Jira IDs | `grep -oP 'JIRA-\d+'` | `JIRA-456` |
+
+# Best Practices
+
+1. **Commit Message Format**
+   - Use consistent commit message formats
+   - Include relevant tags or identifiers
+   - Follow conventional commit standards
+
+2. **Extraction Patterns**
+   - Use specific regex patterns
+   - Test patterns before implementation
+   - Consider edge cases
+
+3. **Commit Depth**
+   - Set appropriate commit_limit
+   - Consider repository size
+   - Balance between depth and performance
+
+## Troubleshooting
+
+### Common Issues
+
+1. **No Matches Found**
+   - Check if commit messages contain expected patterns
+   - Verify regex pattern syntax
+   - Ensure sufficient commit depth
+
+2. **Incorrect Matches**
+   - Review regex pattern
+   - Check for conflicting patterns
+   - Verify commit message format
+
+3. **Performance Issues**
+   - Reduce commit_limit
+   - Optimize regex patterns
+   - Check repository size
 
 ## License
 
