@@ -14,6 +14,8 @@ be configured to limit the number of commits analyzed, apply custom extraction
 commands, and output the results to a variable. This Action is ideal for
 workflows that need to analyze or react based on commit message content.
 
+<br/>
+
 ## Features
 
 - 🔍 Flexible commit message analysis
@@ -24,6 +26,7 @@ workflows that need to analyze or react based on commit message content.
 - 🛠️ Regex pattern support
 - 📝 Detailed output logging
 
+<br/>
 
 ## Inputs
 
@@ -34,6 +37,8 @@ workflows that need to analyze or react based on commit message content.
 | `key_variable`    | Name of the key variable to set.                 | No           | `ENVIRONMENT` |
 | `extract_command` | Command to use for extracting info from commits. | No           | N/A           |
 
+<br/>
+
 ## Outputs
 
 | **Output Name**  | **Description**                              |
@@ -41,7 +46,11 @@ workflows that need to analyze or react based on commit message content.
 | `key_variable`   | Extracted key variable used in the action.   |
 | `value_variable` | Extracted value variable used in the action. |
 
+<br/>
+
 ## Common Use Cases
+
+<br/>
 
 ### 1. Extract Environment Information
 
@@ -61,6 +70,8 @@ steps:
       key_variable: 'DEPLOY_ENV' # Key (default ENVIRONMENT)
 ```
 
+<br/>
+
 ### 2. Find Feature Tags
 
 ```yaml
@@ -74,6 +85,8 @@ steps:
       pretty: true
       key_variable: 'FEATURE_TAG'
 ```
+
+<br/>
 
 ### 3. Extract Version Numbers
 
@@ -89,6 +102,7 @@ steps:
       key_variable: 'VERSION'
 ```
 
+<br/>
 
 ## Extract Command Examples
 
@@ -100,7 +114,11 @@ steps:
 | Features | `grep -oP 'feature:(\w+)'` | `feature:login` |
 | Jira IDs | `grep -oP 'JIRA-\d+'` | `JIRA-456` |
 
-# Best Practices
+<br/>
+
+## Best Practices
+
+<br/>
 
 1. **Commit Message Format**
    - Use consistent commit message formats
@@ -117,7 +135,11 @@ steps:
    - Consider repository size
    - Balance between depth and performance
 
+<br/>
+
 ## Troubleshooting
+
+<br/>
 
 ### Common Issues
 
@@ -136,9 +158,13 @@ steps:
    - Optimize regex patterns
    - Check repository size
 
+<br/>
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE) file for details.
+
+<br/>
 
 ## Contributing
 
