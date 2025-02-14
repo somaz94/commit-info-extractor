@@ -66,6 +66,24 @@ jobs:
   test-action:
     name: Test Extract Commit Action
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test-case:
+          - name: 'Default Test'
+            commit_limit: 10
+            extract_command: 'grep -oP \bfix\b'
+            pretty: true
+            key_variable: 'environment'
+          - name: 'JSON Output Test'
+            commit_limit: 5
+            extract_command: 'grep -oP \bfeat\b'
+            output_format: 'json'
+            branch: 'main'
+          - name: 'Error Skip Test'
+            commit_limit: 3
+            branch: 'non-existing-branch'
+            skip_errors: true
+            key_variable: 'test_env'
 
     steps:
       - name: Checkout
@@ -76,15 +94,49 @@ jobs:
       - name: Configure Git Safe Directory
         run: git config --global --add safe.directory ${{ github.workspace }}
 
-      - name: Test Local Action
+      - name: Run Test Case - ${{ matrix.test-case.name }}
         id: extract_commit
         uses: ./
         with:
-          commit_limit: 10
-          extract_command: grep -oP \\bfix\\b
-          pretty: true
-          key_variable: environment
+          commit_limit: ${{ matrix.test-case.commit_limit }}
+          extract_command: ${{ matrix.test-case.extract_command }}
+          pretty: ${{ matrix.test-case.pretty || false }}
+          key_variable: ${{ matrix.test-case.key_variable || 'ENVIRONMENT' }}
+          branch: ${{ matrix.test-case.branch || 'main' }}
+          skip_errors: ${{ matrix.test-case.skip_errors || false }}
+          output_format: ${{ matrix.test-case.output_format || 'text' }}
 
       - name: Print Output
         run: |
-          echo "Extracted variable: ${{ steps.extract_commit.outputs.key_variable }} = ${{ steps.extract_commit.outputs.value_variable }}"
+          echo "Test Case: ${{ matrix.test-case.name }}"
+          echo "Key Variable: ${{ steps.extract_commit.outputs.key_variable }}"
+          echo "Value: ${{ steps.extract_commit.outputs.value_variable }}"
+
+      - name: Validate JSON Output
+        if: ${{ matrix.test-case.output_format == 'json' }}
+        run: |
+          echo "${{ steps.extract_commit.outputs.value_variable }}" | jq '.'
+
+  # Optional: Add integration test job
+  integration-test:
+    needs: test-action
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for branch tests
+
+      - name: Test Multiple Branch Extraction
+        id: multi_branch
+        uses: ./
+        with:
+          commit_limit: 5
+          branch: 'main'
+          output_format: 'json'
+          extract_command: 'grep -oP "\b(fix|feat|chore)\b"'
+
+      - name: Validate Multi-Branch Results
+        run: |
+          echo "Extracted commits from main branch:"
+          echo "${{ steps.multi_branch.outputs.value_variable }}" | jq '.'

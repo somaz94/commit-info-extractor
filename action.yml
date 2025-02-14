@@ -20,6 +20,18 @@ inputs:
     description:
       'The command to use for extracting information from commit messages.'
     required: false
+  branch:
+    description: 'Specific branch to extract commits from'
+    required: false
+    default: 'main'
+  skip_errors:
+    description: 'Continue execution even if non-critical errors occur'
+    required: false
+    default: 'false'
+  output_format:
+    description: 'Format of the output (json/text)'
+    required: false
+    default: 'text'
 outputs:
   key_variable:
     description: 'Extracted output key variable information.'
@@ -33,6 +45,9 @@ runs:
     INPUT_PRETTY: ${{ inputs.pretty }}
     INPUT_KEY_VARIABLE: ${{ inputs.key_variable }}
     INPUT_EXTRACT_COMMAND: ${{ inputs.extract_command }}
+    INPUT_BRANCH: ${{ inputs.branch }}
+    INPUT_SKIP_ERRORS: ${{ inputs.skip_errors }}
+    INPUT_OUTPUT_FORMAT: ${{ inputs.output_format }}
 branding:
   icon: 'check-circle'
   color: 'yellow'

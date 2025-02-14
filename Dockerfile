@@ -7,7 +7,8 @@ RUN apk add --no-cache \
     gawk \
     sed \
     perl \
-    grep
+    grep \
+    jq
 
 # Set the working directory inside the container    
 WORKDIR /usr/src

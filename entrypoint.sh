@@ -35,10 +35,25 @@ configure_git() {
 fetch_commit_messages() {
 	print_section "Fetching Commit Messages"
 	if [ -d ".git" ]; then
+		if [ -n "$INPUT_BRANCH" ]; then
+			if ! git checkout "$INPUT_BRANCH"; then
+				if [ "$INPUT_SKIP_ERRORS" = "true" ]; then
+					print_section "Warning: Failed to checkout branch $INPUT_BRANCH, using current branch"
+				else
+					print_error "Failed to checkout branch $INPUT_BRANCH"
+				fi
+			fi
+		fi
+		
 		if ! COMMIT_MESSAGES=$(git log -"$INPUT_COMMIT_LIMIT" "${INPUT_PRETTY:+--pretty=%B}"); then
 			print_error "Failed to fetch commit messages"
 		fi
-		printf "  • Last %s commits:\n" "$INPUT_COMMIT_LIMIT"
+		
+		if [ "$INPUT_OUTPUT_FORMAT" = "json" ]; then
+			COMMIT_MESSAGES=$(printf "%s" "$COMMIT_MESSAGES" | jq -R -s -c 'split("\n")')
+		fi
+		
+		printf "  • Last %s commits from branch %s:\n" "$INPUT_COMMIT_LIMIT" "$(git rev-parse --abbrev-ref HEAD)"
 		printf "%s\n" "$COMMIT_MESSAGES" | sed 's/^/    /'
 	else
 		printf "  • No git repository available\n"
