@@ -36,6 +36,7 @@ workflows that need to analyze or react based on commit message content.
 | `pretty`          | Use pretty format for Git logs.                  | No           | `false`       |
 | `key_variable`    | Name of the key variable to set.                 | No           | `ENVIRONMENT` |
 | `extract_command` | Command to use for extracting info from commits. | No           | N/A           |
+| `fail_on_empty`   | Fail the action if no information is extracted.  | No           | `false`       |
 
 <br/>
 
@@ -104,6 +105,22 @@ steps:
 
 <br/>
 
+### 4. Fail on Empty Results
+
+```yaml
+steps:
+  - name: Extract Commit Information
+    uses: somaz94/commit-info-extractor@v1
+    with:
+      commit_limit: 10
+      extract_command: "grep -oP 'critical:(\\w+)'"
+      pretty: true
+      key_variable: 'CRITICAL_CHANGES'
+      fail_on_empty: true  # Action will fail if no matches found
+```
+
+<br/>
+
 ## Extract Command Examples
 
 | Purpose | Command | Example Match |
@@ -147,6 +164,7 @@ steps:
    - Check if commit messages contain expected patterns
    - Verify regex pattern syntax
    - Ensure sufficient commit depth
+   - If using fail_on_empty: true, action will fail when no matches are found
 
 2. **Incorrect Matches**
    - Review regex pattern

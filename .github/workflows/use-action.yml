@@ -24,7 +24,7 @@ jobs:
         with:
           fetch-depth: 10
 
-      - name: Extract Commit Information
+      - name: Extract Commit Information (Basic)
         uses: somaz94/commit-info-extractor@v1
         id: extract_commit
         with:
@@ -36,3 +36,18 @@ jobs:
       - name: Print Output
         run: |
           echo "Extracted variable: ${{ steps.extract_commit.outputs.key_variable }} = ${{ steps.extract_commit.outputs.value_variable }}"
+
+      - name: Extract Commit Information (With fail_on_empty)
+        id: extract_commit_fail
+        uses: somaz94/commit-info-extractor@v1
+        continue-on-error: true
+        with:
+          commit_limit: 10
+          extract_command: grep -oP \\bnonexistentword\\b
+          pretty: true
+          key_variable: environment
+          fail_on_empty: true
+
+      - name: Print Fail Test Output
+        run: |
+          echo "Fail test status: ${{ steps.extract_commit_fail.outcome }}"
