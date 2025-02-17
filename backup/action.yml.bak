@@ -20,10 +20,6 @@ inputs:
     description:
       'The command to use for extracting information from commit messages.'
     required: false
-  fail_on_empty:
-    description: 'Whether to fail the action if no environment information is extracted.'
-    required: false
-    default: 'false'
 outputs:
   key_variable:
     description: 'Extracted output key variable information.'
@@ -37,7 +33,6 @@ runs:
     INPUT_PRETTY: ${{ inputs.pretty }}
     INPUT_KEY_VARIABLE: ${{ inputs.key_variable }}
     INPUT_EXTRACT_COMMAND: ${{ inputs.extract_command }}
-    INPUT_FAIL_ON_EMPTY: ${{ inputs.fail_on_empty }}
 branding:
   icon: 'check-circle'
   color: 'yellow'

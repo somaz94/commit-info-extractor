@@ -76,7 +76,7 @@ jobs:
       - name: Configure Git Safe Directory
         run: git config --global --add safe.directory ${{ github.workspace }}
 
-      - name: Test Local Action
+      - name: Test Local Action (Basic)
         id: extract_commit
         uses: ./
         with:
@@ -85,6 +85,21 @@ jobs:
           pretty: true
           key_variable: environment
 
-      - name: Print Output
+      - name: Print Basic Output
         run: |
           echo "Extracted variable: ${{ steps.extract_commit.outputs.key_variable }} = ${{ steps.extract_commit.outputs.value_variable }}"
+
+      - name: Test Local Action (With fail_on_empty)
+        id: extract_commit_fail
+        uses: ./
+        continue-on-error: true
+        with:
+          commit_limit: 10
+          extract_command: grep -oP \\bnonexistentword\\b
+          pretty: true
+          key_variable: environment
+          fail_on_empty: true
+
+      - name: Print Fail Test Output
+        run: |
+          echo "Fail test status: ${{ steps.extract_commit_fail.outcome }}"

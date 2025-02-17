@@ -57,12 +57,6 @@ extract_environment() {
 	else
 		ENVIRONMENT="$COMMIT_MESSAGES"
 	fi
-	
-	# 환경 정보가 비어있는 경우 처리
-	if [ -z "$ENVIRONMENT" ] && [ "$INPUT_FAIL_ON_EMPTY" = "true" ]; then
-		print_error "No environment information extracted and fail_on_empty is set to true"
-	fi
-	
 	printf "  • Extracted value: %s\n" "$ENVIRONMENT"
 }
 
