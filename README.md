@@ -181,6 +181,8 @@ steps:
 
 ## Advanced Usage
 
+<br/>
+
 ### Output Formats
 
 You can specify different output formats for the extracted information:
@@ -200,6 +202,8 @@ Available output formats:
 - `text` (default): Plain text with each match on a new line
 - `json`: JSON array format (`["value1", "value2"]`)
 - `csv`: Comma-separated values format (`value1,value2`)
+
+<br/>
 
 ### Handling Multiple Matches
 
@@ -254,6 +258,8 @@ steps:
         # Add your processing logic here
       done
 ```
+
+<br/>
 
 ## Performance Considerations
 
