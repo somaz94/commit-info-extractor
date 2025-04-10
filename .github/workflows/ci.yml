@@ -104,3 +104,76 @@ jobs:
       - name: Print Fail Test Output
         run: |
           echo "Fail test status: ${{ steps.extract_commit_fail.outcome }}"
+          
+      # 새롭게 추가된 output_format 기능 테스트
+      - name: Test JSON Output Format
+        id: json_format_test
+        uses: ./
+        with:
+          commit_limit: 10
+          extract_command: grep -oP \\bfix\\b
+          pretty: true
+          key_variable: json_result
+          output_format: json
+
+      - name: Print JSON Output
+        run: |
+          echo "JSON Output: ${{ steps.json_format_test.outputs.value_variable }}"
+          echo "Type checking with jq:"
+          echo '${{ steps.json_format_test.outputs.value_variable }}' | jq
+
+      - name: Test CSV Output Format
+        id: csv_format_test
+        uses: ./
+        with:
+          commit_limit: 10
+          extract_command: grep -oP \\bfix\\b
+          pretty: true
+          key_variable: csv_result
+          output_format: csv
+
+      - name: Print CSV Output
+        run: |
+          echo "CSV Output: ${{ steps.csv_format_test.outputs.value_variable }}"
+          
+      # 여러 결과를 처리하는 기능 테스트
+      - name: Test Multiple Results
+        id: multiple_results
+        uses: ./
+        with:
+          commit_limit: 15
+          extract_command: grep -oP '(?<=\s|^)[a-zA-Z]+(?=\s|$)' | head -n5
+          pretty: true
+          key_variable: multiple_words
+
+      - name: Process Multiple Results
+        run: |
+          echo "Multiple results found: ${{ steps.multiple_results.outputs.value_variable }}"
+          
+          # Read results into array and process each one
+          echo "Processing each result:"
+          echo "${{ steps.multiple_results.outputs.value_variable }}" | while read -r word; do
+            echo "  - Found word: $word"
+          done
+          
+      # 복합 시나리오 테스트: 여러 결과 + JSON 포맷
+      - name: Test Complex Scenario
+        id: complex_test
+        uses: ./
+        with:
+          commit_limit: 15
+          extract_command: grep -oP '(?<=\s|^)[a-zA-Z]+(?=\s|$)' | head -n5
+          pretty: true
+          key_variable: complex_result
+          output_format: json
+
+      - name: Process Complex Scenario Results
+        run: |
+          echo "Complex scenario results (JSON array):"
+          echo "${{ steps.complex_test.outputs.value_variable }}"
+          
+          # Parse JSON and extract each value
+          echo "Parsing JSON array elements:"
+          echo '${{ steps.complex_test.outputs.value_variable }}' | jq -c '.[]' | while read -r item; do
+            echo "  - JSON item: $item"
+          done

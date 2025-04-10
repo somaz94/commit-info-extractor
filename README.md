@@ -178,6 +178,46 @@ steps:
 
 <br/>
 
+## Advanced Usage
+
+### Handling Multiple Matches
+
+When your extraction command returns multiple unique matches, the action will:
+1. List the number of unique matches found
+2. Set all matches as the output value (each on a separate line)
+
+You can process these multiple values in subsequent steps:
+
+```yaml
+steps:
+  - name: Extract Commit Information
+    id: extract_info
+    uses: somaz94/commit-info-extractor@v1
+    with:
+      commit_limit: 10
+      extract_command: "grep -oP 'JIRA-\\d+'"
+      key_variable: 'JIRA_TICKETS'
+
+  - name: Process Multiple Matches
+    run: |
+      # Read all matches into an array
+      IFS=$'\n' read -d '' -ra TICKETS <<< "${{ steps.extract_info.outputs.value_variable }}"
+      
+      # Process each match
+      for ticket in "${TICKETS[@]}"; do
+        echo "Processing ticket: $ticket"
+        # Add your processing logic here
+      done
+```
+
+## Performance Considerations
+
+- When working with large repositories, consider limiting `commit_limit` to improve performance
+- Complex regex patterns in `extract_command` might impact execution time
+- The action is optimized for CI/CD workflows with typically small to medium commit history
+
+<br/>
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE) file for details.
@@ -187,3 +227,4 @@ This project is licensed under the [MIT License](LICENSE) file for details.
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+

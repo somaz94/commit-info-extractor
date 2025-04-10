@@ -24,6 +24,10 @@ inputs:
     description: 'Whether to fail the action if no environment information is extracted.'
     required: false
     default: 'false'
+  output_format:
+    description: 'Format of the output (json, csv, text). Defaults to text.'
+    required: false
+    default: 'text'
 outputs:
   key_variable:
     description: 'Extracted output key variable information.'

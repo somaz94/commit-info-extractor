@@ -63,7 +63,38 @@ extract_environment() {
 		print_error "No environment information extracted and fail_on_empty is set to true"
 	fi
 	
+	# 결과가 여러 줄일 경우 처리 방법 추가
+	ENVIRONMENT_COUNT=$(echo "$ENVIRONMENT" | wc -l)
+	if [ "$ENVIRONMENT_COUNT" -gt 1 ]; then
+		printf "  • Found %s unique matches\n" "$ENVIRONMENT_COUNT"
+	fi
+	
 	printf "  • Extracted value: %s\n" "$ENVIRONMENT"
+}
+
+# Function to format output based on specified format
+format_output() {
+	local value="$1"
+	local format="${INPUT_OUTPUT_FORMAT:-text}"
+	
+	print_section "Formatting Output"
+	printf "  • Output format: %s\n" "$format"
+	
+	case "$format" in
+		json)
+			# Convert to JSON array
+			JSON_VALUE=$(printf "%s" "$value" | awk 'BEGIN {print "["} {printf "%s\"%s\"", (NR==1)?"":",", $0} END {print "]"}')
+			ENVIRONMENT="$JSON_VALUE"
+			;;
+		csv)
+			# Convert to CSV
+			CSV_VALUE=$(printf "%s" "$value" | paste -sd "," -)
+			ENVIRONMENT="$CSV_VALUE"
+			;;
+		text|*)
+			# Keep as is (default)
+			;;
+	esac
 }
 
 # Function to set output variables
@@ -99,6 +130,12 @@ main() {
 	configure_git
 	fetch_commit_messages
 	extract_environment
+	
+	# 새로운 형식 지정 함수 호출
+	if [ -n "$ENVIRONMENT" ]; then
+		format_output "$ENVIRONMENT"
+	fi
+	
 	set_output_variables
 	
 	print_header "Process Completed Successfully"
