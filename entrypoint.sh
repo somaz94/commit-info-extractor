@@ -105,14 +105,23 @@ set_output_variables() {
 	
 	if [ -n "$GITHUB_ENV" ]; then
 		# GitHub Actions environment
+		# 멀티라인 값을 위한 구분자 사용
+		VALUE_DELIMITER="EOF_$(date +%s)"
+		
+		# 환경 변수 설정 - 멀티라인 처리
 		{
-			printf "value_variable=%s\n" "$ENVIRONMENT"
-			printf "key_variable=%s\n" "$OUTPUT_VAR"
+			echo "value_variable<<$VALUE_DELIMITER"
+			echo "$ENVIRONMENT"
+			echo "$VALUE_DELIMITER"
+			echo "key_variable=$OUTPUT_VAR"
 		} >> "$GITHUB_ENV"
 		
+		# 출력 설정 - 멀티라인 처리
 		{
-			printf "value_variable=%s\n" "$ENVIRONMENT"
-			printf "key_variable=%s\n" "$OUTPUT_VAR"
+			echo "value_variable<<$VALUE_DELIMITER"
+			echo "$ENVIRONMENT"
+			echo "$VALUE_DELIMITER"
+			echo "key_variable=$OUTPUT_VAR"
 		} >> "$GITHUB_OUTPUT"
 		
 		print_success "Variables set in GitHub Actions environment"
