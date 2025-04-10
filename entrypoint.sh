@@ -105,10 +105,10 @@ set_output_variables() {
 	
 	if [ -n "$GITHUB_ENV" ]; then
 		# GitHub Actions environment
-		# 멀티라인 값을 위한 구분자 사용
+		# Using a separator for multilinear values
 		VALUE_DELIMITER="EOF_$(date +%s)"
 		
-		# 환경 변수 설정 - 멀티라인 처리
+		# Setting Environmental Variables - Multiline Processing
 		{
 			echo "value_variable<<$VALUE_DELIMITER"
 			echo "$ENVIRONMENT"
@@ -116,7 +116,7 @@ set_output_variables() {
 			echo "key_variable=$OUTPUT_VAR"
 		} >> "$GITHUB_ENV"
 		
-		# 출력 설정 - 멀티라인 처리
+		# Output Settings - Multilinear Processing
 		{
 			echo "value_variable<<$VALUE_DELIMITER"
 			echo "$ENVIRONMENT"
@@ -140,7 +140,7 @@ main() {
 	fetch_commit_messages
 	extract_environment
 	
-	# 새로운 형식 지정 함수 호출
+	# Call a new formatting function
 	if [ -n "$ENVIRONMENT" ]; then
 		format_output "$ENVIRONMENT"
 	fi

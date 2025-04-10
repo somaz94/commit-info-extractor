@@ -37,6 +37,7 @@ workflows that need to analyze or react based on commit message content.
 | `key_variable`    | Name of the key variable to set.                 | No           | `ENVIRONMENT` |
 | `extract_command` | Command to use for extracting info from commits. | No           | N/A           |
 | `fail_on_empty`   | Fail the action if no information is extracted.  | No           | `false`       |
+| `output_format`   | Format for output (text, json, csv).             | No           | `text`        |
 
 <br/>
 
@@ -180,11 +181,31 @@ steps:
 
 ## Advanced Usage
 
+### Output Formats
+
+You can specify different output formats for the extracted information:
+
+```yaml
+steps:
+  - name: Extract Commit Information with JSON Output
+    uses: somaz94/commit-info-extractor@v1
+    with:
+      commit_limit: 10
+      extract_command: "grep -oP 'JIRA-\\d+'"
+      key_variable: 'JIRA_TICKETS'
+      output_format: 'json'  # Output as JSON array
+```
+
+Available output formats:
+- `text` (default): Plain text with each match on a new line
+- `json`: JSON array format (`["value1", "value2"]`)
+- `csv`: Comma-separated values format (`value1,value2`)
+
 ### Handling Multiple Matches
 
 When your extraction command returns multiple unique matches, the action will:
 1. List the number of unique matches found
-2. Set all matches as the output value (each on a separate line)
+2. Set all matches as the output value (formatted according to `output_format`)
 
 You can process these multiple values in subsequent steps:
 
@@ -198,13 +219,37 @@ steps:
       extract_command: "grep -oP 'JIRA-\\d+'"
       key_variable: 'JIRA_TICKETS'
 
-  - name: Process Multiple Matches
+  - name: Process Multiple Text Matches
     run: |
       # Read all matches into an array
       IFS=$'\n' read -d '' -ra TICKETS <<< "${{ steps.extract_info.outputs.value_variable }}"
       
       # Process each match
       for ticket in "${TICKETS[@]}"; do
+        echo "Processing ticket: $ticket"
+        # Add your processing logic here
+      done
+```
+
+For JSON output:
+
+```yaml
+steps:
+  - name: Extract Commit Information as JSON
+    id: extract_json
+    uses: somaz94/commit-info-extractor@v1
+    with:
+      commit_limit: 10
+      extract_command: "grep -oP 'JIRA-\\d+'"
+      key_variable: 'JIRA_TICKETS'
+      output_format: 'json'
+
+  - name: Process JSON Matches
+    run: |
+      # Parse the JSON array using jq
+      echo '${{ steps.extract_json.outputs.value_variable }}' | jq -c '.[]' | while read -r ticket; do
+        # Remove the surrounding quotes from the JSON string
+        ticket=$(echo $ticket | sed 's/^"//;s/"$//')
         echo "Processing ticket: $ticket"
         # Add your processing logic here
       done
