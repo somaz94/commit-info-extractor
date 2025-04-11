@@ -82,13 +82,23 @@ format_output() {
 	
 	case "$format" in
 		json)
-			# Convert to JSON array
-			JSON_VALUE=$(printf "%s" "$value" | awk 'BEGIN {print "["} {printf "%s\"%s\"", (NR==1)?"":",", $0} END {print "]"}')
+			# Convert to JSON array with proper escaping
+			JSON_VALUE=$(printf "%s" "$value" | awk 'BEGIN {print "["} 
+				{
+					gsub(/"/, "\\\"");  # Escape double quotes
+					gsub(/\\/, "\\\\"); # Escape backslashes
+					printf "%s\"%s\"", (NR==1)?"":",", $0
+				} 
+				END {print "]"}')
 			ENVIRONMENT="$JSON_VALUE"
 			;;
 		csv)
-			# Convert to CSV
-			CSV_VALUE=$(printf "%s" "$value" | paste -sd "," -)
+			# Convert to CSV with proper escaping for CSV values
+			CSV_VALUE=$(printf "%s" "$value" | awk '{
+				gsub(/,/, "\\,"); # Escape commas
+				gsub(/"/, "\"\""); # Escape double quotes by doubling
+				print
+			}' | paste -sd "," -)
 			ENVIRONMENT="$CSV_VALUE"
 			;;
 		text|*)

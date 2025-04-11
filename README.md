@@ -203,6 +203,27 @@ Available output formats:
 - `json`: JSON array format (`["value1", "value2"]`)
 - `csv`: Comma-separated values format (`value1,value2`)
 
+#### Output Format Examples:
+
+Given the extracted values: `JIRA-123`, `JIRA-456`, and `JIRA-789`
+
+**Text format output:**
+```
+JIRA-123
+JIRA-456
+JIRA-789
+```
+
+**JSON format output:**
+```json
+["JIRA-123", "JIRA-456", "JIRA-789"]
+```
+
+**CSV format output:**
+```
+JIRA-123,JIRA-456,JIRA-789
+```
+
 <br/>
 
 ### Handling Multiple Matches
