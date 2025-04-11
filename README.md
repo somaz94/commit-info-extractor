@@ -179,6 +179,39 @@ steps:
 
 <br/>
 
+### Debugging Tips
+
+To debug issues with the action, follow these steps:
+
+1. **Verify your regex patterns locally first**
+   ```bash
+   # Test your regex pattern with sample data
+   echo "This is a commit message with env:production tag" | grep -oP 'env:(\w+)'
+   ```
+
+2. **Increase verbosity for testing**
+   ```yaml
+   - name: Extract Commit Information with Debug
+     uses: somaz94/commit-info-extractor@v1
+     with:
+       commit_limit: 3  # Start with fewer commits for debugging
+       extract_command: "grep -oP 'env:(\\w+)'"
+       # Add steps to print outputs for debugging
+     
+   - name: Debug Output
+     run: |
+       echo "Key: ${{ env.key_variable }}"
+       echo "Value: ${{ env.value_variable }}"
+   ```
+
+3. **Common regex issues to check**
+   - Escaping special characters (especially in YAML)
+   - Proper capturing groups
+   - Case sensitivity
+   - Whitespace handling
+
+<br/>
+
 ## Advanced Usage
 
 <br/>
@@ -287,6 +320,26 @@ steps:
 - When working with large repositories, consider limiting `commit_limit` to improve performance
 - Complex regex patterns in `extract_command` might impact execution time
 - The action is optimized for CI/CD workflows with typically small to medium commit history
+
+<br/>
+
+## Security Considerations
+
+When using this action, keep the following security considerations in mind:
+
+1. **Command Injection Prevention**
+   - The `extract_command` input executes shell commands
+   - Always validate and sanitize any user-provided inputs
+   - Avoid using unvalidated user input in extraction commands
+
+2. **Sensitive Information**
+   - Be careful not to extract sensitive information from commit messages
+   - Consider filtering secrets, passwords, or API keys that might have been accidentally committed
+   - Use GitHub's secret scanning features alongside this action
+
+3. **Permission Scopes**
+   - This action only requires read access to repository content
+   - Consider using the least privilege principle when configuring workflows
 
 <br/>
 
