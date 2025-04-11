@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.2.1](https://github.com/somaz94/commit-info-extractor/tree/v1.2.1) (2025-04-11)
+
+[Full Changelog](https://github.com/somaz94/commit-info-extractor/compare/v1.2.0...v1.2.1)
+
 ## [v1.2.0](https://github.com/somaz94/commit-info-extractor/tree/v1.2.0) (2025-04-10)
 
 [Full Changelog](https://github.com/somaz94/commit-info-extractor/compare/v1.1.0...v1.2.0)
