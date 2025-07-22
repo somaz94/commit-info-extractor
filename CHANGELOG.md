@@ -1,11 +1,12 @@
 # Changelog
 
-## [v1.2.1](https://github.com/somaz94/commit-info-extractor/tree/v1.2.1) (2025-06-04)
+## [v1.2.1](https://github.com/somaz94/commit-info-extractor/tree/v1.2.1) (2025-07-22)
 
 [Full Changelog](https://github.com/somaz94/commit-info-extractor/compare/v1.2.1...v1.2.1)
 
 **Merged pull requests:**
 
+- build\(deps\): bump super-linter/super-linter from 7 to 8 [\#6](https://github.com/somaz94/commit-info-extractor/pull/6) ([dependabot[bot]](https://github.com/apps/dependabot))
 - build\(deps\): bump alpine from 3.21 to 3.22 in the docker-minor group [\#5](https://github.com/somaz94/commit-info-extractor/pull/5) ([dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [v1.2.1](https://github.com/somaz94/commit-info-extractor/tree/v1.2.1) (2025-04-11)
