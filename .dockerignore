@@ -1,0 +1,33 @@
+# Git files
+.git
+.gitignore
+.gitattributes
+.gitconfig
+
+# Documentation
+README.md
+CHANGELOG.md
+LICENSE
+*.md
+
+# GitHub workflows
+.github/
+
+# Development files
+.vscode/
+.idea/
+.devcontainer/
+
+# Backup files
+backup/
+
+# Environment files
+.env.test
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test files
+*.test
+test_*
