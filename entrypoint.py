@@ -5,7 +5,12 @@ import sys
 import subprocess
 import json
 from datetime import datetime
-from typing import Optional, List
+from typing import Optional
+
+# Constants
+DEFAULT_TIMEOUT = 30
+DEFAULT_COMMIT_LIMIT = 10
+GIT_SAFE_DIRECTORIES = ["/usr/src", "/github/workspace"]
 
 # Global debug flag
 DEBUG = False
@@ -44,35 +49,45 @@ def configure_git() -> None:
     """Configure git safe directories."""
     print_section("Configuring Git")
     
-    directories = ["/usr/src", "/github/workspace"]
-    for directory in directories:
+    for directory in GIT_SAFE_DIRECTORIES:
         try:
             subprocess.run(
                 ["git", "config", "--global", "--add", "safe.directory", directory],
                 check=True,
-                capture_output=True
+                capture_output=True,
+                timeout=5  # Add timeout for git config
             )
-        except subprocess.CalledProcessError:
-            print_error(f"Failed to set safe.directory {directory}")
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as e:
+            print_debug(f"Failed to configure {directory}: {e}")
+            # Continue even if one fails
     
     print_success("Git configuration completed")
 
 
-def fetch_commit_messages(commit_limit: int, pretty: str, timeout: int = 30) -> str:
-    """Fetch commit messages from git repository."""
+def fetch_commit_messages(commit_limit: int, pretty: str, timeout: int = DEFAULT_TIMEOUT) -> str:
+    """Fetch commit messages from git repository.
+    
+    Args:
+        commit_limit: Number of commits to retrieve
+        pretty: Whether to use pretty format
+        timeout: Command timeout in seconds
+        
+    Returns:
+        Commit messages as string
+    """
     print_section("Fetching Commit Messages")
     
     if not os.path.isdir(".git"):
         print("  • No git repository available")
         return "No commit messages available."
     
+    cmd = ["git", "log", f"-{commit_limit}"]
+    if pretty and pretty.lower() != "false":
+        cmd.append("--pretty=%B")
+    
+    print_debug(f"Executing: {' '.join(cmd)} (timeout: {timeout}s)")
+    
     try:
-        cmd = ["git", "log", f"-{commit_limit}"]
-        if pretty and pretty.lower() != "false":
-            cmd.append("--pretty=%B")
-        
-        print_debug(f"Executing: {' '.join(cmd)} (timeout: {timeout}s)")
-        
         result = subprocess.run(
             cmd,
             check=True,
@@ -82,10 +97,11 @@ def fetch_commit_messages(commit_limit: int, pretty: str, timeout: int = 30) -> 
         )
         
         commit_messages = result.stdout
-        print(f"  • Last {commit_limit} commits:")
-        for line in commit_messages.split('\n'):
-            if line:
-                print(f"    {line}")
+        if commit_messages:
+            print(f"  • Last {commit_limit} commits:")
+            for line in commit_messages.split('\n'):
+                if line:
+                    print(f"    {line}")
         
         return commit_messages
     
@@ -93,92 +109,119 @@ def fetch_commit_messages(commit_limit: int, pretty: str, timeout: int = 30) -> 
         print_error(f"Git command timed out after {timeout} seconds")
     except subprocess.CalledProcessError as e:
         print_debug(f"Git command failed with exit code {e.returncode}")
+        if e.stderr:
+            print_debug(f"Git stderr: {e.stderr.decode() if isinstance(e.stderr, bytes) else e.stderr}")
         print_error("Failed to fetch commit messages")
+    
+    return ""  # This line won't be reached due to print_error, but satisfies type checker
 
 
-def extract_environment(commit_messages: str, extract_command: Optional[str], fail_on_empty: str, timeout: int = 30) -> str:
-    """Extract environment information from commit messages."""
+def extract_environment(commit_messages: str, extract_command: Optional[str], fail_on_empty: str, timeout: int = DEFAULT_TIMEOUT) -> str:
+    """Extract environment information from commit messages.
+    
+    Args:
+        commit_messages: Input commit messages
+        extract_command: Shell command to extract info
+        fail_on_empty: Whether to fail on empty results
+        timeout: Command timeout in seconds
+        
+    Returns:
+        Extracted environment information
+    """
     print_section("Extracting Environment Information")
     
-    if extract_command:
-        print(f"  • Using extract command: {extract_command}")
-        print_debug(f"Input length: {len(commit_messages)} characters")
-        try:
-            # Execute the extract command with commit messages as input
-            result = subprocess.run(
-                extract_command,
-                shell=True,
-                input=commit_messages,
-                capture_output=True,
-                text=True,
-                check=False,  # Don't raise exception on non-zero exit
-                executable='/bin/bash',
-                timeout=timeout
-            )
+    if not extract_command:
+        return commit_messages
+    
+    print(f"  • Using extract command: {extract_command}")
+    print_debug(f"Input length: {len(commit_messages)} characters")
+    
+    try:
+        result = subprocess.run(
+            extract_command,
+            shell=True,
+            input=commit_messages,
+            capture_output=True,
+            text=True,
+            check=False,  # Don't raise exception on non-zero exit
+            executable='/bin/bash',
+            timeout=timeout
+        )
+        
+        print_debug(f"Command exit code: {result.returncode}")
+        print_debug(f"Output length: {len(result.stdout)} characters")
+        
+        # Get unique values and sort, filtering out empty lines
+        lines = [line for line in result.stdout.strip().split('\n') if line.strip()]
+        environment = '\n'.join(sorted(set(lines))) if lines else ""
+        
+        # Only warn if stderr is present AND returncode is not 0 or 1 (grep returns 1 when no match)
+        if result.returncode > 1 and result.stderr:
+            print_debug(f"Command warning (exit {result.returncode}): {result.stderr}")
             
-            print_debug(f"Command exit code: {result.returncode}")
-            print_debug(f"Output length: {len(result.stdout)} characters")
-            
-            # Get unique values and sort, filtering out empty lines
-            lines = [line for line in result.stdout.strip().split('\n') if line.strip()]
-            environment = '\n'.join(sorted(set(lines))) if lines else ""
-            
-            # Only error if stderr is present AND returncode is not 0 or 1 (grep returns 1 when no match)
-            if result.returncode > 1 and result.stderr:
-                print(f"  • Command warning (exit {result.returncode}): {result.stderr}", file=sys.stderr)
-        except subprocess.TimeoutExpired:
-            print_error(f"Extract command timed out after {timeout} seconds")
-        except Exception as e:
-            print_debug(f"Exception type: {type(e).__name__}")
-            print_error(f"Failed to extract environment information: {e}")
-    else:
-        environment = commit_messages
+    except subprocess.TimeoutExpired:
+        print_error(f"Extract command timed out after {timeout} seconds")
+    except Exception as e:
+        print_debug(f"Exception type: {type(e).__name__}")
+        print_error(f"Failed to extract environment information: {e}")
     
     # Handle empty environment information
     if not environment.strip() and fail_on_empty.lower() == "true":
         print_error("No environment information extracted and fail_on_empty is set to true")
     
-    # Count unique matches
+    # Display results
     if environment.strip():
         environment_lines = [line for line in environment.split('\n') if line]
-        environment_count = len(environment_lines)
-        if environment_count > 1:
-            print(f"  • Found {environment_count} unique matches")
+        if len(environment_lines) > 1:
+            print(f"  • Found {len(environment_lines)} unique matches")
         print(f"  • Extracted value: {environment}")
     
     return environment
 
 
 def format_output(value: str, output_format: str) -> str:
-    """Format output based on specified format."""
+    """Format output based on specified format.
+    
+    Args:
+        value: Input value to format
+        output_format: Desired output format (json, csv, text)
+        
+    Returns:
+        Formatted output string
+    """
     print_section("Formatting Output")
     print(f"  • Output format: {output_format}")
     
+    if not value.strip():
+        return value
+    
     if output_format == "json":
-        # Convert to JSON array
         lines = [line for line in value.split('\n') if line]
         return json.dumps(lines, ensure_ascii=False)
     
     elif output_format == "csv":
-        # Convert to CSV with proper escaping
         lines = [line for line in value.split('\n') if line]
-        # Escape commas and quotes
         escaped_lines = []
         for line in lines:
             # Escape quotes by doubling them
             escaped = line.replace('"', '""')
-            # If the line contains comma or quote, wrap in quotes
+            # Wrap in quotes if contains comma or quote
             if ',' in escaped or '"' in line:
                 escaped = f'"{escaped}"'
             escaped_lines.append(escaped)
         return ','.join(escaped_lines)
     
-    else:  # text (default)
-        return value
+    # text (default)
+    return value
 
 
 def set_output_variables(environment: str, key_variable: str) -> None:
-    """Set output variables for GitHub Actions."""
+    """Set output variables for GitHub Actions.
+    
+    Args:
+        environment: The value to set
+        key_variable: The name of the key variable
+    """
     print_section("Setting Output Variables")
     
     output_var = key_variable or "ENVIRONMENT"
@@ -191,21 +234,24 @@ def set_output_variables(environment: str, key_variable: str) -> None:
         # GitHub Actions environment
         delimiter = f"EOF_{int(datetime.now().timestamp())}"
         
-        # Write to GITHUB_ENV
-        with open(github_env, "a") as f:
-            f.write(f"value_variable<<{delimiter}\n")
-            f.write(f"{environment}\n")
-            f.write(f"{delimiter}\n")
-            f.write(f"key_variable={output_var}\n")
-        
-        # Write to GITHUB_OUTPUT
-        with open(github_output, "a") as f:
-            f.write(f"value_variable<<{delimiter}\n")
-            f.write(f"{environment}\n")
-            f.write(f"{delimiter}\n")
-            f.write(f"key_variable={output_var}\n")
-        
-        print_success("Variables set in GitHub Actions environment")
+        try:
+            # Write to GITHUB_ENV
+            with open(github_env, "a", encoding="utf-8") as f:
+                f.write(f"value_variable<<{delimiter}\n")
+                f.write(f"{environment}\n")
+                f.write(f"{delimiter}\n")
+                f.write(f"key_variable={output_var}\n")
+            
+            # Write to GITHUB_OUTPUT
+            with open(github_output, "a", encoding="utf-8") as f:
+                f.write(f"value_variable<<{delimiter}\n")
+                f.write(f"{environment}\n")
+                f.write(f"{delimiter}\n")
+                f.write(f"key_variable={output_var}\n")
+            
+            print_success("Variables set in GitHub Actions environment")
+        except IOError as e:
+            print_error(f"Failed to write output files: {e}")
     else:
         # Local execution
         print_success("Local execution - variables would be set as:")
@@ -218,17 +264,38 @@ def main() -> None:
     
     # Get input parameters from environment variables
     DEBUG = os.getenv("INPUT_DEBUG", "false").lower() == "true"
-    commit_limit = int(os.getenv("INPUT_COMMIT_LIMIT", "10"))
+    
+    try:
+        commit_limit = int(os.getenv("INPUT_COMMIT_LIMIT", str(DEFAULT_COMMIT_LIMIT)))
+        timeout = int(os.getenv("INPUT_TIMEOUT", str(DEFAULT_TIMEOUT)))
+    except ValueError as e:
+        print_error(f"Invalid numeric input: {e}")
+        return
+    
     pretty = os.getenv("INPUT_PRETTY", "false")
     key_variable = os.getenv("INPUT_KEY_VARIABLE", "ENVIRONMENT")
     extract_command = os.getenv("INPUT_EXTRACT_COMMAND", "")
     fail_on_empty = os.getenv("INPUT_FAIL_ON_EMPTY", "false")
-    output_format = os.getenv("INPUT_OUTPUT_FORMAT", "text")
-    timeout = int(os.getenv("INPUT_TIMEOUT", "30"))
+    output_format = os.getenv("INPUT_OUTPUT_FORMAT", "text").lower()
+    
+    # Validate inputs
+    if commit_limit <= 0:
+        print_error("commit_limit must be greater than 0")
+        return
+    
+    if timeout <= 0:
+        print_error("timeout must be greater than 0")
+        return
+    
+    if output_format not in ["text", "json", "csv"]:
+        print_error(f"Invalid output_format: {output_format}. Must be text, json, or csv")
+        return
     
     print_header("Environment Variable Extractor")
     print_debug(f"Debug mode: {DEBUG}")
+    print_debug(f"Commit limit: {commit_limit}")
     print_debug(f"Timeout: {timeout}s")
+    print_debug(f"Output format: {output_format}")
     
     # Execute workflow
     configure_git()
