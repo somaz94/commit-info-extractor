@@ -29,7 +29,7 @@ jobs:
         id: extract_commit
         with:
           commit_limit: 10
-          extract_command: "grep -oP '\\bfix\\b'" # Use regex for values
+          extract_command: "grep -oP '\\bchore\\b'" # Use regex for values
           pretty: true
           key_variable: 'CUSTOM_ENV' # Key
 
@@ -58,7 +58,7 @@ jobs:
         uses: somaz94/commit-info-extractor@v1
         with:
           commit_limit: 10
-          extract_command: grep -oP \\bfix\\b
+          extract_command: grep -oP \\bchore\\b
           pretty: true
           key_variable: json_result
           output_format: json
@@ -74,7 +74,7 @@ jobs:
         uses: somaz94/commit-info-extractor@v1
         with:
           commit_limit: 10
-          extract_command: grep -oP \\bfix\\b
+          extract_command: grep -oP \\bchore\\b
           pretty: true
           key_variable: csv_result
           output_format: csv
