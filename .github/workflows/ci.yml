@@ -177,3 +177,35 @@ jobs:
           echo '${{ steps.complex_test.outputs.value_variable }}' | jq -c '.[]' | while read -r item; do
             echo "  - JSON item: $item"
           done
+
+      # Debug 모드 테스트
+      - name: Test Debug Mode
+        id: debug_test
+        uses: ./
+        with:
+          commit_limit: 5
+          extract_command: grep -oE 'chore|refactor'
+          pretty: true
+          key_variable: debug_result
+          debug: true
+
+      - name: Print Debug Test Output
+        run: |
+          echo "Debug mode test completed"
+          echo "Result: ${{ steps.debug_test.outputs.value_variable }}"
+
+      # Timeout 테스트
+      - name: Test Custom Timeout
+        id: timeout_test
+        uses: ./
+        with:
+          commit_limit: 10
+          extract_command: grep -oE 'feat|fix|chore'
+          pretty: true
+          key_variable: timeout_result
+          timeout: 60
+
+      - name: Print Timeout Test Output
+        run: |
+          echo "Timeout test completed"
+          echo "Result: ${{ steps.timeout_test.outputs.value_variable }}"

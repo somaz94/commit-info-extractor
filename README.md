@@ -18,6 +18,8 @@ A powerful GitHub Action that extracts and processes information from commit mes
 - **Fast & Lightweight**: Built with Python 3.14-slim for optimal performance
 - **Fail-Safe Options**: Optional validation with `fail_on_empty`
 - **Pretty Formatting**: Clean, formatted commit message output
+- **Debug Mode**: Verbose output for troubleshooting
+- **Timeout Control**: Prevent long-running operations
 - **Easy Integration**: Simple YAML configuration in your workflows
 <br/>
 
@@ -35,28 +37,18 @@ A powerful GitHub Action that extracts and processes information from commit mes
 
 <br/>
 
-## Features
-
-- Flexible commit message analysis
-- Customizable extraction patterns
-- Configurable commit depth
-- Support for pretty formatting
-- Custom variable naming
-- Regex pattern support
-- Detailed output logging
-
-<br/>
-
 ## Inputs
 
 | Input | Description | Required | Default |
-|-------|-------------|----------|---------|
+|-------|-------------|----------|---------||
 | `commit_limit` | Number of commits to retrieve | Yes | N/A |
 | `extract_command` | Command to extract info (e.g., grep pattern) | No | N/A |
 | `pretty` | Use pretty format for Git logs | No | `false` |
 | `key_variable` | Name of the output variable | No | `ENVIRONMENT` |
 | `fail_on_empty` | Fail if no information is extracted | No | `false` |
 | `output_format` | Output format: `text`, `json`, or `csv` | No | `text` |
+| `debug` | Enable debug mode for verbose output | No | `false` |
+| `timeout` | Timeout in seconds for git/extract commands | No | `30` |
 
 <br/>
 
@@ -142,6 +134,21 @@ A powerful GitHub Action that extracts and processes information from commit mes
 - name: Process Tickets
   run: |
     echo '${{ steps.jira.outputs.value_variable }}' | jq -r '.[]'
+```
+
+<br/>
+
+### Debug Mode for Troubleshooting
+
+```yaml
+- name: Extract with Debug
+  uses: somaz94/commit-info-extractor@v1
+  with:
+    commit_limit: 10
+    extract_command: "grep -oE 'env:(\\w+)'"
+    key_variable: 'ENVIRONMENT'
+    debug: true          # Enable verbose output
+    timeout: 60          # Set custom timeout
 ```
 
 <br/>
@@ -282,7 +289,31 @@ JIRA-123,JIRA-456,JIRA-789
 - name: Test Extract Command
   run: |
     git log -10 --pretty=%B | grep -oE 'your-pattern' || echo "No matches"
+
+# Or use built-in debug mode
+- name: Extract with Debug Mode
+  uses: somaz94/commit-info-extractor@v1
+  with:
+    commit_limit: 10
+    extract_command: "grep -oE 'your-pattern'"
+    debug: true  # Shows detailed execution information
 ```
+
+### Timeout Errors
+
+#### Problem: Action times out during execution
+
+#### Solutions:
+- Increase timeout value (default is 30 seconds):
+  ```yaml
+  - uses: somaz94/commit-info-extractor@v1
+    with:
+      commit_limit: 10
+      extract_command: "complex-command"
+      timeout: 120  # Increase to 2 minutes
+  ```
+- Reduce `commit_limit` to process fewer commits
+- Simplify your `extract_command` pattern
 
 <br/>
 
@@ -403,6 +434,8 @@ python3 tests/test_local.py
 export INPUT_COMMIT_LIMIT=10
 export INPUT_EXTRACT_COMMAND="grep -oE 'feat|fix|chore'"
 export INPUT_PRETTY=true
+export INPUT_DEBUG=true      # Enable debug mode
+export INPUT_TIMEOUT=60       # Set timeout
 python3 entrypoint.py
 ```
 

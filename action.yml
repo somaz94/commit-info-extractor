@@ -28,6 +28,14 @@ inputs:
     description: 'Format of the output (json, csv, text). Defaults to text.'
     required: false
     default: 'text'
+  debug:
+    description: 'Enable debug mode for verbose output.'
+    required: false
+    default: 'false'
+  timeout:
+    description: 'Timeout in seconds for git and extract commands.'
+    required: false
+    default: '30'
 outputs:
   key_variable:
     description: 'Extracted output key variable information.'
@@ -43,6 +51,8 @@ runs:
     INPUT_EXTRACT_COMMAND: ${{ inputs.extract_command }}
     INPUT_FAIL_ON_EMPTY: ${{ inputs.fail_on_empty }}
     INPUT_OUTPUT_FORMAT: ${{ inputs.output_format }}
+    INPUT_DEBUG: ${{ inputs.debug }}
+    INPUT_TIMEOUT: ${{ inputs.timeout }}
 branding:
   icon: 'check-circle'
   color: 'yellow'
