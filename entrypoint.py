@@ -95,15 +95,18 @@ def extract_environment(commit_messages: str, extract_command: Optional[str], fa
                 input=commit_messages,
                 capture_output=True,
                 text=True,
-                check=True,
+                check=False,  # Don't raise exception on non-zero exit
                 executable='/bin/bash'
             )
             
             # Get unique values and sort, filtering out empty lines
             lines = [line for line in result.stdout.strip().split('\n') if line.strip()]
             environment = '\n'.join(sorted(set(lines))) if lines else ""
-        except subprocess.CalledProcessError as e:
-            print(f"  • Command stderr: {e.stderr}", file=sys.stderr)
+            
+            # Only error if stderr is present AND returncode is not 0 or 1 (grep returns 1 when no match)
+            if result.returncode > 1 and result.stderr:
+                print(f"  • Command warning (exit {result.returncode}): {result.stderr}", file=sys.stderr)
+        except Exception as e:
             print_error(f"Failed to extract environment information: {e}")
     else:
         environment = commit_messages
