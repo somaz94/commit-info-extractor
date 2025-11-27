@@ -23,11 +23,43 @@ backup/
 
 # Environment files
 .env.test
+.env
+
+# Python files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+venv/
+env/
+ENV/
+.venv
+
+# Testing
+.pytest_cache/
+.coverage
+.tox/
+htmlcov/
+*.test
+test_*
 
 # OS files
 .DS_Store
 Thumbs.db
-
-# Test files
-*.test
-test_*

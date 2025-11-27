@@ -1,19 +1,19 @@
-FROM alpine:3.22
+FROM python:3.14-slim
 
 # Install necessary packages
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
-    bash \
-    gawk \
-    sed \
-    perl \
-    grep
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory inside the container    
 WORKDIR /usr/src
 
 # Copy any source file(s) required for the action
-COPY entrypoint.sh .
+COPY entrypoint.py .
+
+# Make the script executable
+RUN chmod +x entrypoint.py
 
 # Configure the container to be run as an executable
-ENTRYPOINT ["/usr/src/entrypoint.sh"]
+ENTRYPOINT ["python3", "/usr/src/entrypoint.py"]

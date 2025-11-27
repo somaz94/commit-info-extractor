@@ -57,7 +57,54 @@ extract_environment() {
 	else
 		ENVIRONMENT="$COMMIT_MESSAGES"
 	fi
+	
+	# 환경 정보가 비어있는 경우 처리
+	if [ -z "$ENVIRONMENT" ] && [ "$INPUT_FAIL_ON_EMPTY" = "true" ]; then
+		print_error "No environment information extracted and fail_on_empty is set to true"
+	fi
+	
+	# 결과가 여러 줄일 경우 처리 방법 추가
+	ENVIRONMENT_COUNT=$(echo "$ENVIRONMENT" | wc -l)
+	if [ "$ENVIRONMENT_COUNT" -gt 1 ]; then
+		printf "  • Found %s unique matches\n" "$ENVIRONMENT_COUNT"
+	fi
+	
 	printf "  • Extracted value: %s\n" "$ENVIRONMENT"
+}
+
+# Function to format output based on specified format
+format_output() {
+	local value="$1"
+	local format="${INPUT_OUTPUT_FORMAT:-text}"
+	
+	print_section "Formatting Output"
+	printf "  • Output format: %s\n" "$format"
+	
+	case "$format" in
+		json)
+			# Convert to JSON array with proper escaping
+			JSON_VALUE=$(printf "%s" "$value" | awk 'BEGIN {print "["} 
+				{
+					gsub(/"/, "\\\"");  # Escape double quotes
+					gsub(/\\/, "\\\\"); # Escape backslashes
+					printf "%s\"%s\"", (NR==1)?"":",", $0
+				} 
+				END {print "]"}')
+			ENVIRONMENT="$JSON_VALUE"
+			;;
+		csv)
+			# Convert to CSV with proper escaping for CSV values
+			CSV_VALUE=$(printf "%s" "$value" | awk '{
+				gsub(/,/, "\\,"); # Escape commas
+				gsub(/"/, "\"\""); # Escape double quotes by doubling
+				print
+			}' | paste -sd "," -)
+			ENVIRONMENT="$CSV_VALUE"
+			;;
+		text|*)
+			# Keep as is (default)
+			;;
+	esac
 }
 
 # Function to set output variables
@@ -68,14 +115,23 @@ set_output_variables() {
 	
 	if [ -n "$GITHUB_ENV" ]; then
 		# GitHub Actions environment
+		# Using a separator for multilinear values
+		VALUE_DELIMITER="EOF_$(date +%s)"
+		
+		# Setting Environmental Variables - Multiline Processing
 		{
-			printf "value_variable=%s\n" "$ENVIRONMENT"
-			printf "key_variable=%s\n" "$OUTPUT_VAR"
+			echo "value_variable<<$VALUE_DELIMITER"
+			echo "$ENVIRONMENT"
+			echo "$VALUE_DELIMITER"
+			echo "key_variable=$OUTPUT_VAR"
 		} >> "$GITHUB_ENV"
 		
+		# Output Settings - Multilinear Processing
 		{
-			printf "value_variable=%s\n" "$ENVIRONMENT"
-			printf "key_variable=%s\n" "$OUTPUT_VAR"
+			echo "value_variable<<$VALUE_DELIMITER"
+			echo "$ENVIRONMENT"
+			echo "$VALUE_DELIMITER"
+			echo "key_variable=$OUTPUT_VAR"
 		} >> "$GITHUB_OUTPUT"
 		
 		print_success "Variables set in GitHub Actions environment"
@@ -93,6 +149,12 @@ main() {
 	configure_git
 	fetch_commit_messages
 	extract_environment
+	
+	# Call a new formatting function
+	if [ -n "$ENVIRONMENT" ]; then
+		format_output "$ENVIRONMENT"
+	fi
+	
 	set_output_variables
 	
 	print_header "Process Completed Successfully"
