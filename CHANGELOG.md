@@ -1,8 +1,8 @@
 # Changelog
 
-## [v1.2.1](https://github.com/somaz94/commit-info-extractor/tree/v1.2.1) (2025-11-25)
+## [v1.3.0](https://github.com/somaz94/commit-info-extractor/tree/v1.3.0) (2025-11-27)
 
-[Full Changelog](https://github.com/somaz94/commit-info-extractor/compare/v1.2.1...v1.2.1)
+[Full Changelog](https://github.com/somaz94/commit-info-extractor/compare/v1.2.1...v1.3.0)
 
 **Merged pull requests:**
 
