@@ -1,52 +1,71 @@
 # Extract Commit Action
 
-<!-- [![GitHub Super-Linter](https://github.com/somaz94/commit-info-extractor/actions/workflows/linter.yml/badge.svg)](https://github.com/somaz94/commit-info-extractor) -->
 ![CI](https://github.com/somaz94/commit-info-extractor/actions/workflows/ci.yml/badge.svg)
-[![License](https://img.shields.io/github/license/somaz94/commit-info-extractor)](https://github.com/somaz94/container-action)
+[![License](https://img.shields.io/github/license/somaz94/commit-info-extractor)](https://github.com/somaz94/commit-info-extractor/blob/main/LICENSE)
 ![Latest Tag](https://img.shields.io/github/v/tag/somaz94/commit-info-extractor)
-![Top Language](https://img.shields.io/github/languages/top/somaz94/commit-info-extractor?color=green&logo=terraform&logoColor=blue)
+![Python](https://img.shields.io/badge/python-3.14-blue?logo=python)
 [![GitHub Marketplace](https://img.shields.io/badge/Marketplace-Commit%20Info%20Extractor-blue?logo=github)](https://github.com/marketplace/actions/extract-commit-action)
 
-## Description
-
-The **Extract Commit Action** extracts information from commit messages. It can
-be configured to limit the number of commits analyzed, apply custom extraction
-commands, and output the results to a variable. This Action is ideal for
-workflows that need to analyze or react based on commit message content.
+A powerful GitHub Action that extracts and processes information from commit messages using customizable patterns and commands.
 
 <br/>
 
 ## Features
 
-- 🔍 Flexible commit message analysis
-- 🎯 Customizable extraction patterns
-- 📊 Configurable commit depth
-- 🔄 Support for pretty formatting
-- 🎨 Custom variable naming
-- 🛠️ Regex pattern support
-- 📝 Detailed output logging
+- **Flexible Pattern Matching**: Extract information using regex patterns or custom commands
+- **Multiple Output Formats**: Support for text, JSON, and CSV outputs
+- **Customizable Depth**: Control the number of commits to analyze
+- **Fast & Lightweight**: Built with Python 3.14-slim for optimal performance
+- **Fail-Safe Options**: Optional validation with `fail_on_empty`
+- **Pretty Formatting**: Clean, formatted commit message output
+- **Easy Integration**: Simple YAML configuration in your workflows
+<br/>
+
+## Quick Start
+
+```yaml
+- name: Extract Environment from Commits
+  uses: somaz94/commit-info-extractor@v1
+  with:
+    commit_limit: 10
+    extract_command: "grep -oE 'env:(\\w+)'"
+    pretty: true
+    key_variable: 'DEPLOY_ENV'
+```
+
+<br/>
+
+## Features
+
+- Flexible commit message analysis
+- Customizable extraction patterns
+- Configurable commit depth
+- Support for pretty formatting
+- Custom variable naming
+- Regex pattern support
+- Detailed output logging
 
 <br/>
 
 ## Inputs
 
-| **Input Name**    | **Description**                                  | **Required** | **Default**   |
-| ----------------- | ------------------------------------------------ | ------------ | ------------- |
-| `commit_limit`    | Number of commits to retrieve.                   | Yes          | N/A           |
-| `pretty`          | Use pretty format for Git logs.                  | No           | `false`       |
-| `key_variable`    | Name of the key variable to set.                 | No           | `ENVIRONMENT` |
-| `extract_command` | Command to use for extracting info from commits. | No           | N/A           |
-| `fail_on_empty`   | Fail the action if no information is extracted.  | No           | `false`       |
-| `output_format`   | Format for output (text, json, csv).             | No           | `text`        |
+| Input | Description | Required | Default |
+|-------|-------------|----------|---------|
+| `commit_limit` | Number of commits to retrieve | Yes | N/A |
+| `extract_command` | Command to extract info (e.g., grep pattern) | No | N/A |
+| `pretty` | Use pretty format for Git logs | No | `false` |
+| `key_variable` | Name of the output variable | No | `ENVIRONMENT` |
+| `fail_on_empty` | Fail if no information is extracted | No | `false` |
+| `output_format` | Output format: `text`, `json`, or `csv` | No | `text` |
 
 <br/>
 
 ## Outputs
 
-| **Output Name**  | **Description**                              |
-| ---------------- | -------------------------------------------- |
-| `key_variable`   | Extracted key variable used in the action.   |
-| `value_variable` | Extracted value variable used in the action. |
+| Output | Description |
+|--------|-------------|
+| `key_variable` | The name of the variable used |
+| `value_variable` | The extracted value(s) from commits |
 
 <br/>
 
@@ -54,70 +73,110 @@ workflows that need to analyze or react based on commit message content.
 
 <br/>
 
-### 1. Extract Environment Information
+### Extract Environment Information
 
 ```yaml
-steps:
-  - name: Checkout
-    uses: actions/checkout@v4
-    with:
-      fetch-depth: 10
-
-  - name: Extract Commit Information
-    uses: somaz94/commit-info-extractor@v1
-    with:
-      commit_limit: 10
-      extract_command: "grep -oP 'env:(\\w+)'" # Use regex for values
-      pretty: true
-      key_variable: 'DEPLOY_ENV' # Key (default ENVIRONMENT)
+- name: Extract Environment
+  uses: somaz94/commit-info-extractor@v1
+  with:
+    commit_limit: 10
+    extract_command: "grep -oE 'env:(\\w+)'"
+    pretty: true
+    key_variable: 'DEPLOY_ENV'
 ```
 
 <br/>
 
-### 2. Find Feature Tags
+### Find Feature Tags
 
 ```yaml
-steps:
-...
-  - name: Extract Commit Information
-    uses: somaz94/commit-info-extractor@v1
-    with:
-      commit_limit: 10
-      extract_command: "grep -oP 'feature:(\\w+)'"
-      pretty: true
-      key_variable: 'FEATURE_TAG'
+- name: Extract Feature Tags
+  uses: somaz94/commit-info-extractor@v1
+  with:
+    commit_limit: 10
+    extract_command: "grep -oE 'feature:(\\w+)'"
+    key_variable: 'FEATURE_TAG'
 ```
 
 <br/>
 
-### 3. Extract Version Numbers
+### Extract Version Numbers
 
 ```yaml
-steps:
-...
-  - name: Extract Commit Information
-    uses: somaz94/commit-info-extractor@v1
-    with:
-      commit_limit: 10
-      extract_command: "grep -oP 'v\\d+\\.\\d+\\.\\d+'"
-      pretty: true
-      key_variable: 'VERSION'
+- name: Extract Version
+  uses: somaz94/commit-info-extractor@v1
+  with:
+    commit_limit: 10
+    extract_command: "grep -oE 'v[0-9]+\\.[0-9]+\\.[0-9]+'"
+    key_variable: 'VERSION'
 ```
 
 <br/>
 
-### 4. Fail on Empty Results
+### Fail on Empty Results
 
 ```yaml
-steps:
-  - name: Extract Commit Information
-    uses: somaz94/commit-info-extractor@v1
-    with:
-      commit_limit: 10
-      extract_command: "grep -oP 'critical:(\\w+)'"
-      pretty: true
-      key_variable: 'CRITICAL_CHANGES'
-      fail_on_empty: true  # Action will fail if no matches found
+- name: Extract Critical Changes
+  uses: somaz94/commit-info-extractor@v1
+  with:
+    commit_limit: 10
+    extract_command: "grep -oE 'critical:(\\w+)'"
+    key_variable: 'CRITICAL_CHANGES'
+    fail_on_empty: true  # Fails if no matches found
+```
+
+<br/>
+
+### Extract JIRA Tickets with JSON Output
+
+```yaml
+- name: Extract JIRA Tickets
+  id: jira
+  uses: somaz94/commit-info-extractor@v1
+  with:
+    commit_limit: 20
+    extract_command: "grep -oE 'JIRA-[0-9]+'"
+    key_variable: 'JIRA_TICKETS'
+    output_format: 'json'
+
+- name: Process Tickets
+  run: |
+    echo '${{ steps.jira.outputs.value_variable }}' | jq -r '.[]'
+```
+
+<br/>
+
+## Output Formats
+
+The action supports three output formats:
+
+| Format | Description | Example Output |
+|--------|-------------|----------------|
+| `text` | Plain text (default) | `value1`<br/>`value2`<br/>`value3` |
+| `json` | JSON array | `["value1", "value2", "value3"]` |
+| `csv` | Comma-separated | `value1,value2,value3` |
+
+<br/>
+
+### Format Examples
+
+Given extracted values: `JIRA-123`, `JIRA-456`, `JIRA-789`
+
+#### Text format:
+```
+JIRA-123
+JIRA-456
+JIRA-789
+```
+
+#### JSON format:
+```json
+["JIRA-123", "JIRA-456", "JIRA-789"]
+```
+
+#### CSV format:
+```
+JIRA-123,JIRA-456,JIRA-789
 ```
 
 <br/>
@@ -126,11 +185,14 @@ steps:
 
 | Purpose | Command | Example Match |
 |---------|---------|---------------|
-| Environment | `grep -oP 'env:(\w+)'` | `env:production` |
-| Fix IDs | `grep -oP 'fix-\d+'` | `fix-123` |
-| Versions | `grep -oP 'v\d+\.\d+\.\d+'` | `v1.2.3` |
-| Features | `grep -oP 'feature:(\w+)'` | `feature:login` |
-| Jira IDs | `grep -oP 'JIRA-\d+'` | `JIRA-456` |
+| Environment | `grep -oE 'env:(\\w+)'` | `env:production` |
+| Fix IDs | `grep -oE 'fix-[0-9]+'` | `fix-123` |
+| Versions | `grep -oE 'v[0-9]+\\.[0-9]+\\.[0-9]+'` | `v1.2.3` |
+| Features | `grep -oE 'feature:(\\w+)'` | `feature:login` |
+| JIRA IDs | `grep -oE 'JIRA-[0-9]+'` | `JIRA-456` |
+| Conventional Commits | `grep -oE '^(feat|fix|chore|docs):'` | `feat:`, `fix:` |
+
+> **Note**: Use `grep -oE` (Extended regex) instead of `grep -oP` (Perl regex) for better compatibility.
 
 <br/>
 
@@ -138,20 +200,37 @@ steps:
 
 <br/>
 
-1. **Commit Message Format**
-   - Use consistent commit message formats
-   - Include relevant tags or identifiers
-   - Follow conventional commit standards
+### Commit Message Format
+- Use consistent commit message formats (e.g., [Conventional Commits](https://www.conventionalcommits.org/))
+- Include relevant tags or identifiers
+- Example: `feat(auth): add login functionality env:production`
 
-2. **Extraction Patterns**
-   - Use specific regex patterns
-   - Test patterns before implementation
-   - Consider edge cases
+<br/>
 
-3. **Commit Depth**
-   - Set appropriate commit_limit
-   - Consider repository size
-   - Balance between depth and performance
+### Extraction Patterns
+- Test regex patterns locally before implementation:
+  ```bash
+  echo "feat: add login env:production" | grep -oE 'env:(\\w+)'
+  ```
+- Use specific patterns to avoid false matches
+- Consider edge cases and special characters
+
+<br/>
+
+### Performance
+- Set appropriate `commit_limit` based on your needs
+- Lower values = faster execution
+- Typical range: 10-50 commits
+
+<br/>
+
+### Repository Setup
+- Ensure sufficient `fetch-depth` in checkout action:
+  ```yaml
+  - uses: actions/checkout@v4
+    with:
+      fetch-depth: 20  # Match or exceed commit_limit
+  ```
 
 <br/>
 
@@ -159,197 +238,216 @@ steps:
 
 <br/>
 
-### Common Issues
+### No Matches Found
 
-1. **No Matches Found**
-   - Check if commit messages contain expected patterns
-   - Verify regex pattern syntax
-   - Ensure sufficient commit depth
-   - If using fail_on_empty: true, action will fail when no matches are found
+#### Problem: Action completes but returns empty results
 
-2. **Incorrect Matches**
-   - Review regex pattern
-   - Check for conflicting patterns
-   - Verify commit message format
-
-3. **Performance Issues**
-   - Reduce commit_limit
-   - Optimize regex patterns
-   - Check repository size
-
-<br/>
-
-### Debugging Tips
-
-To debug issues with the action, follow these steps:
-
-1. **Verify your regex patterns locally first**
+#### Solutions:
+1. Verify commit messages contain expected patterns:
    ```bash
-   # Test your regex pattern with sample data
-   echo "This is a commit message with env:production tag" | grep -oP 'env:(\w+)'
+   git log -10 --pretty=%B
    ```
-
-2. **Increase verbosity for testing**
-   ```yaml
-   - name: Extract Commit Information with Debug
-     uses: somaz94/commit-info-extractor@v1
-     with:
-       commit_limit: 3  # Start with fewer commits for debugging
-       extract_command: "grep -oP 'env:(\\w+)'"
-       # Add steps to print outputs for debugging
-     
-   - name: Debug Output
-     run: |
-       echo "Key: ${{ env.key_variable }}"
-       echo "Value: ${{ env.value_variable }}"
+2. Test your regex pattern locally:
+   ```bash
+   git log -10 --pretty=%B | grep -oE 'your-pattern'
    ```
+3. Ensure `fetch-depth` in checkout is sufficient
+4. Check if `fail_on_empty` is set appropriately
 
-3. **Common regex issues to check**
-   - Escaping special characters (especially in YAML)
-   - Proper capturing groups
-   - Case sensitivity
-   - Whitespace handling
+### Incorrect Matches
+
+#### Problem: Extracting wrong or unexpected values
+
+#### Solutions:
+- Review and refine your regex pattern
+- Use more specific patterns with word boundaries
+- Test with sample commit messages first
+- Use online regex testers like [regex101.com](https://regex101.com)
+
+### Action Fails with Error
+
+#### Problem: Action exits with non-zero code
+
+#### Possible Causes:
+- `fail_on_empty: true` is set and no matches found (intended behavior)
+- Invalid regex pattern in `extract_command`
+- Git repository not available
+- Insufficient permissions
+
+#### Debug Steps:
+```yaml
+- name: Debug Commit Messages
+  run: git log -${{ inputs.commit_limit }} --pretty=%B
+
+- name: Test Extract Command
+  run: |
+    git log -10 --pretty=%B | grep -oE 'your-pattern' || echo "No matches"
+```
 
 <br/>
 
 ## Advanced Usage
 
-<br/>
+### Processing Multiple Matches
 
-### Output Formats
+When multiple values are extracted, you can process them in subsequent steps:
 
-You can specify different output formats for the extracted information:
-
+#### Text format:
 ```yaml
-steps:
-  - name: Extract Commit Information with JSON Output
-    uses: somaz94/commit-info-extractor@v1
-    with:
-      commit_limit: 10
-      extract_command: "grep -oP 'JIRA-\\d+'"
-      key_variable: 'JIRA_TICKETS'
-      output_format: 'json'  # Output as JSON array
+- name: Extract JIRA Tickets
+  id: extract
+  uses: somaz94/commit-info-extractor@v1
+  with:
+    commit_limit: 10
+    extract_command: "grep -oE 'JIRA-[0-9]+'"
+    key_variable: 'JIRA_TICKETS'
+
+- name: Process Each Ticket
+  run: |
+    while IFS= read -r ticket; do
+      echo "Processing: $ticket"
+      # Your processing logic here
+    done <<< "${{ steps.extract.outputs.value_variable }}"
 ```
 
-Available output formats:
-- `text` (default): Plain text with each match on a new line
-- `json`: JSON array format (`["value1", "value2"]`)
-- `csv`: Comma-separated values format (`value1,value2`)
-
-#### Output Format Examples:
-
-Given the extracted values: `JIRA-123`, `JIRA-456`, and `JIRA-789`
-
-**Text format output:**
-```
-JIRA-123
-JIRA-456
-JIRA-789
-```
-
-**JSON format output:**
-```json
-["JIRA-123", "JIRA-456", "JIRA-789"]
-```
-
-**CSV format output:**
-```
-JIRA-123,JIRA-456,JIRA-789
-```
-
-<br/>
-
-### Handling Multiple Matches
-
-When your extraction command returns multiple unique matches, the action will:
-1. List the number of unique matches found
-2. Set all matches as the output value (formatted according to `output_format`)
-
-You can process these multiple values in subsequent steps:
-
+#### JSON format:
 ```yaml
-steps:
-  - name: Extract Commit Information
-    id: extract_info
-    uses: somaz94/commit-info-extractor@v1
-    with:
-      commit_limit: 10
-      extract_command: "grep -oP 'JIRA-\\d+'"
-      key_variable: 'JIRA_TICKETS'
+- name: Extract as JSON
+  id: extract_json
+  uses: somaz94/commit-info-extractor@v1
+  with:
+    commit_limit: 10
+    extract_command: "grep -oE 'JIRA-[0-9]+'"
+    output_format: 'json'
 
-  - name: Process Multiple Text Matches
-    run: |
-      # Read all matches into an array
-      IFS=$'\n' read -d '' -ra TICKETS <<< "${{ steps.extract_info.outputs.value_variable }}"
-      
-      # Process each match
-      for ticket in "${TICKETS[@]}"; do
-        echo "Processing ticket: $ticket"
-        # Add your processing logic here
+- name: Process JSON Array
+  run: |
+    echo '${{ steps.extract_json.outputs.value_variable }}' | \
+      jq -r '.[]' | while read -r ticket; do
+        echo "Processing: $ticket"
       done
 ```
 
-For JSON output:
+### Combining with Other Actions
 
+#### Send to Slack:
 ```yaml
-steps:
-  - name: Extract Commit Information as JSON
-    id: extract_json
-    uses: somaz94/commit-info-extractor@v1
-    with:
-      commit_limit: 10
-      extract_command: "grep -oP 'JIRA-\\d+'"
-      key_variable: 'JIRA_TICKETS'
-      output_format: 'json'
+- name: Extract Deployment Info
+  id: deploy
+  uses: somaz94/commit-info-extractor@v1
+  with:
+    commit_limit: 5
+    extract_command: "grep -oE 'env:(\\w+)'"
+    key_variable: 'ENVIRONMENT'
 
-  - name: Process JSON Matches
-    run: |
-      # Parse the JSON array using jq
-      echo '${{ steps.extract_json.outputs.value_variable }}' | jq -c '.[]' | while read -r ticket; do
-        # Remove the surrounding quotes from the JSON string
-        ticket=$(echo $ticket | sed 's/^"//;s/"$//')
-        echo "Processing ticket: $ticket"
-        # Add your processing logic here
-      done
+- name: Notify Slack
+  uses: slackapi/slack-github-action@v1
+  with:
+    payload: |
+      {
+        "text": "Deploying to: ${{ steps.deploy.outputs.value_variable }}"
+      }
 ```
 
-<br/>
+#### Conditional Deployment:
+```yaml
+- name: Check for Production Tag
+  id: check_env
+  uses: somaz94/commit-info-extractor@v1
+  with:
+    commit_limit: 1
+    extract_command: "grep -oE 'env:production'"
+    fail_on_empty: false
 
-## Performance Considerations
-
-- When working with large repositories, consider limiting `commit_limit` to improve performance
-- Complex regex patterns in `extract_command` might impact execution time
-- The action is optimized for CI/CD workflows with typically small to medium commit history
+- name: Deploy to Production
+  if: steps.check_env.outputs.value_variable == 'env:production'
+  run: |
+    echo "Deploying to production..."
+```
 
 <br/>
 
 ## Security Considerations
 
-When using this action, keep the following security considerations in mind:
+When using this action, keep the following in mind:
 
-1. **Command Injection Prevention**
-   - The `extract_command` input executes shell commands
-   - Always validate and sanitize any user-provided inputs
-   - Avoid using unvalidated user input in extraction commands
+#### Command Injection Prevention
+- The `extract_command` executes shell commands
+- Never use untrusted user input in extraction commands
+- Always validate and sanitize inputs
 
-2. **Sensitive Information**
-   - Be careful not to extract sensitive information from commit messages
-   - Consider filtering secrets, passwords, or API keys that might have been accidentally committed
-   - Use GitHub's secret scanning features alongside this action
+#### Sensitive Information
+- Be careful not to extract secrets or credentials from commit messages
+- Use GitHub's [secret scanning](https://docs.github.com/en/code-security/secret-scanning) alongside this action
+- Consider filtering sensitive patterns
 
-3. **Permission Scopes**
-   - This action only requires read access to repository content
-   - Consider using the least privilege principle when configuring workflows
+#### Permission Scopes
+- This action only requires **read access** to repository content
+- Follow the principle of least privilege in your workflows
+
+<br/>
+
+## Local Testing
+
+Test the Python script locally without Docker:
+
+```bash
+# Clone the repository
+git clone https://github.com/somaz94/commit-info-extractor.git
+cd commit-info-extractor
+
+# Run tests
+python3 tests/test_local.py
+
+# Or test manually
+export INPUT_COMMIT_LIMIT=10
+export INPUT_EXTRACT_COMMAND="grep -oE 'feat|fix|chore'"
+export INPUT_PRETTY=true
+python3 entrypoint.py
+```
+
+See [tests/TESTING.md](tests/TESTING.md) for more details.
+
+<br/>
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for version history and updates.
 
 <br/>
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 <br/>
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please feel free to:
+- Report bugs
+- Suggest new features
+- Submit pull requests
+- Improve documentation
+
+<br/>
+
+## Support
+
+If you find this action helpful, please consider:
+- Starring the repository
+- Sharing with others
+- Contributing improvements
+
+<br/>
+
+## Related Projects
+
+- [actions/checkout](https://github.com/actions/checkout) - Checkout your repository
+- [github-script](https://github.com/actions/github-script) - Write workflows using JavaScript
+- [setup-python](https://github.com/actions/setup-python) - Set up Python environment
+
+---
+
+Made by [somaz94](https://github.com/somaz94)
 
