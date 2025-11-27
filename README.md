@@ -261,6 +261,8 @@ JIRA-123,JIRA-456,JIRA-789
 3. Ensure `fetch-depth` in checkout is sufficient
 4. Check if `fail_on_empty` is set appropriately
 
+<br/>
+
 ### Incorrect Matches
 
 #### Problem: Extracting wrong or unexpected values
@@ -270,6 +272,8 @@ JIRA-123,JIRA-456,JIRA-789
 - Use more specific patterns with word boundaries
 - Test with sample commit messages first
 - Use online regex testers like [regex101.com](https://regex101.com)
+
+<br/>
 
 ### Action Fails with Error
 
@@ -299,6 +303,8 @@ JIRA-123,JIRA-456,JIRA-789
     debug: true  # Shows detailed execution information
 ```
 
+<br/>
+
 ### Timeout Errors
 
 #### Problem: Action times out during execution
@@ -318,6 +324,8 @@ JIRA-123,JIRA-456,JIRA-789
 <br/>
 
 ## Advanced Usage
+
+<br/>
 
 ### Processing Multiple Matches
 
@@ -358,6 +366,8 @@ When multiple values are extracted, you can process them in subsequent steps:
         echo "Processing: $ticket"
       done
 ```
+
+<br/>
 
 ### Combining with Other Actions
 
