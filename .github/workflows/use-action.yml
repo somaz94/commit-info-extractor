@@ -161,6 +161,7 @@ jobs:
           pretty: true
           key_variable: debug_result
           debug: true
+          output_format: json
 
       - name: Print Debug Test Output
         run: |
