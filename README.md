@@ -40,7 +40,7 @@ A powerful GitHub Action that extracts and processes information from commit mes
 ## Inputs
 
 | Input | Description | Required | Default |
-|-------|-------------|----------|---------||
+|-------|-------------|----------|---------|
 | `commit_limit` | Number of commits to retrieve | Yes | N/A |
 | `extract_command` | Command to extract info (e.g., grep pattern) | No | N/A |
 | `pretty` | Use pretty format for Git logs | No | `false` |
