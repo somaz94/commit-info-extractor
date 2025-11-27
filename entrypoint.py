@@ -11,13 +11,13 @@ from typing import Optional, List
 def print_header(message: str) -> None:
     """Print formatted header."""
     print("\n" + "=" * 50)
-    print(f"🚀 {message}")
+    print(f"▶️ {message}")
     print("=" * 50 + "\n")
 
 
 def print_section(message: str) -> None:
     """Print formatted section."""
-    print(f"\n📋 {message}:")
+    print(f"\n{message}:")
 
 
 def print_success(message: str) -> None:
@@ -95,13 +95,16 @@ def extract_environment(commit_messages: str, extract_command: Optional[str], fa
                 input=commit_messages,
                 capture_output=True,
                 text=True,
-                check=True
+                check=True,
+                executable='/bin/bash'
             )
             
-            # Get unique values and sort
-            environment = '\n'.join(sorted(set(result.stdout.strip().split('\n'))))
-        except subprocess.CalledProcessError:
-            print_error("Failed to extract environment information")
+            # Get unique values and sort, filtering out empty lines
+            lines = [line for line in result.stdout.strip().split('\n') if line.strip()]
+            environment = '\n'.join(sorted(set(lines))) if lines else ""
+        except subprocess.CalledProcessError as e:
+            print(f"  • Command stderr: {e.stderr}", file=sys.stderr)
+            print_error(f"Failed to extract environment information: {e}")
     else:
         environment = commit_messages
     

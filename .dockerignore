@@ -59,6 +59,7 @@ ENV/
 htmlcov/
 *.test
 test_*
+tests/
 
 # OS files
 .DS_Store
