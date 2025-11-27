@@ -82,7 +82,7 @@ jobs:
         uses: ./
         with:
           commit_limit: 10
-          extract_command: grep -oP \\bfix\\b
+          extract_command: grep -oP \\bchore\\b
           pretty: true
           key_variable: environment
 
@@ -111,7 +111,7 @@ jobs:
         uses: ./
         with:
           commit_limit: 10
-          extract_command: grep -oP \\bfix\\b
+          extract_command: grep -oP \\bchore\\b
           pretty: true
           key_variable: json_result
           output_format: json
@@ -127,7 +127,7 @@ jobs:
         uses: ./
         with:
           commit_limit: 10
-          extract_command: grep -oP \\bfix\\b
+          extract_command: grep -oP \\bchore\\b
           pretty: true
           key_variable: csv_result
           output_format: csv
