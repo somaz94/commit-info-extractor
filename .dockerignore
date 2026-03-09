@@ -21,6 +21,14 @@ LICENSE
 # Backup files
 backup/
 
+# Config files
+cliff.toml
+CLAUDE.md
+CODEOWNERS
+.prettierrc.json
+.coveragerc
+requirements-dev.txt
+
 # Environment files
 .env.test
 .env

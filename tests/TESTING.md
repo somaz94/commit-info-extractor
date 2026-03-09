@@ -1,48 +1,68 @@
 # Commit Info Extractor - Local Testing Guide
 
-## 🧪 테스트 방법
+<br/>
 
-### Python으로 직접 테스트 (Docker 불필요)
+## How to Test
+
+<br/>
+
+### Run directly with Python (no Docker required)
 ```bash
 cd /path/to/commit-info-extractor
 python3 tests/test_local.py
 ```
 
-## 🔍 테스트 케이스
+<br/>
 
-### Test 1: 기본 커밋 메시지 추출
-- 최근 5개 커밋 메시지 추출
-- Pretty 포맷 사용
+## Test Cases
 
-### Test 2: grep 명령어로 키워드 추출
-- 'chore' 키워드 추출
-- 정규식 사용
+<br/>
 
-### Test 3: JSON 출력 형식
-- 커밋 메시지를 JSON 배열로 출력
+### Test 1: Basic commit message extraction
+- Extracts the last 5 commit messages
+- Uses pretty format
 
-### Test 4: CSV 출력 형식
-- 커밋 메시지를 CSV 형식으로 출력
+<br/>
 
-### Test 5: 특정 커밋 타입 추출
-- 'refactor' 타입 커밋만 추출
+### Test 2: Keyword extraction with grep
+- Extracts 'chore' keyword
+- Uses regex patterns
 
-## 📝 환경 변수
+<br/>
 
-| 변수 | 설명 | 기본값 |
-|------|------|--------|
-| INPUT_COMMIT_LIMIT | 추출할 커밋 수 | 10 |
-| INPUT_PRETTY | Pretty 포맷 사용 여부 | false |
-| INPUT_KEY_VARIABLE | 출력 변수 이름 | ENVIRONMENT |
-| INPUT_EXTRACT_COMMAND | 추출 명령어 (grep 등) | - |
-| INPUT_FAIL_ON_EMPTY | 빈 결과시 실패 여부 | false |
-| INPUT_OUTPUT_FORMAT | 출력 형식 (text/json/csv) | text |
+### Test 3: JSON output format
+- Outputs commit messages as a JSON array
 
-## 🐛 디버깅
+<br/>
 
-문제가 발생하면 다음을 확인:
+### Test 4: CSV output format
+- Outputs commit messages in CSV format
 
-1. Git 저장소인지 확인: `.git` 디렉토리 존재 여부
-2. 커밋 히스토리 확인: `git log`
-3. grep 명령어 테스트: `echo "test fix" | grep -oE '\\bfix\\b'`
-4. Python 버전 확인: `python3 --version` (3.7 이상 권장)
+<br/>
+
+### Test 5: Specific commit type extraction
+- Extracts only 'refactor' type commits
+
+<br/>
+
+## Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| INPUT_COMMIT_LIMIT | Number of commits to extract | 10 |
+| INPUT_PRETTY | Whether to use pretty format | false |
+| INPUT_KEY_VARIABLE | Output variable name | ENVIRONMENT |
+| INPUT_EXTRACT_COMMAND | Extraction command (e.g., grep) | - |
+| INPUT_FAIL_ON_EMPTY | Whether to fail on empty results | false |
+| INPUT_OUTPUT_FORMAT | Output format (text/json/csv) | text |
+
+<br/>
+
+## Debugging
+
+If issues occur, check the following:
+
+1. Verify it is a git repository: check for `.git` directory
+2. Check commit history: `git log`
+3. Test grep command: `echo "test fix" | grep -oE '\\bfix\\b'`
+4. Check Python version: `python3 --version` (3.7 or higher recommended)

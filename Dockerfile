@@ -9,8 +9,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Set the working directory inside the container    
 WORKDIR /usr/src
 
-# Copy any source file(s) required for the action
+# Copy application source
 COPY entrypoint.py .
+COPY app/ app/
 
 # Make the script executable
 RUN chmod +x entrypoint.py

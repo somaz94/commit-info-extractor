@@ -8,64 +8,86 @@ on:
     paths-ignore:
       - '.github/workflows/**'
       - '**/*.md'
-      - 'backup/**/*'
+      - 'backup/**'
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  # build-and-push-docker:
-  #   name: Build and Push Docker
-  #   runs-on: ubuntu-latest
-  #   services:
-  #     registry:
-  #       image: registry:2
-  #       ports:
-  #         - 5001:5000
+  unit-test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
 
-  #   env:
-  #     TEST_TAG: localhost:5001/actions/commit-info-extractor:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v6
-  #       with:
-  #         fetch-depth: 10
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
 
-  #     - name: Configure Git Safe Directory
-  #       run: git config --global --add safe.directory ${{ github.workspace }}
+      - name: Install Dependencies
+        run: pip install -r requirements-dev.txt
 
-  #     - name: Setup Docker BuildX
-  #       uses: docker/setup-buildx-action@v3
-  #       with:
-  #         install: true
-  #         driver-opts: network=host
+      - name: Run Tests
+        run: python -m pytest tests/ -v --cov=app --cov-report=term-missing
 
-  #     - name: Build the Container
-  #       uses: docker/build-push-action@v6
-  #       with:
-  #         context: .
-  #         push: true
-  #         tags: ${{ env.TEST_TAG }}
+  build-and-push-docker:
+    name: Build and Push Docker
+    runs-on: ubuntu-latest
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5001:5000
 
-  #     - name: Run the Container
-  #       env:
-  #         INPUT_COMMIT_LIMIT: 10
-  #         INPUT_EXTRACT_COMMAND: grep -oP \\bfix\\b
-  #         INPUT_PRETTY: true
-  #         INPUT_KEY_VARIABLE: extracted_info
-  #       run: |
-  #         docker run \
-  #         --env INPUT_COMMIT_LIMIT="${{ env.INPUT_COMMIT_LIMIT }}" \
-  #         --env INPUT_EXTRACT_COMMAND="${{ env.INPUT_EXTRACT_COMMAND }}" \
-  #         --env INPUT_PRETTY="${{ env.INPUT_PRETTY }}" \
-  #         --env INPUT_KEY_VARIABLE="${{ env.INPUT_KEY_VARIABLE }}" \
-  #         --volume ${{ github.workspace }}:/usr/src \
-  #         --rm ${{ env.TEST_TAG }}
+    env:
+      TEST_TAG: localhost:5001/actions/commit-info-extractor:latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 10
+
+      - name: Configure Git Safe Directory
+        run: git config --global --add safe.directory ${{ github.workspace }}
+
+      - name: Setup Docker BuildX
+        uses: docker/setup-buildx-action@v4
+        with:
+          install: true
+          driver-opts: network=host
+
+      - name: Build the Container
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          tags: ${{ env.TEST_TAG }}
+
+      - name: Run the Container
+        env:
+          INPUT_COMMIT_LIMIT: 10
+          INPUT_EXTRACT_COMMAND: grep -oP \\bfix\\b
+          INPUT_PRETTY: true
+          INPUT_KEY_VARIABLE: extracted_info
+        run: |
+          docker run \
+          --env INPUT_COMMIT_LIMIT="${{ env.INPUT_COMMIT_LIMIT }}" \
+          --env INPUT_EXTRACT_COMMAND="${{ env.INPUT_EXTRACT_COMMAND }}" \
+          --env INPUT_PRETTY="${{ env.INPUT_PRETTY }}" \
+          --env INPUT_KEY_VARIABLE="${{ env.INPUT_KEY_VARIABLE }}" \
+          --volume ${{ github.workspace }}:/usr/src \
+          --rm ${{ env.TEST_TAG }}
 
   test-action:
     name: Test Extract Commit Action
+    needs:
+      - unit-test
+      - build-and-push-docker
     runs-on: ubuntu-latest
 
     steps:
@@ -104,8 +126,7 @@ jobs:
       - name: Print Fail Test Output
         run: |
           echo "Fail test status: ${{ steps.extract_commit_fail.outcome }}"
-          
-      # 새롭게 추가된 output_format 기능 테스트
+
       - name: Test JSON Output Format
         id: json_format_test
         uses: ./
@@ -135,8 +156,7 @@ jobs:
       - name: Print CSV Output
         run: |
           echo "CSV Output: ${{ steps.csv_format_test.outputs.value_variable }}"
-          
-      # 여러 결과를 처리하는 기능 테스트
+
       - name: Test Multiple Results
         id: multiple_results
         uses: ./
@@ -149,14 +169,11 @@ jobs:
       - name: Process Multiple Results
         run: |
           echo "Multiple results found: ${{ steps.multiple_results.outputs.value_variable }}"
-          
-          # Read results into array and process each one
           echo "Processing each result:"
           echo "${{ steps.multiple_results.outputs.value_variable }}" | while read -r word; do
             echo "  - Found word: $word"
           done
-          
-      # 복합 시나리오 테스트: 여러 결과 + JSON 포맷
+
       - name: Test Complex Scenario
         id: complex_test
         uses: ./
@@ -171,14 +188,11 @@ jobs:
         run: |
           echo "Complex scenario results (JSON array):"
           echo "${{ steps.complex_test.outputs.value_variable }}"
-          
-          # Parse JSON and extract each value
           echo "Parsing JSON array elements:"
           echo '${{ steps.complex_test.outputs.value_variable }}' | jq -c '.[]' | while read -r item; do
             echo "  - JSON item: $item"
           done
 
-      # Debug 모드 테스트
       - name: Test Debug Mode
         id: debug_test
         uses: ./
@@ -194,7 +208,6 @@ jobs:
           echo "Debug mode test completed"
           echo "Result: ${{ steps.debug_test.outputs.value_variable }}"
 
-      # Timeout 테스트
       - name: Test Custom Timeout
         id: timeout_test
         uses: ./
@@ -209,3 +222,21 @@ jobs:
         run: |
           echo "Timeout test completed"
           echo "Result: ${{ steps.timeout_test.outputs.value_variable }}"
+
+  ci-result:
+    name: CI Result
+    if: always()
+    needs:
+      - unit-test
+      - build-and-push-docker
+      - test-action
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check all jobs
+        run: |
+          if [ "${{ contains(needs.*.result, 'failure') }}" = "true" ] || \
+             [ "${{ contains(needs.*.result, 'cancelled') }}" = "true" ]; then
+            echo "[FAIL] Some jobs failed or were cancelled"
+            exit 1
+          fi
+          echo "[PASS] All CI jobs passed"
