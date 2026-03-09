@@ -1,20 +1,62 @@
-# Commit Info Extractor - Local Testing Guide
+# Commit Info Extractor - Testing Guide
 
 <br/>
 
-## How to Test
+## Unit Tests (pytest)
+
+<br/>
+
+### Setup
+```bash
+cd /path/to/commit-info-extractor
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements-dev.txt
+```
+
+<br/>
+
+### Run Tests
+```bash
+# All tests with coverage
+python -m pytest tests/ -v --cov=app --cov-report=term-missing
+
+# Specific test file
+python -m pytest tests/test_config.py -v
+
+# Specific test class or method
+python -m pytest tests/test_formatter.py::TestFormatOutput::test_json_format -v
+```
+
+<br/>
+
+### Test Files
+
+| File | Description |
+|------|-------------|
+| `conftest.py` | Shared pytest fixtures (`clean_env`, `default_env`, `github_output_files`) |
+| `test_config.py` | AppConfig dataclass (from_env, validate) |
+| `test_extractor.py` | Shell command extraction logic |
+| `test_formatter.py` | Output formatting (text/json/csv) |
+| `test_git_client.py` | Git operations (configure, fetch) |
+| `test_output_writer.py` | GITHUB_ENV/GITHUB_OUTPUT writing |
+| `test_main.py` | End-to-end flow with mocks |
+
+<br/>
+
+## Integration Test
 
 <br/>
 
 ### Run directly with Python (no Docker required)
 ```bash
 cd /path/to/commit-info-extractor
-python3 tests/test_local.py
+python tests/test_local.py
 ```
 
 <br/>
 
-## Test Cases
+## Integration Test Cases
 
 <br/>
 
@@ -55,6 +97,8 @@ python3 tests/test_local.py
 | INPUT_EXTRACT_COMMAND | Extraction command (e.g., grep) | - |
 | INPUT_FAIL_ON_EMPTY | Whether to fail on empty results | false |
 | INPUT_OUTPUT_FORMAT | Output format (text/json/csv) | text |
+| INPUT_DEBUG | Enable debug mode | false |
+| INPUT_TIMEOUT | Command timeout in seconds | 30 |
 
 <br/>
 
@@ -65,4 +109,5 @@ If issues occur, check the following:
 1. Verify it is a git repository: check for `.git` directory
 2. Check commit history: `git log`
 3. Test grep command: `echo "test fix" | grep -oE '\\bfix\\b'`
-4. Check Python version: `python3 --version` (3.7 or higher recommended)
+4. Check Python version: `python3 --version` (3.13 or higher recommended)
+5. Enable debug mode: `export INPUT_DEBUG=true`

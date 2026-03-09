@@ -234,7 +234,7 @@ JIRA-123,JIRA-456,JIRA-789
 ### Repository Setup
 - Ensure sufficient `fetch-depth` in checkout action:
   ```yaml
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@v6
     with:
       fetch-depth: 20  # Match or exceed commit_limit
   ```
@@ -428,25 +428,54 @@ When using this action, keep the following in mind:
 
 <br/>
 
-## Local Testing
+## Project Structure
 
-Test the Python script locally without Docker:
+```
+entrypoint.py              # Thin wrapper (calls app.main.run)
+app/
+  main.py                  # Orchestration entrypoint
+  config.py                # AppConfig dataclass (from_env, validate)
+  git_client.py            # Git operations (configure, fetch commits)
+  extractor.py             # Shell command extraction logic
+  formatter.py             # Output formatting (text/json/csv)
+  output_writer.py         # GITHUB_ENV/GITHUB_OUTPUT writing
+  logger.py                # Logging utilities
+tests/
+  conftest.py              # pytest fixtures
+  test_config.py           # Config unit tests
+  test_extractor.py        # Extraction logic tests
+  test_formatter.py        # Formatter tests
+  test_git_client.py       # Git client tests
+  test_output_writer.py    # Output writer tests
+  test_main.py             # Integration tests (mocked)
+  test_local.py            # Local integration test
+```
+
+<br/>
+
+## Local Testing
 
 ```bash
 # Clone the repository
 git clone https://github.com/somaz94/commit-info-extractor.git
 cd commit-info-extractor
 
-# Run tests
-python3 tests/test_local.py
+# Unit tests with pytest (recommended)
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements-dev.txt
+python -m pytest tests/ -v --cov=app --cov-report=term-missing
+
+# Integration test (requires git repo)
+python tests/test_local.py
 
 # Or test manually
 export INPUT_COMMIT_LIMIT=10
 export INPUT_EXTRACT_COMMAND="grep -oE 'feat|fix|chore'"
 export INPUT_PRETTY=true
-export INPUT_DEBUG=true      # Enable debug mode
-export INPUT_TIMEOUT=60       # Set timeout
-python3 entrypoint.py
+export INPUT_DEBUG=true
+export INPUT_TIMEOUT=60
+python entrypoint.py
 ```
 
 See [tests/TESTING.md](tests/TESTING.md) for more details.
