@@ -36,16 +36,12 @@ requirements-dev.txt            # pytest, pytest-cov
 ## Build & Test
 
 ```bash
-# Unit tests with coverage (use venv)
-python -m venv venv && source venv/bin/activate
-pip install -r requirements-dev.txt
-python -m pytest tests/ -v --cov=app --cov-report=term-missing
-
-# Local integration test (requires git repo)
-python tests/test_local.py
-
-# Run directly with INPUT_* env vars
-python entrypoint.py
+make venv          # Create virtualenv and install dev dependencies
+make test          # Run unit tests with coverage
+make test-local    # Run local integration test
+make coverage      # Generate HTML coverage report
+make clean         # Remove venv, cache, and build artifacts
+make help          # Show all available commands
 ```
 
 ## Key Inputs

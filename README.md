@@ -460,22 +460,18 @@ tests/
 git clone https://github.com/somaz94/commit-info-extractor.git
 cd commit-info-extractor
 
-# Unit tests with pytest (recommended)
-python -m venv venv
-source venv/bin/activate
+# Using Makefile (recommended)
+make venv          # Create virtualenv and install dev dependencies
+make test          # Run unit tests with coverage
+make test-local    # Run local integration test
+make coverage      # Generate HTML coverage report
+make clean         # Remove venv, cache, and build artifacts
+make help          # Show all available commands
+
+# Or manually
+python -m venv venv && source venv/bin/activate
 pip install -r requirements-dev.txt
 python -m pytest tests/ -v --cov=app --cov-report=term-missing
-
-# Integration test (requires git repo)
-python tests/test_local.py
-
-# Or test manually
-export INPUT_COMMIT_LIMIT=10
-export INPUT_EXTRACT_COMMAND="grep -oE 'feat|fix|chore'"
-export INPUT_PRETTY=true
-export INPUT_DEBUG=true
-export INPUT_TIMEOUT=60
-python entrypoint.py
 ```
 
 See [tests/TESTING.md](tests/TESTING.md) for more details.

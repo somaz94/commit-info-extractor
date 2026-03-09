@@ -28,6 +28,7 @@ CODEOWNERS
 .prettierrc.json
 .coveragerc
 requirements-dev.txt
+Makefile
 
 # Environment files
 .env.test
