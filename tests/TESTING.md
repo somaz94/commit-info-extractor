@@ -132,6 +132,26 @@ python tests/test_local.py
 
 <br/>
 
+## Coverage Report
+
+<br/>
+
+### Terminal Output
+`make test` 또는 `make coverage` 실행 시 터미널에 파일별 커버리지와 Missing 라인이 표시됩니다.
+
+### HTML Report
+`make coverage` 실행 후 `htmlcov/index.html` 파일이 생성됩니다.
+
+```bash
+make coverage
+open htmlcov/index.html    # macOS
+# xdg-open htmlcov/index.html  # Linux
+```
+
+브라우저에서 파일별로 클릭하면 커버되지 않은 라인을 시각적으로 확인할 수 있습니다.
+
+<br/>
+
 ## Debugging
 
 If issues occur, check the following:

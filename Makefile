@@ -26,7 +26,7 @@ test-local: $(VENV)/bin/activate ## Run local integration test
 	$(PYTHON) tests/test_local.py
 
 coverage: $(VENV)/bin/activate ## Generate HTML coverage report
-	$(PYTEST) tests/ --cov=app --cov-report=html
+	$(PYTEST) tests/ --cov=app --cov-report=term-missing --cov-report=html
 	@echo "Open htmlcov/index.html in your browser"
 
 clean: ## Remove venv, cache, and build artifacts
