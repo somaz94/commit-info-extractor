@@ -1,5 +1,13 @@
 # Changelog
 
+## [v1.3.2](https://github.com/somaz94/commit-info-extractor/tree/v1.3.2) (2026-03-10)
+
+[Full Changelog](https://github.com/somaz94/commit-info-extractor/compare/v1.3.2...v1.3.2)
+
+**Merged pull requests:**
+
+- build\(deps\): bump actions/setup-python from 5 to 6 [\#9](https://github.com/somaz94/commit-info-extractor/pull/9) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v1.3.2](https://github.com/somaz94/commit-info-extractor/tree/v1.3.2) (2025-11-27)
 
 [Full Changelog](https://github.com/somaz94/commit-info-extractor/compare/v1.3.1...v1.3.2)
