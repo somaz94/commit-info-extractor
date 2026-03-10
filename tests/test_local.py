@@ -52,8 +52,10 @@ def main():
             "INPUT_PRETTY": "true",
             "INPUT_KEY_VARIABLE": "ENVIRONMENT",
             "INPUT_EXTRACT_COMMAND": "",
+            "INPUT_EXTRACT_PATTERN": "",
             "INPUT_FAIL_ON_EMPTY": "false",
             "INPUT_OUTPUT_FORMAT": "text",
+            "INPUT_COMMIT_RANGE": "",
         },
     )
 
@@ -64,8 +66,10 @@ def main():
             "INPUT_PRETTY": "true",
             "INPUT_KEY_VARIABLE": "CHORE_KEYWORD",
             "INPUT_EXTRACT_COMMAND": "grep -oE 'chore' || true",
+            "INPUT_EXTRACT_PATTERN": "",
             "INPUT_FAIL_ON_EMPTY": "false",
             "INPUT_OUTPUT_FORMAT": "text",
+            "INPUT_COMMIT_RANGE": "",
         },
     )
 
@@ -76,8 +80,10 @@ def main():
             "INPUT_PRETTY": "true",
             "INPUT_KEY_VARIABLE": "COMMITS_JSON",
             "INPUT_EXTRACT_COMMAND": "",
+            "INPUT_EXTRACT_PATTERN": "",
             "INPUT_FAIL_ON_EMPTY": "false",
             "INPUT_OUTPUT_FORMAT": "json",
+            "INPUT_COMMIT_RANGE": "",
         },
     )
 
@@ -88,8 +94,10 @@ def main():
             "INPUT_PRETTY": "true",
             "INPUT_KEY_VARIABLE": "COMMITS_CSV",
             "INPUT_EXTRACT_COMMAND": "",
+            "INPUT_EXTRACT_PATTERN": "",
             "INPUT_FAIL_ON_EMPTY": "false",
             "INPUT_OUTPUT_FORMAT": "csv",
+            "INPUT_COMMIT_RANGE": "",
         },
     )
 
@@ -100,8 +108,38 @@ def main():
             "INPUT_PRETTY": "true",
             "INPUT_KEY_VARIABLE": "REFACTOR_COMMITS",
             "INPUT_EXTRACT_COMMAND": "grep -oE 'refactor' || true",
+            "INPUT_EXTRACT_PATTERN": "",
             "INPUT_FAIL_ON_EMPTY": "false",
             "INPUT_OUTPUT_FORMAT": "text",
+            "INPUT_COMMIT_RANGE": "",
+        },
+    )
+
+    run_test(
+        "Test 6: Extract using regex pattern (extract_pattern)",
+        {
+            "INPUT_COMMIT_LIMIT": "10",
+            "INPUT_PRETTY": "true",
+            "INPUT_KEY_VARIABLE": "PATTERN_RESULT",
+            "INPUT_EXTRACT_COMMAND": "",
+            "INPUT_EXTRACT_PATTERN": r"(feat|fix|chore|refactor|docs|ci|test)",
+            "INPUT_FAIL_ON_EMPTY": "false",
+            "INPUT_OUTPUT_FORMAT": "text",
+            "INPUT_COMMIT_RANGE": "",
+        },
+    )
+
+    run_test(
+        "Test 7: Extract with commit range",
+        {
+            "INPUT_COMMIT_LIMIT": "10",
+            "INPUT_PRETTY": "true",
+            "INPUT_KEY_VARIABLE": "RANGE_RESULT",
+            "INPUT_EXTRACT_COMMAND": "",
+            "INPUT_EXTRACT_PATTERN": r"(feat|fix|chore|refactor)",
+            "INPUT_FAIL_ON_EMPTY": "false",
+            "INPUT_OUTPUT_FORMAT": "text",
+            "INPUT_COMMIT_RANGE": "HEAD~3..HEAD",
         },
     )
 

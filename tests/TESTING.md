@@ -50,7 +50,7 @@ python -m pytest tests/test_formatter.py::TestFormatOutput::test_json_format -v
 |------|-------------|
 | `conftest.py` | Shared pytest fixtures (`clean_env`, `default_env`, `github_output_files`) |
 | `test_config.py` | AppConfig dataclass (from_env, validate) |
-| `test_extractor.py` | Shell command extraction logic |
+| `test_extractor.py` | Extraction logic (command & regex pattern) |
 | `test_formatter.py` | Output formatting (text/json/csv) |
 | `test_git_client.py` | Git operations (configure, fetch) |
 | `test_output_writer.py` | GITHUB_ENV/GITHUB_OUTPUT writing |
@@ -101,6 +101,18 @@ python tests/test_local.py
 
 <br/>
 
+### Test 6: Extract using regex pattern
+- Uses `extract_pattern` instead of `extract_command`
+- Safer alternative (no shell execution)
+
+<br/>
+
+### Test 7: Commit range extraction
+- Uses `commit_range` to limit commits to a specific range
+- Combined with `extract_pattern`
+
+<br/>
+
 ## Environment Variables
 
 | Variable | Description | Default |
@@ -109,10 +121,14 @@ python tests/test_local.py
 | INPUT_PRETTY | Whether to use pretty format | false |
 | INPUT_KEY_VARIABLE | Output variable name | ENVIRONMENT |
 | INPUT_EXTRACT_COMMAND | Extraction command (e.g., grep) | - |
+| INPUT_EXTRACT_PATTERN | Regex pattern for extraction (safer alternative) | - |
+| INPUT_COMMIT_RANGE | Git commit range (e.g., HEAD~5..HEAD) | - |
 | INPUT_FAIL_ON_EMPTY | Whether to fail on empty results | false |
 | INPUT_OUTPUT_FORMAT | Output format (text/json/csv) | text |
 | INPUT_DEBUG | Enable debug mode | false |
 | INPUT_TIMEOUT | Command timeout in seconds | 30 |
+
+> **Note**: `INPUT_EXTRACT_COMMAND` and `INPUT_EXTRACT_PATTERN` are mutually exclusive.
 
 <br/>
 
