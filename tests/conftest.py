@@ -25,8 +25,10 @@ def default_env(monkeypatch, clean_env):
     monkeypatch.setenv("INPUT_PRETTY", "true")
     monkeypatch.setenv("INPUT_KEY_VARIABLE", "ENVIRONMENT")
     monkeypatch.setenv("INPUT_EXTRACT_COMMAND", "")
+    monkeypatch.setenv("INPUT_EXTRACT_PATTERN", "")
     monkeypatch.setenv("INPUT_FAIL_ON_EMPTY", "false")
     monkeypatch.setenv("INPUT_OUTPUT_FORMAT", "text")
+    monkeypatch.setenv("INPUT_COMMIT_RANGE", "")
     monkeypatch.setenv("INPUT_DEBUG", "false")
 
 

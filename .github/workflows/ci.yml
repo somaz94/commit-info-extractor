@@ -193,6 +193,35 @@ jobs:
             echo "  - JSON item: $item"
           done
 
+      - name: Test Extract Pattern
+        id: pattern_test
+        uses: ./
+        with:
+          commit_limit: 10
+          extract_pattern: '(feat|fix|chore|refactor|docs|ci|test)'
+          pretty: true
+          key_variable: pattern_result
+
+      - name: Print Pattern Test Output
+        run: |
+          echo "Pattern result: ${{ steps.pattern_test.outputs.value_variable }}"
+          echo "Match count: ${{ steps.pattern_test.outputs.match_count }}"
+
+      - name: Test Commit Range
+        id: range_test
+        uses: ./
+        with:
+          commit_limit: 10
+          commit_range: 'HEAD~3..HEAD'
+          extract_pattern: '(feat|fix|chore|refactor|docs|ci|test)'
+          pretty: true
+          key_variable: range_result
+
+      - name: Print Range Test Output
+        run: |
+          echo "Range result: ${{ steps.range_test.outputs.value_variable }}"
+          echo "Match count: ${{ steps.range_test.outputs.match_count }}"
+
       - name: Test Debug Mode
         id: debug_test
         uses: ./

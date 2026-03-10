@@ -6,36 +6,48 @@ from datetime import datetime
 from app.logger import print_error, print_section, print_success
 
 
-def set_output_variables(environment: str, key_variable: str) -> None:
+def set_output_variables(
+    environment: str, key_variable: str, match_count: int = 0
+) -> None:
     """Set output variables for GitHub Actions.
 
     Args:
         environment: The value to set.
         key_variable: The name of the key variable.
+        match_count: Number of extracted matches.
     """
     print_section("Setting Output Variables")
 
     output_var = key_variable or "ENVIRONMENT"
     print(f"  - Key Variable: {output_var}")
+    print(f"  - Match Count: {match_count}")
 
     github_env = os.getenv("GITHUB_ENV")
     github_output = os.getenv("GITHUB_OUTPUT")
 
     if github_env and github_output:
-        _write_github_outputs(environment, output_var, github_env, github_output)
+        _write_github_outputs(
+            environment, output_var, match_count, github_env, github_output
+        )
     else:
         print_success("Local execution - variables would be set as:")
         print(f"  - {output_var}={environment}")
+        print(f"  - match_count={match_count}")
 
 
 def _write_github_outputs(
-    environment: str, output_var: str, github_env: str, github_output: str
+    environment: str,
+    output_var: str,
+    match_count: int,
+    github_env: str,
+    github_output: str,
 ) -> None:
     """Write values to GITHUB_ENV and GITHUB_OUTPUT files.
 
     Args:
         environment: The value to write.
         output_var: Variable name.
+        match_count: Number of extracted matches.
         github_env: Path to GITHUB_ENV file.
         github_output: Path to GITHUB_OUTPUT file.
     """
@@ -48,6 +60,7 @@ def _write_github_outputs(
                 f.write(f"{environment}\n")
                 f.write(f"{delimiter}\n")
                 f.write(f"key_variable={output_var}\n")
+                f.write(f"match_count={match_count}\n")
 
         print_success("Variables set in GitHub Actions environment")
     except IOError as e:

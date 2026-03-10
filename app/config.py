@@ -17,8 +17,10 @@ class AppConfig:
     pretty: str
     key_variable: str
     extract_command: str
+    extract_pattern: str
     fail_on_empty: str
     output_format: str
+    commit_range: str
     debug: bool
 
     @classmethod
@@ -38,8 +40,10 @@ class AppConfig:
             pretty=os.getenv("INPUT_PRETTY", "false"),
             key_variable=os.getenv("INPUT_KEY_VARIABLE", "ENVIRONMENT"),
             extract_command=os.getenv("INPUT_EXTRACT_COMMAND", ""),
+            extract_pattern=os.getenv("INPUT_EXTRACT_PATTERN", ""),
             fail_on_empty=os.getenv("INPUT_FAIL_ON_EMPTY", "false"),
             output_format=os.getenv("INPUT_OUTPUT_FORMAT", "text").lower(),
+            commit_range=os.getenv("INPUT_COMMIT_RANGE", ""),
             debug=debug,
         )
 
@@ -57,4 +61,8 @@ class AppConfig:
             raise ValueError(
                 f"Invalid output_format: {self.output_format}. "
                 f"Must be {', '.join(VALID_OUTPUT_FORMATS)}"
+            )
+        if self.extract_command and self.extract_pattern:
+            raise ValueError(
+                "Cannot use both extract_command and extract_pattern. Choose one."
             )

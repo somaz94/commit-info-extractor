@@ -43,12 +43,16 @@ A powerful GitHub Action that extracts and processes information from commit mes
 |-------|-------------|----------|---------|
 | `commit_limit` | Number of commits to retrieve | Yes | N/A |
 | `extract_command` | Command to extract info (e.g., grep pattern) | No | N/A |
+| `extract_pattern` | Regex pattern to extract info (safer alternative to `extract_command`) | No | N/A |
+| `commit_range` | Git commit range (e.g., `HEAD~5..HEAD`, `v1.0.0..v1.1.0`) | No | N/A |
 | `pretty` | Use pretty format for Git logs | No | `false` |
 | `key_variable` | Name of the output variable | No | `ENVIRONMENT` |
 | `fail_on_empty` | Fail if no information is extracted | No | `false` |
 | `output_format` | Output format: `text`, `json`, or `csv` | No | `text` |
 | `debug` | Enable debug mode for verbose output | No | `false` |
 | `timeout` | Timeout in seconds for git/extract commands | No | `30` |
+
+> **Note**: `extract_command` and `extract_pattern` are mutually exclusive. Use `extract_pattern` for safer regex matching without shell execution.
 
 <br/>
 
@@ -58,6 +62,7 @@ A powerful GitHub Action that extracts and processes information from commit mes
 |--------|-------------|
 | `key_variable` | The name of the variable used |
 | `value_variable` | The extracted value(s) from commits |
+| `match_count` | Number of extracted matches |
 
 <br/>
 
@@ -138,6 +143,47 @@ A powerful GitHub Action that extracts and processes information from commit mes
 
 <br/>
 
+### Extract Using Regex Pattern (Safe)
+
+```yaml
+- name: Extract JIRA Tickets (Pattern)
+  id: jira_pattern
+  uses: somaz94/commit-info-extractor@v1
+  with:
+    commit_limit: 10
+    extract_pattern: 'JIRA-[0-9]+'
+    key_variable: 'JIRA_TICKETS'
+
+- name: Check Match Count
+  run: |
+    echo "Found ${{ steps.jira_pattern.outputs.match_count }} tickets"
+    echo "Tickets: ${{ steps.jira_pattern.outputs.value_variable }}"
+```
+
+<br/>
+
+### Extract from Commit Range
+
+```yaml
+- name: Extract Changes Between Tags
+  uses: somaz94/commit-info-extractor@v1
+  with:
+    commit_limit: 10
+    commit_range: 'v1.0.0..v1.1.0'
+    extract_pattern: '(feat|fix|chore):'
+    key_variable: 'CHANGE_TYPES'
+
+- name: Extract Recent Changes
+  uses: somaz94/commit-info-extractor@v1
+  with:
+    commit_limit: 10
+    commit_range: 'HEAD~5..HEAD'
+    extract_pattern: 'env:(\w+)'
+    key_variable: 'DEPLOY_ENV'
+```
+
+<br/>
+
 ### Debug Mode for Troubleshooting
 
 ```yaml
@@ -200,6 +246,22 @@ JIRA-123,JIRA-456,JIRA-789
 | Conventional Commits | `grep -oE '^(feat|fix|chore|docs):'` | `feat:`, `fix:` |
 
 > **Note**: Use `grep -oE` (Extended regex) instead of `grep -oP` (Perl regex) for better compatibility.
+
+<br/>
+
+## Extract Pattern Examples
+
+`extract_pattern` uses Python's `re` module for safe regex matching without shell execution.
+
+| Purpose | Pattern | Example Match |
+|---------|---------|---------------|
+| Environment | `env:(\w+)` | `production` (captured group) |
+| JIRA IDs | `JIRA-[0-9]+` | `JIRA-456` |
+| Versions | `v\d+\.\d+\.\d+` | `v1.2.3` |
+| Conventional Commits | `(feat\|fix\|chore\|docs):` | `feat:`, `fix:` |
+| PR Numbers | `#(\d+)` | `123` (captured group) |
+
+> **Note**: When using capture groups `()`, only the captured portion is returned. Without groups, the full match is returned.
 
 <br/>
 
@@ -413,8 +475,8 @@ When multiple values are extracted, you can process them in subsequent steps:
 When using this action, keep the following in mind:
 
 #### Command Injection Prevention
-- The `extract_command` executes shell commands
-- Never use untrusted user input in extraction commands
+- The `extract_command` executes shell commands — never use untrusted user input
+- Prefer `extract_pattern` over `extract_command` for safer regex matching (no shell execution)
 - Always validate and sanitize inputs
 
 #### Sensitive Information
@@ -436,7 +498,7 @@ app/
   main.py                  # Orchestration entrypoint
   config.py                # AppConfig dataclass (from_env, validate)
   git_client.py            # Git operations (configure, fetch commits)
-  extractor.py             # Shell command extraction logic
+  extractor.py             # Extraction logic (command & regex pattern)
   formatter.py             # Output formatting (text/json/csv)
   output_writer.py         # GITHUB_ENV/GITHUB_OUTPUT writing
   logger.py                # Logging utilities

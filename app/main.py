@@ -27,18 +27,20 @@ def run() -> None:
     print_header("Environment Variable Extractor")
     print_debug(f"Debug mode: {config.debug}")
     print_debug(f"Commit limit: {config.commit_limit}")
+    print_debug(f"Commit range: {config.commit_range or 'N/A'}")
     print_debug(f"Timeout: {config.timeout}s")
     print_debug(f"Output format: {config.output_format}")
 
     configure_git()
 
     commit_messages = fetch_commit_messages(
-        config.commit_limit, config.pretty, config.timeout
+        config.commit_limit, config.pretty, config.timeout, config.commit_range
     )
 
-    environment = extract_info(
+    environment, match_count = extract_info(
         commit_messages,
         config.extract_command or None,
+        config.extract_pattern or None,
         config.fail_on_empty,
         config.timeout,
     )
@@ -46,6 +48,6 @@ def run() -> None:
     if environment.strip():
         environment = format_output(environment, config.output_format)
 
-    set_output_variables(environment, config.key_variable)
+    set_output_variables(environment, config.key_variable, match_count)
 
     print_header("Process Completed Successfully")

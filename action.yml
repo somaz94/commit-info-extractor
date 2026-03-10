@@ -20,6 +20,14 @@ inputs:
     description:
       'The command to use for extracting information from commit messages.'
     required: false
+  extract_pattern:
+    description:
+      'Regex pattern to extract information from commit messages (safer alternative to extract_command). Cannot be used together with extract_command.'
+    required: false
+  commit_range:
+    description:
+      'Git commit range (e.g., "HEAD~5..HEAD", "v1.0.0..v1.1.0"). Takes priority over commit_limit when specified.'
+    required: false
   fail_on_empty:
     description: 'Whether to fail the action if no environment information is extracted.'
     required: false
@@ -41,6 +49,8 @@ outputs:
     description: 'Extracted output key variable information.'
   value_variable:
     description: 'Extracted output value variable information.'
+  match_count:
+    description: 'Number of extracted matches.'
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -49,6 +59,8 @@ runs:
     INPUT_PRETTY: ${{ inputs.pretty }}
     INPUT_KEY_VARIABLE: ${{ inputs.key_variable }}
     INPUT_EXTRACT_COMMAND: ${{ inputs.extract_command }}
+    INPUT_EXTRACT_PATTERN: ${{ inputs.extract_pattern }}
+    INPUT_COMMIT_RANGE: ${{ inputs.commit_range }}
     INPUT_FAIL_ON_EMPTY: ${{ inputs.fail_on_empty }}
     INPUT_OUTPUT_FORMAT: ${{ inputs.output_format }}
     INPUT_DEBUG: ${{ inputs.debug }}

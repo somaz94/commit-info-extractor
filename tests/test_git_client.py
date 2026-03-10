@@ -40,3 +40,20 @@ class TestFetchCommitMessages:
         fetch_commit_messages(5, "false", 10)
         cmd = mock_run.call_args[0][0]
         assert "--pretty=%B" not in cmd
+
+    @patch("app.git_client.subprocess.run")
+    @patch("app.git_client.os.path.isdir", return_value=True)
+    def test_commit_range(self, mock_isdir, mock_run):
+        mock_run.return_value.stdout = "feat: login\n"
+        fetch_commit_messages(5, "true", 10, commit_range="HEAD~3..HEAD")
+        cmd = mock_run.call_args[0][0]
+        assert "HEAD~3..HEAD" in cmd
+        assert "-5" not in cmd
+
+    @patch("app.git_client.subprocess.run")
+    @patch("app.git_client.os.path.isdir", return_value=True)
+    def test_no_commit_range_uses_limit(self, mock_isdir, mock_run):
+        mock_run.return_value.stdout = "feat: login\n"
+        fetch_commit_messages(5, "true", 10)
+        cmd = mock_run.call_args[0][0]
+        assert "-5" in cmd

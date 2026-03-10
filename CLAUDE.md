@@ -11,7 +11,7 @@ app/
   main.py                       # Orchestration entrypoint
   config.py                     # AppConfig dataclass (from_env, validate)
   git_client.py                 # Git operations (configure, fetch commits)
-  extractor.py                  # Shell command extraction logic
+  extractor.py                  # Extraction logic (command & regex pattern)
   formatter.py                  # Output formatting (text/json/csv)
   output_writer.py              # GITHUB_ENV/GITHUB_OUTPUT writing
   logger.py                     # Logging utilities (header, debug, error)
@@ -28,7 +28,7 @@ tests/
 backup/
   entrypoint.py                 # Original single-file entrypoint
 Dockerfile                      # Single-stage (python:3.14-slim)
-action.yml                      # GitHub Action definition (8 inputs, 2 outputs)
+action.yml                      # GitHub Action definition (10 inputs, 3 outputs)
 requirements-dev.txt            # pytest, pytest-cov
 .coveragerc                     # Coverage config
 ```
@@ -47,12 +47,13 @@ make help          # Show all available commands
 ## Key Inputs
 
 - **Required**: `commit_limit`
-- **Options**: `extract_command`, `pretty`, `key_variable`, `fail_on_empty`, `output_format` (text/json/csv)
+- **Options**: `extract_command`, `extract_pattern`, `pretty`, `key_variable`, `fail_on_empty`, `output_format` (text/json/csv), `commit_range`
 - **Advanced**: `debug`, `timeout`
+- **Note**: `extract_command` and `extract_pattern` are mutually exclusive
 
 ## Outputs
 
-`key_variable`, `value_variable`
+`key_variable`, `value_variable`, `match_count`
 
 ## Workflow Structure
 

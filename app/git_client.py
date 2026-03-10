@@ -26,13 +26,16 @@ def configure_git() -> None:
     print_success("Git configuration completed")
 
 
-def fetch_commit_messages(commit_limit: int, pretty: str, timeout: int) -> str:
+def fetch_commit_messages(
+    commit_limit: int, pretty: str, timeout: int, commit_range: str = ""
+) -> str:
     """Fetch commit messages from git repository.
 
     Args:
         commit_limit: Number of commits to retrieve.
         pretty: Whether to use pretty format.
         timeout: Command timeout in seconds.
+        commit_range: Git commit range (e.g., "HEAD~5..HEAD", "v1.0.0..v1.1.0").
 
     Returns:
         Commit messages as string.
@@ -43,7 +46,14 @@ def fetch_commit_messages(commit_limit: int, pretty: str, timeout: int) -> str:
         print("  - No git repository available")
         return "No commit messages available."
 
-    cmd = ["git", "log", f"-{commit_limit}"]
+    cmd = ["git", "log"]
+
+    if commit_range:
+        cmd.append(commit_range)
+        print_debug(f"Using commit range: {commit_range}")
+    else:
+        cmd.append(f"-{commit_limit}")
+
     if pretty and pretty.lower() != "false":
         cmd.append("--pretty=%B")
 
@@ -60,7 +70,8 @@ def fetch_commit_messages(commit_limit: int, pretty: str, timeout: int) -> str:
 
         commit_messages = result.stdout
         if commit_messages:
-            print(f"  - Last {commit_limit} commits:")
+            label = f"range {commit_range}" if commit_range else f"last {commit_limit} commits"
+            print(f"  - {label}:")
             for line in commit_messages.split("\n"):
                 if line:
                     print(f"    {line}")

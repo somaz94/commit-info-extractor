@@ -1,5 +1,6 @@
-"""Extract information from commit messages using shell commands."""
+"""Extract information from commit messages using shell commands or regex patterns."""
 
+import re
 import subprocess
 
 from app.logger import print_debug, print_error, print_section
@@ -8,29 +9,38 @@ from app.logger import print_debug, print_error, print_section
 def extract_info(
     commit_messages: str,
     extract_command: str | None,
+    extract_pattern: str | None,
     fail_on_empty: str,
     timeout: int,
-) -> str:
+) -> tuple[str, int]:
     """Extract information from commit messages.
 
     Args:
         commit_messages: Input commit messages.
         extract_command: Shell command to extract info.
+        extract_pattern: Regex pattern to extract info (safer alternative).
         fail_on_empty: Whether to fail on empty results.
         timeout: Command timeout in seconds.
 
     Returns:
-        Extracted information as string.
+        Tuple of (extracted information, match count).
     """
     print_section("Extracting Environment Information")
 
-    if not extract_command:
-        return commit_messages
+    if not extract_command and not extract_pattern:
+        lines = [line for line in commit_messages.strip().split("\n") if line.strip()]
+        return commit_messages, len(lines)
 
-    print(f"  - Using extract command: {extract_command}")
+    if extract_pattern:
+        print(f"  - Using extract pattern: {extract_pattern}")
+        environment = _run_extract_pattern(commit_messages, extract_pattern)
+    else:
+        print(f"  - Using extract command: {extract_command}")
+        environment = _run_extract_command(commit_messages, extract_command, timeout)
+
     print_debug(f"Input length: {len(commit_messages)} characters")
 
-    environment = _run_extract_command(commit_messages, extract_command, timeout)
+    match_count = len([line for line in environment.split("\n") if line.strip()]) if environment.strip() else 0
 
     if not environment.strip() and fail_on_empty.lower() == "true":
         print_error(
@@ -38,12 +48,34 @@ def extract_info(
         )
 
     if environment.strip():
-        lines = [line for line in environment.split("\n") if line]
-        if len(lines) > 1:
-            print(f"  - Found {len(lines)} unique matches")
+        if match_count > 1:
+            print(f"  - Found {match_count} unique matches")
         print(f"  - Extracted value: {environment}")
 
-    return environment
+    return environment, match_count
+
+
+def _run_extract_pattern(commit_messages: str, pattern: str) -> str:
+    """Extract matches using Python regex pattern.
+
+    Args:
+        commit_messages: Input text.
+        pattern: Regex pattern to match.
+
+    Returns:
+        Deduplicated, sorted extraction result.
+    """
+    try:
+        compiled = re.compile(pattern)
+    except re.error as e:
+        print_error(f"Invalid regex pattern '{pattern}': {e}")
+        return ""
+
+    matches = compiled.findall(commit_messages)
+    print_debug(f"Pattern matched {len(matches)} times")
+
+    unique = sorted(set(matches))
+    return "\n".join(unique) if unique else ""
 
 
 def _run_extract_command(

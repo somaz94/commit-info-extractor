@@ -11,8 +11,10 @@ class TestAppConfig:
         assert config.pretty == "false"
         assert config.key_variable == "ENVIRONMENT"
         assert config.extract_command == ""
+        assert config.extract_pattern == ""
         assert config.fail_on_empty == "false"
         assert config.output_format == "text"
+        assert config.commit_range == ""
         assert config.debug is False
 
     def test_from_env_custom(self, clean_env, monkeypatch):
@@ -66,6 +68,23 @@ class TestAppConfig:
         config = AppConfig.from_env()
         with pytest.raises(ValueError, match="Invalid output_format"):
             config.validate()
+
+    def test_validate_mutual_exclusion(self, clean_env, monkeypatch):
+        monkeypatch.setenv("INPUT_EXTRACT_COMMAND", "grep -oE 'feat'")
+        monkeypatch.setenv("INPUT_EXTRACT_PATTERN", "feat")
+        config = AppConfig.from_env()
+        with pytest.raises(ValueError, match="Cannot use both"):
+            config.validate()
+
+    def test_from_env_extract_pattern(self, clean_env, monkeypatch):
+        monkeypatch.setenv("INPUT_EXTRACT_PATTERN", r"feat:\s+\w+")
+        config = AppConfig.from_env()
+        assert config.extract_pattern == r"feat:\s+\w+"
+
+    def test_from_env_commit_range(self, clean_env, monkeypatch):
+        monkeypatch.setenv("INPUT_COMMIT_RANGE", "HEAD~5..HEAD")
+        config = AppConfig.from_env()
+        assert config.commit_range == "HEAD~5..HEAD"
 
     def test_valid_output_formats(self):
         assert VALID_OUTPUT_FORMATS == ("text", "json", "csv")
