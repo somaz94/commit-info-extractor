@@ -55,9 +55,12 @@ jobs:
           commit_limit: '5'
 
       - name: Verify output
+        env:
+          KEY_VAR: ${{ steps.extract-default.outputs.key_variable }}
+          VALUE_VAR: ${{ steps.extract-default.outputs.value_variable }}
         run: |
-          echo "key_variable=${{ steps.extract-default.outputs.key_variable }}"
-          echo "value_variable=${{ steps.extract-default.outputs.value_variable }}"
+          echo "key_variable=$KEY_VAR"
+          echo "value_variable=$VALUE_VAR"
           echo "PASS: basic extraction completed"
 
   test-pattern-extraction:
@@ -80,8 +83,10 @@ jobs:
           debug: 'true'
 
       - name: Verify pattern output
+        env:
+          MATCH_COUNT: ${{ steps.extract-pattern.outputs.match_count }}
         run: |
-          echo "match_count=${{ steps.extract-pattern.outputs.match_count }}"
+          echo "match_count=$MATCH_COUNT"
           echo "PASS: pattern extraction completed"
 
   test-options:
@@ -126,7 +131,10 @@ jobs:
           key_variable: ${{ matrix.key_variable || 'ENVIRONMENT' }}
 
       - name: Verify output
+        env:
+          KEY_VAR: ${{ steps.extract.outputs.key_variable }}
+          VALUE_VAR: ${{ steps.extract.outputs.value_variable }}
         run: |
-          echo "key=${{ steps.extract.outputs.key_variable }}"
-          echo "value=${{ steps.extract.outputs.value_variable }}"
+          echo "key=$KEY_VAR"
+          echo "value=$VALUE_VAR"
           echo "PASS: ${{ matrix.name }} completed"

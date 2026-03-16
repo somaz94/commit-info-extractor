@@ -35,9 +35,12 @@ jobs:
           commit_limit: '5'
 
       - name: Verify Default Output
+        env:
+          KEY_VAR: ${{ steps.extract-default.outputs.key_variable }}
+          VALUE_VAR: ${{ steps.extract-default.outputs.value_variable }}
         run: |
-          echo "key_variable=${{ steps.extract-default.outputs.key_variable }}"
-          echo "value_variable=${{ steps.extract-default.outputs.value_variable }}"
+          echo "key_variable=$KEY_VAR"
+          echo "value_variable=$VALUE_VAR"
           echo "PASS: default extraction completed"
 
   smoke-test-pattern:
@@ -59,8 +62,10 @@ jobs:
           output_format: 'json'
 
       - name: Verify Pattern Output
+        env:
+          MATCH_COUNT: ${{ steps.extract-pattern.outputs.match_count }}
         run: |
-          echo "match_count=${{ steps.extract-pattern.outputs.match_count }}"
+          echo "match_count=$MATCH_COUNT"
           echo "PASS: pattern extraction completed"
 
   smoke-test-options:
@@ -84,6 +89,8 @@ jobs:
           debug: 'true'
 
       - name: Verify Custom Output
+        env:
+          KEY_VAR: ${{ steps.extract-custom.outputs.key_variable }}
         run: |
-          echo "key_variable=${{ steps.extract-custom.outputs.key_variable }}"
+          echo "key_variable=$KEY_VAR"
           echo "PASS: custom options completed"
