@@ -1,0 +1,132 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/workflows/**'
+      - '**/*.md'
+      - 'backup/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: pip install pytest pytest-cov
+
+      - name: Run tests with coverage
+        run: |
+          python -m pytest tests/ \
+            --cov=app \
+            --cov-report=term-missing \
+            --cov-fail-under=90 \
+            -v
+
+  test-basic-extraction:
+    name: Test Basic Extraction
+    runs-on: ubuntu-latest
+    needs: [unit-tests]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 10
+
+      - name: Test default extraction
+        id: extract-default
+        uses: ./
+        with:
+          commit_limit: '5'
+
+      - name: Verify output
+        run: |
+          echo "key_variable=${{ steps.extract-default.outputs.key_variable }}"
+          echo "value_variable=${{ steps.extract-default.outputs.value_variable }}"
+          echo "PASS: basic extraction completed"
+
+  test-pattern-extraction:
+    name: Test Pattern Extraction
+    runs-on: ubuntu-latest
+    needs: [unit-tests]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 10
+
+      - name: Test with extract_pattern
+        id: extract-pattern
+        uses: ./
+        with:
+          commit_limit: '5'
+          extract_pattern: '(feat|fix|docs|chore):'
+          output_format: 'json'
+          debug: 'true'
+
+      - name: Verify pattern output
+        run: |
+          echo "match_count=${{ steps.extract-pattern.outputs.match_count }}"
+          echo "PASS: pattern extraction completed"
+
+  test-options:
+    name: Test Options
+    runs-on: ubuntu-latest
+    needs: [unit-tests]
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: pretty-format
+            pretty: 'true'
+            commit_limit: '3'
+            output_format: 'text'
+          - name: json-output
+            pretty: 'false'
+            commit_limit: '5'
+            output_format: 'json'
+          - name: csv-output
+            pretty: 'false'
+            commit_limit: '5'
+            output_format: 'csv'
+          - name: custom-key
+            pretty: 'false'
+            commit_limit: '3'
+            output_format: 'text'
+            key_variable: 'DEPLOY_ENV'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 10
+
+      - name: Test ${{ matrix.name }}
+        id: extract
+        uses: ./
+        with:
+          commit_limit: ${{ matrix.commit_limit }}
+          pretty: ${{ matrix.pretty }}
+          output_format: ${{ matrix.output_format }}
+          key_variable: ${{ matrix.key_variable || 'ENVIRONMENT' }}
+
+      - name: Verify output
+        run: |
+          echo "key=${{ steps.extract.outputs.key_variable }}"
+          echo "value=${{ steps.extract.outputs.value_variable }}"
+          echo "PASS: ${{ matrix.name }} completed"
