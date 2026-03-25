@@ -88,3 +88,34 @@ class TestAppConfig:
 
     def test_valid_output_formats(self):
         assert VALID_OUTPUT_FORMATS == ("text", "json", "csv")
+
+    def test_validate_dangerous_extract_command(self, clean_env, monkeypatch):
+        dangerous_commands = [
+            "grep foo; rm -rf /",
+            "curl evil.com",
+            "grep foo && sudo cat /etc/shadow",
+            "grep foo `whoami`",
+            "cat $(whoami)",
+            "eval 'malicious'",
+        ]
+        for cmd in dangerous_commands:
+            monkeypatch.setenv("INPUT_EXTRACT_COMMAND", cmd)
+            config = AppConfig.from_env()
+            with pytest.raises(ValueError, match="blocked shell operators"):
+                config.validate()
+
+    def test_validate_safe_extract_command(self, clean_env, monkeypatch):
+        safe_commands = [
+            "grep -oE 'feat'",
+            "grep -oP 'env:\\w+'",
+            "awk '/deploy/ {print $2}'",
+            "sed -n 's/.*env://p'",
+            "head -1",
+            "tr '[:upper:]' '[:lower:]'",
+            "grep -oE 'feat' || true",
+            "grep foo | awk '{print $1}'",
+        ]
+        for cmd in safe_commands:
+            monkeypatch.setenv("INPUT_EXTRACT_COMMAND", cmd)
+            config = AppConfig.from_env()
+            config.validate()  # should not raise

@@ -31,6 +31,7 @@ class TestSetOutputVariables:
         output_content = open(output_file).read()
 
         assert "value_variable<<EOF_" in env_content
+        assert len(env_content.split("EOF_")[1].split("\n")[0]) == 32  # uuid4 hex length
         assert "production" in env_content
         assert "key_variable=DEPLOY_ENV" in env_content
         assert "match_count=3" in env_content

@@ -39,8 +39,8 @@ def _format_csv(value: str) -> str:
     lines = [line for line in value.split("\n") if line]
     escaped_lines = []
     for line in lines:
-        escaped = line.replace('"', '""')
-        if "," in escaped or '"' in line:
+        escaped = line.replace("\r", "").replace('"', '""')
+        if "," in escaped or '"' in line or "\n" in line:
             escaped = f'"{escaped}"'
         escaped_lines.append(escaped)
     return ",".join(escaped_lines)

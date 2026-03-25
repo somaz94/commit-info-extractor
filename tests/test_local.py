@@ -25,14 +25,9 @@ def run_test(test_name: str, env_vars: dict) -> None:
 
     try:
         run()
-        print(f"[PASS] Test completed successfully")
-    except SystemExit as e:
-        if e.code != 0:
-            print(f"[FAIL] Test failed with exit code {e.code}")
-        else:
-            print(f"[PASS] Test completed successfully")
+        print("[PASS] Test completed successfully")
     except Exception as e:
-        print(f"[FAIL] Test failed with exception: {e}")
+        print(f"[FAIL] Test failed: {e}")
 
 
 def main():

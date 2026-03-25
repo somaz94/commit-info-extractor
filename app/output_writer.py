@@ -1,7 +1,7 @@
 """Write output variables for GitHub Actions."""
 
 import os
-from datetime import datetime
+import uuid
 
 from app.logger import print_error, print_section, print_success
 
@@ -51,7 +51,7 @@ def _write_github_outputs(
         github_env: Path to GITHUB_ENV file.
         github_output: Path to GITHUB_OUTPUT file.
     """
-    delimiter = f"EOF_{int(datetime.now().timestamp())}"
+    delimiter = f"EOF_{uuid.uuid4().hex}"
 
     try:
         for filepath in (github_env, github_output):

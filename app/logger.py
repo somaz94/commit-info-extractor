@@ -2,6 +2,11 @@
 
 import sys
 
+
+class ActionError(RuntimeError):
+    """Raised when the action encounters a fatal error."""
+
+
 # Global debug flag
 _debug = False
 
@@ -41,6 +46,6 @@ def print_success(message: str) -> None:
 
 
 def print_error(message: str) -> None:
-    """Print error message and exit."""
+    """Print error message and raise ActionError."""
     print(f"[ERROR] {message}", file=sys.stderr)
-    sys.exit(1)
+    raise ActionError(message)

@@ -1,6 +1,7 @@
 import pytest
 
 from app.extractor import extract_info, _run_extract_command, _run_extract_pattern
+from app.logger import ActionError
 
 
 class TestRunExtractCommand:
@@ -21,7 +22,7 @@ class TestRunExtractCommand:
         assert result == "apple\nbanana\ncherry"
 
     def test_timeout(self):
-        with pytest.raises(SystemExit):
+        with pytest.raises(ActionError):
             _run_extract_command("test", "sleep 10", 1)
 
 
@@ -44,7 +45,7 @@ class TestRunExtractPattern:
         assert result == "apple\nbanana\ncherry"
 
     def test_invalid_regex(self):
-        with pytest.raises(SystemExit):
+        with pytest.raises(ActionError):
             _run_extract_pattern("test", r"[invalid")
 
 
@@ -72,7 +73,7 @@ class TestExtractInfo:
         assert count == 2
 
     def test_fail_on_empty_true_with_pattern(self):
-        with pytest.raises(SystemExit):
+        with pytest.raises(ActionError):
             extract_info("hello", None, r"nonexistent", "true", 10)
 
     def test_fail_on_empty_false_returns_empty(self):

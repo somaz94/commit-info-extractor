@@ -1,13 +1,19 @@
 #!/usr/bin/env python3
 """Entrypoint for commit-info-extractor GitHub Action."""
 
-from app.logger import print_error
+import sys
+
+from app.logger import ActionError
 from app.main import run
 
 if __name__ == "__main__":
     try:
         run()
+    except ActionError:
+        sys.exit(1)
     except KeyboardInterrupt:
-        print_error("Process interrupted by user")
+        print("[ERROR] Process interrupted by user", file=sys.stderr)
+        sys.exit(1)
     except Exception as e:
-        print_error(f"Unexpected error: {str(e)}")
+        print(f"[ERROR] Unexpected error: {str(e)}", file=sys.stderr)
+        sys.exit(1)

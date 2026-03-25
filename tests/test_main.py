@@ -2,18 +2,19 @@ from unittest.mock import patch
 
 import pytest
 
+from app.logger import ActionError
 from app.main import run
 
 
 class TestRun:
     def test_invalid_config_exits(self, clean_env, monkeypatch):
         monkeypatch.setenv("INPUT_COMMIT_LIMIT", "abc")
-        with pytest.raises(SystemExit):
+        with pytest.raises(ActionError):
             run()
 
     def test_invalid_validation_exits(self, clean_env, monkeypatch):
         monkeypatch.setenv("INPUT_COMMIT_LIMIT", "0")
-        with pytest.raises(SystemExit):
+        with pytest.raises(ActionError):
             run()
 
     @patch("app.main.configure_git")

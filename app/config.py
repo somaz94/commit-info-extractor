@@ -1,11 +1,31 @@
 """Input configuration parsing and validation."""
 
 import os
+import re
 from dataclasses import dataclass
 
 DEFAULT_TIMEOUT = 30
 DEFAULT_COMMIT_LIMIT = 10
 VALID_OUTPUT_FORMATS = ("text", "json", "csv")
+
+# Dangerous patterns blocked in extract_command
+DANGEROUS_PATTERNS = re.compile(
+    r"[;&`]"          # shell chaining (;, &), backticks
+    r"|\$[\({]"       # command substitution $() or variable expansion ${}
+    r"|>\s*/"         # redirect to absolute path
+    r"|\brm\b"       # rm command
+    r"|\bcurl\b"     # network access
+    r"|\bwget\b"
+    r"|\bnc\b"       # netcat
+    r"|\bchmod\b"
+    r"|\bchown\b"
+    r"|\bmkdir\b"
+    r"|\bsudo\b"
+    r"|\beval\b"
+    r"|\bexec\b"
+    r"|\bsource\b"
+    r"|\bdd\b"
+)
 
 
 @dataclass
@@ -65,4 +85,9 @@ class AppConfig:
         if self.extract_command and self.extract_pattern:
             raise ValueError(
                 "Cannot use both extract_command and extract_pattern. Choose one."
+            )
+        if self.extract_command and DANGEROUS_PATTERNS.search(self.extract_command):
+            raise ValueError(
+                f"extract_command contains blocked shell operators or commands: "
+                f"'{self.extract_command}'. Use extract_pattern for safer extraction."
             )
