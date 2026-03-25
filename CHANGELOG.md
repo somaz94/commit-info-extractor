@@ -2,15 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased (2026-03-16)
+## [v1.4.1](https://github.com/somaz94/commit-info-extractor/compare/v1.4.0...v1.4.1) (2026-03-25)
 
 ### Bug Fixes
 
+- improve security and error handling ([d9020b8](https://github.com/somaz94/commit-info-extractor/commit/d9020b80474f449eaf5a12e96d3190f3a0a80560))
+- use heredoc to safely print outputs containing special characters ([526c9e7](https://github.com/somaz94/commit-info-extractor/commit/526c9e745a66ca28d0aefeff389c12b7dc33bbc1))
+- use env vars for outputs to avoid shell injection from special characters ([f86cf55](https://github.com/somaz94/commit-info-extractor/commit/f86cf55d4a44ca216ecfd5330700f73041ec4269))
 - apache license -> mit license ([58602b2](https://github.com/somaz94/commit-info-extractor/commit/58602b2f87d758f495001149d361198367fad527))
 - delete linter.yml ([21b852a](https://github.com/somaz94/commit-info-extractor/commit/21b852a0aeb8a393cbff7341f5f7e19aba167a1b))
 
+### Documentation
+
+- add no-push rule to CLAUDE.md ([cfd6509](https://github.com/somaz94/commit-info-extractor/commit/cfd6509240ffbcc189d94e655401364cf806a3d5))
+- update CLAUDE.md with commit guidelines and language ([1ff13ad](https://github.com/somaz94/commit-info-extractor/commit/1ff13ad323c48418916464a6f2e36ebb24dcc2df))
+
 ### Continuous Integration
 
+- skip auto-generated changelog and contributors commits in release notes ([21fa432](https://github.com/somaz94/commit-info-extractor/commit/21fa432bd8e1ccac4a76be0d72d4c8d4a664ca98))
+- revert to body_path RELEASE.md in release workflow ([c2a9972](https://github.com/somaz94/commit-info-extractor/commit/c2a997256655cfc394f8df4c69a5fcca4402e606))
+- use generate_release_notes instead of RELEASE.md ([da012bd](https://github.com/somaz94/commit-info-extractor/commit/da012bd64a10bfa79639461f9cec201a7b047a1d))
+- migrate gitlab-mirror workflow to multi-git-mirror action ([44f4741](https://github.com/somaz94/commit-info-extractor/commit/44f4741a89f4e5b102d9ec0b8a16ac2538a5352b))
+- use somaz94/contributors-action@v1 for contributors generation ([8caae8b](https://github.com/somaz94/commit-info-extractor/commit/8caae8b2645974f2ef9e5e9889f4a67735a98857))
+- use major-tag-action for version tag updates ([ded94a1](https://github.com/somaz94/commit-info-extractor/commit/ded94a1ed3d6935b76279c613057cfaa2dad7c20))
 - add all missing workflow files and release config ([9ac3aad](https://github.com/somaz94/commit-info-extractor/commit/9ac3aad61c8e0b00dfd3d43d2eb71d2a42210011))
 
 ### Chores
@@ -20,9 +34,9 @@ All notable changes to this project will be documented in this file.
 
 ### Contributors
 
-- GitHub Action
-- GitHub Actions
 - somaz
+
+<br/>
 
 ## [v1.4.0](https://github.com/somaz94/commit-info-extractor/compare/v1.3.2...v1.4.0) (2026-03-10)
 
@@ -50,9 +64,9 @@ All notable changes to this project will be documented in this file.
 
 ### Contributors
 
-- GitHub Actions
-- dependabot[bot]
 - somaz
+
+<br/>
 
 ## [v1.3.2](https://github.com/somaz94/commit-info-extractor/compare/v1.3.1...v1.3.2) (2025-11-27)
 
@@ -62,8 +76,9 @@ All notable changes to this project will be documented in this file.
 
 ### Contributors
 
-- GitHub Actions
 - somaz
+
+<br/>
 
 ## [v1.3.1](https://github.com/somaz94/commit-info-extractor/compare/v1.3.0...v1.3.1) (2025-11-27)
 
@@ -77,8 +92,9 @@ All notable changes to this project will be documented in this file.
 
 ### Contributors
 
-- GitHub Actions
 - somaz
+
+<br/>
 
 ## [v1.3.0](https://github.com/somaz94/commit-info-extractor/compare/v1.2.1...v1.3.0) (2025-11-27)
 
@@ -110,9 +126,9 @@ All notable changes to this project will be documented in this file.
 
 ### Contributors
 
-- GitHub Actions
-- dependabot[bot]
 - somaz
+
+<br/>
 
 ## [v1.2.1](https://github.com/somaz94/commit-info-extractor/compare/v1.2.0...v1.2.1) (2025-04-11)
 
@@ -124,8 +140,9 @@ All notable changes to this project will be documented in this file.
 
 ### Contributors
 
-- GitHub Actions
 - somaz
+
+<br/>
 
 ## [v1.2.0](https://github.com/somaz94/commit-info-extractor/compare/v1.1.0...v1.2.0) (2025-04-10)
 
@@ -144,8 +161,9 @@ All notable changes to this project will be documented in this file.
 
 ### Contributors
 
-- GitHub Actions
 - somaz
+
+<br/>
 
 ## [v1.1.0](https://github.com/somaz94/commit-info-extractor/compare/v1.0.5...v1.1.0) (2025-02-17)
 
@@ -159,8 +177,9 @@ All notable changes to this project will be documented in this file.
 
 ### Contributors
 
-- GitHub Actions
 - somaz
+
+<br/>
 
 ## [v1.0.5](https://github.com/somaz94/commit-info-extractor/compare/v1.0.4...v1.0.5) (2025-02-07)
 
@@ -205,9 +224,9 @@ All notable changes to this project will be documented in this file.
 
 ### Contributors
 
-- GitHub Action
-- dependabot[bot]
 - somaz
+
+<br/>
 
 ## [v1.0.4](https://github.com/somaz94/commit-info-extractor/compare/v1.0.3...v1.0.4) (2024-06-24)
 
@@ -227,6 +246,8 @@ All notable changes to this project will be documented in this file.
 
 - somaz
 
+<br/>
+
 ## [v1.0.3](https://github.com/somaz94/commit-info-extractor/compare/v1.0.2...v1.0.3) (2024-06-20)
 
 ### Bug Fixes
@@ -238,6 +259,8 @@ All notable changes to this project will be documented in this file.
 ### Contributors
 
 - somaz
+
+<br/>
 
 ## [v1.0.2](https://github.com/somaz94/commit-info-extractor/compare/v1.0.1...v1.0.2) (2024-06-20)
 
@@ -255,6 +278,8 @@ All notable changes to this project will be documented in this file.
 ### Contributors
 
 - somaz
+
+<br/>
 
 ## [v1.0.1](https://github.com/somaz94/commit-info-extractor/compare/v1.0.0...v1.0.1) (2024-06-19)
 
@@ -276,7 +301,9 @@ All notable changes to this project will be documented in this file.
 
 - somaz
 
-## v1.0.0 (2024-06-19)
+<br/>
+
+## [v1.0.0](https://github.com/somaz94/commit-info-extractor/releases/tag/v1.0.0) (2024-06-19)
 
 ### Bug Fixes
 
@@ -335,6 +362,7 @@ All notable changes to this project will be documented in this file.
 
 ### Contributors
 
-- dependabot[bot]
 - somaz
+
+<br/>
 
