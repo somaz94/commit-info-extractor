@@ -2,10 +2,6 @@
 
 GitHub Action to extract and process information from commit messages using customizable patterns and commands.
 
-- Do not include `Co-Authored-By` lines in commit messages.
-- Do not push to remote. Only commit. The user will push manually.
-- Do not modify git config.
-
 ## Project Structure
 
 ```
@@ -101,6 +97,3 @@ build-and-push-docker ──> test-action ──> ci-result
 - **paths-ignore**: `.github/workflows/**`, `**/*.md`, `backup/**`
 - **Testing**: pytest with coverage, fixtures in conftest.py
 - Do NOT commit directly - recommend commit messages only
-
-- Communicate with the user in Korean.
-- All documentation and code comments must be written in English.
