@@ -39,8 +39,8 @@ def run() -> None:
 
     environment, match_count = extract_info(
         commit_messages,
-        config.extract_command or None,
-        config.extract_pattern or None,
+        config.extract_command if config.extract_command else None,
+        config.extract_pattern if config.extract_pattern else None,
         config.fail_on_empty,
         config.timeout,
     )

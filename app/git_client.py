@@ -83,8 +83,7 @@ def fetch_commit_messages(
     except subprocess.CalledProcessError as e:
         print_debug(f"Git command failed with exit code {e.returncode}")
         if e.stderr:
-            stderr = e.stderr.decode() if isinstance(e.stderr, bytes) else e.stderr
-            print_debug(f"Git stderr: {stderr}")
+            print_debug(f"Git stderr: {e.stderr}")
         print_error("Failed to fetch commit messages")
 
     return ""

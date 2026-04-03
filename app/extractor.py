@@ -6,6 +6,12 @@ import subprocess
 from app.logger import print_debug, print_error, print_section
 
 
+def _deduplicate_and_join(items: list[str]) -> str:
+    """Deduplicate, sort, and join items into a newline-separated string."""
+    unique = sorted(set(items))
+    return "\n".join(unique) if unique else ""
+
+
 def extract_info(
     commit_messages: str,
     extract_command: str | None,
@@ -74,8 +80,7 @@ def _run_extract_pattern(commit_messages: str, pattern: str) -> str:
     matches = compiled.findall(commit_messages)
     print_debug(f"Pattern matched {len(matches)} times")
 
-    unique = sorted(set(matches))
-    return "\n".join(unique) if unique else ""
+    return _deduplicate_and_join(matches)
 
 
 def _run_extract_command(
@@ -107,7 +112,7 @@ def _run_extract_command(
         print_debug(f"Output length: {len(result.stdout)} characters")
 
         lines = [line for line in result.stdout.strip().split("\n") if line.strip()]
-        environment = "\n".join(sorted(set(lines))) if lines else ""
+        environment = _deduplicate_and_join(lines)
 
         if result.returncode > 1 and result.stderr:
             print_debug(
@@ -118,7 +123,7 @@ def _run_extract_command(
 
     except subprocess.TimeoutExpired:
         print_error(f"Extract command timed out after {timeout} seconds")
-    except Exception as e:
+    except subprocess.SubprocessError as e:
         print_debug(f"Exception type: {type(e).__name__}")
         print_error(f"Failed to extract environment information: {e}")
 
