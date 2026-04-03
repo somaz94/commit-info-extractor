@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v1.4.2](https://github.com/somaz94/commit-info-extractor/compare/v1.4.1...v1.4.2) (2026-04-03)
+
+### Code Refactoring
+
+- extract dedup helper, narrow exception catches, and clean up redundant checks ([7c7cc63](https://github.com/somaz94/commit-info-extractor/commit/7c7cc633b1f80c62f25941dd02ed8b1be8cab0be))
+
+### Documentation
+
+- remove duplicate rules covered by global CLAUDE.md ([df4bd2a](https://github.com/somaz94/commit-info-extractor/commit/df4bd2a34fdff1522a4c2fe739b21b70fca2c3c7))
+
+### Chores
+
+- remove duplicate rules from CLAUDE.md (moved to global) ([95074d9](https://github.com/somaz94/commit-info-extractor/commit/95074d9f1993b11ce2ada756199c0bce79ae7d3c))
+- add git config protection to CLAUDE.md ([602f73b](https://github.com/somaz94/commit-info-extractor/commit/602f73ba5b611dda8d1a689d79f9fa886fa76e94))
+
+### Contributors
+
+- somaz
+
+<br/>
+
 ## [v1.4.1](https://github.com/somaz94/commit-info-extractor/compare/v1.4.0...v1.4.1) (2026-03-25)
 
 ### Bug Fixes
