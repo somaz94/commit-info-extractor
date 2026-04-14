@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased (2026-04-14)
+
+### Builds
+
+- **deps:** bump actions/github-script from 8 to 9 ([1d2b813](https://github.com/somaz94/commit-info-extractor/commit/1d2b813674757fc53fcfe502643dcd0ee0a1bf81))
+
+<br/>
+
 ## [v1.4.2](https://github.com/somaz94/commit-info-extractor/compare/v1.4.1...v1.4.2) (2026-04-03)
 
 ### Code Refactoring
