@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Builds
 
+- **deps:** bump softprops/action-gh-release from 2 to 3 ([b7b7421](https://github.com/somaz94/commit-info-extractor/commit/b7b74218762533ab0ed270eb7cfa6e56ee9f8e13))
 - **deps:** bump actions/github-script from 8 to 9 ([1d2b813](https://github.com/somaz94/commit-info-extractor/commit/1d2b813674757fc53fcfe502643dcd0ee0a1bf81))
 
 <br/>
