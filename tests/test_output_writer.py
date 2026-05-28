@@ -30,12 +30,16 @@ class TestSetOutputVariables:
         env_content = open(env_file).read()
         output_content = open(output_file).read()
 
-        assert "value_variable<<EOF_" in env_content
+        # GITHUB_ENV exposes the user-chosen key as a real env var for subsequent steps.
+        assert "DEPLOY_ENV<<EOF_" in env_content
         assert len(env_content.split("EOF_")[1].split("\n")[0]) == 32  # uuid4 hex length
         assert "production" in env_content
-        assert "key_variable=DEPLOY_ENV" in env_content
-        assert "match_count=3" in env_content
+        # Step-output keys must NOT leak into GITHUB_ENV.
+        assert "key_variable=" not in env_content
+        assert "match_count=" not in env_content
+        assert "value_variable<<" not in env_content
 
+        # GITHUB_OUTPUT carries the three action.yml-declared outputs.
         assert "value_variable<<EOF_" in output_content
         assert "production" in output_content
         assert "key_variable=DEPLOY_ENV" in output_content
@@ -48,7 +52,12 @@ class TestSetOutputVariables:
 
         set_output_variables("line1\nline2\nline3", "RESULT", 3)
 
-        content = open(output_file).read()
-        assert "line1\nline2\nline3" in content
-        assert "key_variable=RESULT" in content
-        assert "match_count=3" in content
+        env_content = open(env_file).read()
+        output_content = open(output_file).read()
+
+        assert "RESULT<<EOF_" in env_content
+        assert "line1\nline2\nline3" in env_content
+
+        assert "line1\nline2\nline3" in output_content
+        assert "key_variable=RESULT" in output_content
+        assert "match_count=3" in output_content
