@@ -3,7 +3,7 @@
 import os
 import subprocess
 
-from app.logger import print_debug, print_error, print_section, print_success
+from app.logger import print_debug, fail, print_section, print_success
 
 GIT_SAFE_DIRECTORIES = ["/usr/src", "/github/workspace"]
 
@@ -79,11 +79,11 @@ def fetch_commit_messages(
         return commit_messages
 
     except subprocess.TimeoutExpired:
-        print_error(f"Git command timed out after {timeout} seconds")
+        fail(f"Git command timed out after {timeout} seconds")
     except subprocess.CalledProcessError as e:
         print_debug(f"Git command failed with exit code {e.returncode}")
         if e.stderr:
             print_debug(f"Git stderr: {e.stderr}")
-        print_error("Failed to fetch commit messages")
+        fail("Failed to fetch commit messages")
 
     return ""

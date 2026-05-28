@@ -3,7 +3,7 @@
 import os
 import uuid
 
-from app.logger import print_error, print_section, print_success
+from app.logger import fail, print_section, print_success
 
 
 def set_output_variables(
@@ -73,4 +73,4 @@ def _write_github_outputs(
 
         print_success("Variables set in GitHub Actions environment")
     except IOError as e:
-        print_error(f"Failed to write output files: {e}")
+        fail(f"Failed to write output files: {e}")

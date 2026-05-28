@@ -4,7 +4,7 @@ from app.config import AppConfig
 from app.extractor import extract_info
 from app.formatter import format_output
 from app.git_client import configure_git, fetch_commit_messages
-from app.logger import print_debug, print_error, print_header, set_debug
+from app.logger import print_debug, fail, print_header, set_debug
 from app.output_writer import set_output_variables
 
 
@@ -13,7 +13,7 @@ def run() -> None:
     try:
         config = AppConfig.from_env()
     except ValueError as e:
-        print_error(str(e))
+        fail(str(e))
         return
 
     set_debug(config.debug)
@@ -21,7 +21,7 @@ def run() -> None:
     try:
         config.validate()
     except ValueError as e:
-        print_error(str(e))
+        fail(str(e))
         return
 
     print_header("Environment Variable Extractor")
@@ -39,8 +39,8 @@ def run() -> None:
 
     environment, match_count = extract_info(
         commit_messages,
-        config.extract_command if config.extract_command else None,
-        config.extract_pattern if config.extract_pattern else None,
+        config.extract_command,
+        config.extract_pattern,
         config.fail_on_empty,
         config.timeout,
     )

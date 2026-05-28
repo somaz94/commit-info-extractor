@@ -1,6 +1,7 @@
 """Logging and output formatting utilities."""
 
 import sys
+from typing import NoReturn
 
 
 class ActionError(RuntimeError):
@@ -45,7 +46,7 @@ def print_success(message: str) -> None:
     print(f"[OK] {message}")
 
 
-def print_error(message: str) -> None:
-    """Print error message and raise ActionError."""
+def fail(message: str) -> NoReturn:
+    """Print error message and raise ActionError. Control does not return."""
     print(f"[ERROR] {message}", file=sys.stderr)
     raise ActionError(message)

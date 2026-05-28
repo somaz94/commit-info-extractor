@@ -3,7 +3,7 @@
 import re
 import subprocess
 
-from app.logger import print_debug, print_error, print_section
+from app.logger import print_debug, fail, print_section
 
 
 def _deduplicate_and_join(items: list[str]) -> str:
@@ -54,7 +54,7 @@ def extract_info(
     match_count = len(_non_empty_lines(environment))
 
     if not environment.strip() and fail_on_empty:
-        print_error(
+        fail(
             "No environment information extracted and fail_on_empty is set to true"
         )
 
@@ -79,7 +79,7 @@ def _run_extract_pattern(commit_messages: str, pattern: str) -> str:
     try:
         compiled = re.compile(pattern)
     except re.error as e:
-        print_error(f"Invalid regex pattern '{pattern}': {e}")
+        fail(f"Invalid regex pattern '{pattern}': {e}")
         return ""
 
     matches = compiled.findall(commit_messages)
@@ -127,9 +127,9 @@ def _run_extract_command(
         return environment
 
     except subprocess.TimeoutExpired:
-        print_error(f"Extract command timed out after {timeout} seconds")
+        fail(f"Extract command timed out after {timeout} seconds")
     except subprocess.SubprocessError as e:
         print_debug(f"Exception type: {type(e).__name__}")
-        print_error(f"Failed to extract environment information: {e}")
+        fail(f"Failed to extract environment information: {e}")
 
     return ""
