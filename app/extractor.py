@@ -12,6 +12,11 @@ def _deduplicate_and_join(items: list[str]) -> str:
     return "\n".join(unique) if unique else ""
 
 
+def _non_empty_lines(text: str) -> list[str]:
+    """Split on newline and drop blank/whitespace-only lines."""
+    return [line for line in text.split("\n") if line.strip()]
+
+
 def extract_info(
     commit_messages: str,
     extract_command: str | None,
@@ -34,8 +39,10 @@ def extract_info(
     print_section("Extracting Environment Information")
 
     if not extract_command and not extract_pattern:
-        lines = [line for line in commit_messages.strip().split("\n") if line.strip()]
+        lines = _non_empty_lines(commit_messages)
         return commit_messages, len(lines)
+
+    print_debug(f"Input length: {len(commit_messages)} characters")
 
     if extract_pattern:
         print(f"  - Using extract pattern: {extract_pattern}")
@@ -44,9 +51,7 @@ def extract_info(
         print(f"  - Using extract command: {extract_command}")
         environment = _run_extract_command(commit_messages, extract_command, timeout)
 
-    print_debug(f"Input length: {len(commit_messages)} characters")
-
-    match_count = len([line for line in environment.split("\n") if line.strip()]) if environment.strip() else 0
+    match_count = len(_non_empty_lines(environment))
 
     if not environment.strip() and fail_on_empty.lower() == "true":
         print_error(
@@ -111,7 +116,7 @@ def _run_extract_command(
         print_debug(f"Command exit code: {result.returncode}")
         print_debug(f"Output length: {len(result.stdout)} characters")
 
-        lines = [line for line in result.stdout.strip().split("\n") if line.strip()]
+        lines = _non_empty_lines(result.stdout)
         environment = _deduplicate_and_join(lines)
 
         if result.returncode > 1 and result.stderr:

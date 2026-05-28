@@ -5,6 +5,11 @@ import json
 from app.logger import print_section
 
 
+def _split_lines(value: str) -> list[str]:
+    """Split value on newline and drop empty entries (preserves whitespace-only lines)."""
+    return [line for line in value.split("\n") if line]
+
+
 def format_output(value: str, output_format: str) -> str:
     """Format output based on specified format.
 
@@ -30,13 +35,13 @@ def format_output(value: str, output_format: str) -> str:
 
 def _format_json(value: str) -> str:
     """Format value as JSON array."""
-    lines = [line for line in value.split("\n") if line]
+    lines = _split_lines(value)
     return json.dumps(lines, ensure_ascii=False)
 
 
 def _format_csv(value: str) -> str:
     """Format value as CSV string."""
-    lines = [line for line in value.split("\n") if line]
+    lines = _split_lines(value)
     escaped_lines = []
     for line in lines:
         escaped = line.replace("\r", "").replace('"', '""')
