@@ -8,11 +8,11 @@ class TestAppConfig:
         config = AppConfig.from_env()
         assert config.commit_limit == 10
         assert config.timeout == 30
-        assert config.pretty == "false"
+        assert config.pretty is False
         assert config.key_variable == "ENVIRONMENT"
         assert config.extract_command == ""
         assert config.extract_pattern == ""
-        assert config.fail_on_empty == "false"
+        assert config.fail_on_empty is False
         assert config.output_format == "text"
         assert config.commit_range == ""
         assert config.debug is False
@@ -30,10 +30,10 @@ class TestAppConfig:
         config = AppConfig.from_env()
         assert config.commit_limit == 20
         assert config.timeout == 60
-        assert config.pretty == "true"
+        assert config.pretty is True
         assert config.key_variable == "DEPLOY_ENV"
         assert config.extract_command == "grep -oE 'env:\\w+'"
-        assert config.fail_on_empty == "true"
+        assert config.fail_on_empty is True
         assert config.output_format == "json"
         assert config.debug is True
 

@@ -28,17 +28,22 @@ DANGEROUS_PATTERNS = re.compile(
 )
 
 
+def _bool_env(name: str, default: str = "false") -> bool:
+    """Parse a GitHub Actions string-typed boolean input into a real bool."""
+    return os.getenv(name, default).lower() == "true"
+
+
 @dataclass
 class AppConfig:
     """Configuration loaded from environment variables."""
 
     commit_limit: int
     timeout: int
-    pretty: str
+    pretty: bool
     key_variable: str
     extract_command: str
     extract_pattern: str
-    fail_on_empty: str
+    fail_on_empty: bool
     output_format: str
     commit_range: str
     debug: bool
@@ -46,8 +51,6 @@ class AppConfig:
     @classmethod
     def from_env(cls) -> "AppConfig":
         """Create configuration from environment variables."""
-        debug = os.getenv("INPUT_DEBUG", "false").lower() == "true"
-
         try:
             commit_limit = int(os.getenv("INPUT_COMMIT_LIMIT", str(DEFAULT_COMMIT_LIMIT)))
             timeout = int(os.getenv("INPUT_TIMEOUT", str(DEFAULT_TIMEOUT)))
@@ -57,14 +60,14 @@ class AppConfig:
         return cls(
             commit_limit=commit_limit,
             timeout=timeout,
-            pretty=os.getenv("INPUT_PRETTY", "false"),
+            pretty=_bool_env("INPUT_PRETTY"),
             key_variable=os.getenv("INPUT_KEY_VARIABLE", "ENVIRONMENT"),
             extract_command=os.getenv("INPUT_EXTRACT_COMMAND", ""),
             extract_pattern=os.getenv("INPUT_EXTRACT_PATTERN", ""),
-            fail_on_empty=os.getenv("INPUT_FAIL_ON_EMPTY", "false"),
+            fail_on_empty=_bool_env("INPUT_FAIL_ON_EMPTY"),
             output_format=os.getenv("INPUT_OUTPUT_FORMAT", "text").lower(),
             commit_range=os.getenv("INPUT_COMMIT_RANGE", ""),
-            debug=debug,
+            debug=_bool_env("INPUT_DEBUG"),
         )
 
     def validate(self) -> None:

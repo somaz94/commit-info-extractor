@@ -27,7 +27,7 @@ def configure_git() -> None:
 
 
 def fetch_commit_messages(
-    commit_limit: int, pretty: str, timeout: int, commit_range: str = ""
+    commit_limit: int, pretty: bool, timeout: int, commit_range: str = ""
 ) -> str:
     """Fetch commit messages from git repository.
 
@@ -54,7 +54,7 @@ def fetch_commit_messages(
     else:
         cmd.append(f"-{commit_limit}")
 
-    if pretty and pretty.lower() != "false":
+    if pretty:
         cmd.append("--pretty=%B")
 
     print_debug(f"Executing: {' '.join(cmd)} (timeout: {timeout}s)")

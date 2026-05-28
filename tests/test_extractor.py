@@ -51,36 +51,36 @@ class TestRunExtractPattern:
 
 class TestExtractInfo:
     def test_no_command_returns_messages(self):
-        result, count = extract_info("commit messages", None, None, "false", 10)
+        result, count = extract_info("commit messages", None, None, False, 10)
         assert result == "commit messages"
         assert count == 1
 
     def test_empty_command_returns_messages(self):
-        result, count = extract_info("line1\nline2", None, None, "false", 10)
+        result, count = extract_info("line1\nline2", None, None, False, 10)
         assert result == "line1\nline2"
         assert count == 2
 
     def test_with_extract_command(self):
-        result, count = extract_info("feat: login\nfix: bug", "grep -oE 'feat|fix'", None, "false", 10)
+        result, count = extract_info("feat: login\nfix: bug", "grep -oE 'feat|fix'", None, False, 10)
         assert "feat" in result
         assert "fix" in result
         assert count == 2
 
     def test_with_extract_pattern(self):
-        result, count = extract_info("feat: login\nfix: bug", None, r"(feat|fix)", "false", 10)
+        result, count = extract_info("feat: login\nfix: bug", None, r"(feat|fix)", False, 10)
         assert "feat" in result
         assert "fix" in result
         assert count == 2
 
     def test_fail_on_empty_true_with_pattern(self):
         with pytest.raises(ActionError):
-            extract_info("hello", None, r"nonexistent", "true", 10)
+            extract_info("hello", None, r"nonexistent", True, 10)
 
     def test_fail_on_empty_false_returns_empty(self):
-        result, count = extract_info("hello", "grep -oE 'nonexistent'", None, "false", 10)
+        result, count = extract_info("hello", "grep -oE 'nonexistent'", None, False, 10)
         assert result == ""
         assert count == 0
 
     def test_match_count_multiple(self):
-        result, count = extract_info("feat: a\nfeat: b\nfix: c", None, r"(feat|fix)", "false", 10)
+        result, count = extract_info("feat: a\nfeat: b\nfix: c", None, r"(feat|fix)", False, 10)
         assert count == 2

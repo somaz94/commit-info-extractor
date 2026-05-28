@@ -21,7 +21,7 @@ def extract_info(
     commit_messages: str,
     extract_command: str | None,
     extract_pattern: str | None,
-    fail_on_empty: str,
+    fail_on_empty: bool,
     timeout: int,
 ) -> tuple[str, int]:
     """Extract information from commit messages.
@@ -53,7 +53,7 @@ def extract_info(
 
     match_count = len(_non_empty_lines(environment))
 
-    if not environment.strip() and fail_on_empty.lower() == "true":
+    if not environment.strip() and fail_on_empty:
         print_error(
             "No environment information extracted and fail_on_empty is set to true"
         )
