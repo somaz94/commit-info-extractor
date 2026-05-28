@@ -2,13 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased (2026-04-14)
+## [v1.4.3](https://github.com/somaz94/commit-info-extractor/compare/v1.4.2...v1.4.3) (2026-05-28)
+
+### Bug Fixes
+
+- write step-output keys only to GITHUB_OUTPUT and expose user key in GITHUB_ENV ([bca6ba6](https://github.com/somaz94/commit-info-extractor/commit/bca6ba60cfd0507c0aa9dd037d66f1a94a6ce907))
+
+### Code Refactoring
+
+- rename print_error to fail with NoReturn and broaden entrypoint traceback ([3eed452](https://github.com/somaz94/commit-info-extractor/commit/3eed45207916dd145915d395e15cf1d729a8cb54))
+- normalize pretty and fail_on_empty inputs to bool at parse time ([27ae904](https://github.com/somaz94/commit-info-extractor/commit/27ae904bdc3153f8837a6868db0919c356b82ad5))
+- extract _non_empty_lines and _split_lines helpers ([0ae2e53](https://github.com/somaz94/commit-info-extractor/commit/0ae2e537fdde830286365a32d1fd0278da32cfa8))
 
 ### Builds
 
 - **deps:** bump dependabot/fetch-metadata from 2 to 3 ([351b529](https://github.com/somaz94/commit-info-extractor/commit/351b5298467f2f659eb051861a630bd5e780f1c9))
 - **deps:** bump softprops/action-gh-release from 2 to 3 ([b7b7421](https://github.com/somaz94/commit-info-extractor/commit/b7b74218762533ab0ed270eb7cfa6e56ee9f8e13))
 - **deps:** bump actions/github-script from 8 to 9 ([1d2b813](https://github.com/somaz94/commit-info-extractor/commit/1d2b813674757fc53fcfe502643dcd0ee0a1bf81))
+
+### Continuous Integration
+
+- add concurrency guards to recurring workflows ([2b107df](https://github.com/somaz94/commit-info-extractor/commit/2b107dfc36ae4657cc0850daeca22666437ee74b))
+
+### Contributors
+
+- somaz
 
 <br/>
 
