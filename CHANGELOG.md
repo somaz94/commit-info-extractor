@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased (2026-06-23)
+
+### Builds
+
+- **deps:** bump actions/checkout from 6 to 7 ([defa088](https://github.com/somaz94/commit-info-extractor/commit/defa0884dfe0d40ccf61f620a6d9b25b8022d9cf))
+
+### Continuous Integration
+
+- add DCO check via shared reusable workflow ([8a1ec78](https://github.com/somaz94/commit-info-extractor/commit/8a1ec786a38be0a99b19c36ca9d4f24b597f072b))
+
+### Contributors
+
+- somaz
+
+<br/>
+
 ## [v1.4.3](https://github.com/somaz94/commit-info-extractor/compare/v1.4.2...v1.4.3) (2026-05-28)
 
 ### Bug Fixes
