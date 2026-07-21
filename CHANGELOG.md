@@ -2,14 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased (2026-06-23)
+## Unreleased (2026-07-21)
 
 ### Builds
 
+- **deps:** bump actions/setup-python from 6 to 7 (#14) ([#14](https://github.com/somaz94/commit-info-extractor/pull/14)) ([a9569bd](https://github.com/somaz94/commit-info-extractor/commit/a9569bdeb6efcf4b0d90914181b3fdc52173873e))
 - **deps:** bump actions/checkout from 6 to 7 ([defa088](https://github.com/somaz94/commit-info-extractor/commit/defa0884dfe0d40ccf61f620a6d9b25b8022d9cf))
 
 ### Continuous Integration
 
+- remove DCO workflow ([d52c8aa](https://github.com/somaz94/commit-info-extractor/commit/d52c8aae1bab8641df96261d54426094b9b8c3e4))
+- adopt semantic-pr, labels, lock-threads, PR size, and auto-assign reusables ([10f51a2](https://github.com/somaz94/commit-info-extractor/commit/10f51a216da3e51c0606efb1bee1e18931343ba2))
+- use reusable stale-issues workflow ([5844c14](https://github.com/somaz94/commit-info-extractor/commit/5844c14915f3839d392a733c1bdefd9440a62f99))
+- use reusable issue-greeting workflow ([8f51d7d](https://github.com/somaz94/commit-info-extractor/commit/8f51d7dfdda9df364ffbe689f26a8b99b0c4f9d7))
+- use reusable dependabot-auto-merge workflow ([074606f](https://github.com/somaz94/commit-info-extractor/commit/074606fd2795d355dbe7356bea2576630ae14991))
+- use reusable contributors workflow ([114c053](https://github.com/somaz94/commit-info-extractor/commit/114c0537e62ab8d4c5d9f5473787cf715da5cae7))
+- add ok-to-test workflow stub ([b557302](https://github.com/somaz94/commit-info-extractor/commit/b5573025205985fc1dbfa49c113152246d98d41a))
+- add PR welcome workflow stub ([11d3bff](https://github.com/somaz94/commit-info-extractor/commit/11d3bff45a3f7c631fc3ab5f265663653d79a1e7))
 - add DCO check via shared reusable workflow ([8a1ec78](https://github.com/somaz94/commit-info-extractor/commit/8a1ec786a38be0a99b19c36ca9d4f24b597f072b))
 
 ### Contributors
