@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased (2026-08-07)
+## [v1.5.0](https://github.com/somaz94/commit-info-extractor/compare/v1.4.3...v1.5.0) (2026-08-07)
 
 ### Performance Improvements
 
