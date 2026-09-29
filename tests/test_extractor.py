@@ -93,6 +93,15 @@ class TestExtractInfo:
         assert result == ""
         assert count == 0
 
+    def test_fail_on_empty_true_without_extraction(self):
+        with pytest.raises(ActionError):
+            extract_info("", None, None, True, 10)
+
+    def test_fail_on_empty_false_without_extraction_returns_empty(self):
+        result, count = extract_info("", None, None, False, 10)
+        assert result == ""
+        assert count == 0
+
     def test_match_count_multiple(self):
         result, count = extract_info("feat: a\nfeat: b\nfix: c", None, r"(feat|fix)", False, 10)
         assert count == 2

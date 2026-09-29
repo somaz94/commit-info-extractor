@@ -40,6 +40,8 @@ def extract_info(
 
     if not extract_command and not extract_pattern:
         lines = _non_empty_lines(commit_messages)
+        if not lines and fail_on_empty:
+            fail("No commit messages found and fail_on_empty is set to true")
         return commit_messages, len(lines)
 
     print_debug(f"Input length: {len(commit_messages)} characters")

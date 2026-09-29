@@ -47,7 +47,7 @@ A powerful GitHub Action that extracts and processes information from commit mes
 | `commit_range` | Git commit range (e.g., `HEAD~5..HEAD`, `v1.0.0..v1.1.0`) | No | N/A |
 | `pretty` | Use pretty format for Git logs | No | `false` |
 | `key_variable` | Name of the output variable | No | `ENVIRONMENT` |
-| `fail_on_empty` | Fail if no information is extracted | No | `false` |
+| `fail_on_empty` | Fail if no information is extracted (with neither extraction input set, if no commits are found) | No | `false` |
 | `output_format` | Output format: `text`, `json`, or `csv` | No | `text` |
 | `debug` | Enable debug mode for verbose output | No | `false` |
 | `timeout` | Timeout in seconds for git/extract commands | No | `30` |
