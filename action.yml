@@ -57,7 +57,7 @@ runs:
   # building one per consumer run (~31s). Subtle: this version's image must be
   # published (release.yml workflow_dispatch) before its git tag is pushed, and
   # a runner can pull only the pushed platforms (linux/amd64, linux/arm64).
-  image: docker://ghcr.io/somaz94/commit-info-extractor:v1.6.0
+  image: docker://ghcr.io/somaz94/commit-info-extractor:v1.6.1
   env:
     INPUT_COMMIT_LIMIT: ${{ inputs.commit_limit }}
     INPUT_PRETTY: ${{ inputs.pretty }}
