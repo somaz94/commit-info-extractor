@@ -60,10 +60,9 @@ make help          # Show all available commands
 | Workflow | Name | Trigger |
 |----------|------|---------|
 | `ci.yml` | `Continuous Integration` | push(main), PR, dispatch |
-| `release.yml` | `Create release` | tag push `v*` |
+| `release.yml` | `Create release` | tag push `v*`, dispatch (`image_tag` seeds the image before the tag) |
 | `changelog-generator.yml` | `Generate changelog` | after release, PR merge, dispatch |
 | `use-action.yml` | `Smoke Test (Released Action)` | after release, dispatch |
-| `linter.yml` | `Lint Codebase` | dispatch |
 
 ### Workflow Chain
 ```
@@ -74,15 +73,17 @@ tag push v* -> Create release
 
 ### CI Structure
 ```
-unit-test ──────────┐
-build-and-push-docker ──> test-action ──> ci-result
+unit-tests ──┬──> docker-build
+             ├──> test-basic-extraction
+             ├──> test-pattern-extraction
+             └──> test-options
 ```
 
 ## Testing Notes
 
 - Modular `app/` package with dataclass config, pytest fixtures, 90%+ coverage
 - Local tests in `tests/test_local.py` for manual integration testing
-- CI tests use `uses: ./` (local action) with various scenarios
+- CI's `uses: ./` jobs pull the image pinned in `action.yml` (the last release); only `docker-build` builds and runs this commit's Dockerfile
 - Smoke tests in `use-action.yml` use `somaz94/commit-info-extractor@v1` (released)
 - Uses `subprocess.run` with shell=True for extract commands
 

@@ -25,10 +25,10 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
-          python-version: '3.13'
+          python-version: '3.14' # keep in step with the Dockerfile base image
 
       - name: Install dependencies
-        run: pip install pytest pytest-cov
+        run: pip install -r requirements-dev.txt
 
       - name: Run tests with coverage
         run: |
@@ -37,6 +37,44 @@ jobs:
             --cov-report=term-missing \
             --cov-fail-under=90 \
             -v
+
+  # The uses: ./ jobs pull the image pinned in action.yml; only this job runs
+  # this commit's Dockerfile and app/.
+  docker-build:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    needs: [unit-tests]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 10
+
+      - name: Build the image
+        run: docker build -t commit-info-extractor:ci .
+
+      - name: Run the image against this repository
+        run: |
+          mkdir -p "$RUNNER_TEMP/files"
+          docker run --rm \
+            -v "$PWD:/github/workspace" -w /github/workspace \
+            -v "$RUNNER_TEMP/files:/github/files" \
+            -e GITHUB_ENV=/github/files/env \
+            -e GITHUB_OUTPUT=/github/files/output \
+            -e INPUT_COMMIT_LIMIT=5 \
+            -e INPUT_EXTRACT_PATTERN='(feat|fix|docs|chore|ci|test|refactor):' \
+            -e INPUT_OUTPUT_FORMAT=json \
+            commit-info-extractor:ci
+          grep -x 'key_variable=ENVIRONMENT' "$RUNNER_TEMP/files/output"
+          grep '^match_count=' "$RUNNER_TEMP/files/output"
+
+      - name: Reject a blocked extract_command
+        run: |
+          ! docker run --rm \
+            -v "$PWD:/github/workspace" -w /github/workspace \
+            -e INPUT_COMMIT_LIMIT=5 \
+            -e INPUT_EXTRACT_COMMAND='grep foo; id' \
+            commit-info-extractor:ci
 
   test-basic-extraction:
     name: Test Basic Extraction
