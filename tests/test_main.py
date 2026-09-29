@@ -28,7 +28,6 @@ class TestRun:
         mock_git.assert_called_once()
         mock_fetch.assert_called_once()
         mock_output.assert_called_once()
-        # Without extract_command, raw commit messages passed through
         call_args = mock_output.call_args[0]
         assert "feat: login" in call_args[0]
 

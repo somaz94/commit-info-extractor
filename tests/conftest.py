@@ -3,13 +3,12 @@ import sys
 
 import pytest
 
-# Add project root to path so tests can import app modules
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 
 @pytest.fixture
 def clean_env(monkeypatch):
-    """Remove all INPUT_* env vars to ensure clean state."""
+    """Unset INPUT_*, plus GITHUB_ENV/GITHUB_OUTPUT (always set on GitHub runners)."""
     for key in list(os.environ):
         if key.startswith("INPUT_"):
             monkeypatch.delenv(key, raising=False)

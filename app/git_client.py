@@ -86,5 +86,3 @@ def fetch_commit_messages(
         if e.stderr:
             print_debug(f"Git stderr: {e.stderr}")
         fail("Failed to fetch commit messages")
-
-    return ""

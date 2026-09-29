@@ -8,7 +8,6 @@ class ActionError(RuntimeError):
     """Raised when the action encounters a fatal error."""
 
 
-# Global debug flag
 _debug = False
 
 
@@ -16,11 +15,6 @@ def set_debug(enabled: bool) -> None:
     """Enable or disable debug mode."""
     global _debug
     _debug = enabled
-
-
-def is_debug() -> bool:
-    """Return current debug mode state."""
-    return _debug
 
 
 def print_header(message: str) -> None:

@@ -1,20 +1,14 @@
 FROM python:3.14-slim
 
-# Install necessary packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Set the working directory inside the container    
 WORKDIR /usr/src
 
-# Copy application source
 COPY entrypoint.py .
 COPY app/ app/
 
-# Make the script executable
-RUN chmod +x entrypoint.py
-
-# Configure the container to be run as an executable
+# Absolute path: the runner overrides WORKDIR with /github/workspace.
 ENTRYPOINT ["python3", "/usr/src/entrypoint.py"]

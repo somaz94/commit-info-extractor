@@ -2,7 +2,6 @@
 .git
 .gitignore
 .gitattributes
-.gitconfig
 
 # Documentation
 README.md
@@ -31,7 +30,6 @@ requirements-dev.txt
 Makefile
 
 # Environment files
-.env.test
 .env
 
 # Python files

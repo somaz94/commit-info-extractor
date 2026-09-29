@@ -83,7 +83,6 @@ def _run_extract_pattern(commit_messages: str, pattern: str) -> str:
         compiled = re.compile(pattern)
     except re.error as e:
         fail(f"Invalid regex pattern '{pattern}': {e}")
-        return ""
 
     if compiled.groups > 1:
         # findall would return tuples here.
@@ -141,5 +140,3 @@ def _run_extract_command(
     except subprocess.SubprocessError as e:
         print_debug(f"Exception type: {type(e).__name__}")
         fail(f"Failed to extract environment information: {e}")
-
-    return ""

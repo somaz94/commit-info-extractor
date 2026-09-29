@@ -14,7 +14,6 @@ def run() -> None:
         config = AppConfig.from_env()
     except ValueError as e:
         fail(str(e))
-        return
 
     set_debug(config.debug)
 
@@ -22,7 +21,6 @@ def run() -> None:
         config.validate()
     except ValueError as e:
         fail(str(e))
-        return
 
     print_header("Environment Variable Extractor")
     print_debug(f"Debug mode: {config.debug}")
