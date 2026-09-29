@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v1.6.0](https://github.com/somaz94/commit-info-extractor/compare/v1.5.0...v1.6.0) (2026-09-29)
+
+### Bug Fixes
+
+- apply fail_on_empty when no extraction input is set ([f293bd6](https://github.com/somaz94/commit-info-extractor/commit/f293bd6d31cda987854a4d8eef420920cba09e80))
+- fail when the workspace has no git repository ([6515a4f](https://github.com/somaz94/commit-info-extractor/commit/6515a4fbb473013b9d9a806d04f34262885483f7))
+- accept a .git file as a repository in worktrees and submodules ([02e4410](https://github.com/somaz94/commit-info-extractor/commit/02e4410f174dfd6003b5a1909560f4368e5aaedf))
+- block newline-chained, quote-split and shell-invoking commands ([b4714a4](https://github.com/somaz94/commit-info-extractor/commit/b4714a48e11450fda4e21fdecb338fc26d33d733))
+- return the first matched group when a pattern has several groups ([952a438](https://github.com/somaz94/commit-info-extractor/commit/952a438f758015871f927a4a66d3968a8a103eeb))
+
+### Tests
+
+- tighten weak assertions and align default_env with the defaults ([7115e84](https://github.com/somaz94/commit-info-extractor/commit/7115e84fdd33998d3df50674b03dddd6afb93873))
+- keep test-local off the global git config and fail on errors ([f6c356c](https://github.com/somaz94/commit-info-extractor/commit/f6c356caf9284e271737f127c75eedcc702b63ac))
+
+### Continuous Integration
+
+- narrow smoke-test permissions and correct image-seeding comments ([abbc423](https://github.com/somaz94/commit-info-extractor/commit/abbc423489d14141e403891f6fddb6aa39082915))
+- build and run this commit's image and test on Python 3.14 ([39d2671](https://github.com/somaz94/commit-info-extractor/commit/39d267107a62cf1b7e80a534bc6dedf376e48396))
+- trim redundant comments in gitlab-mirror workflow ([756c394](https://github.com/somaz94/commit-info-extractor/commit/756c394bd4e0e607343f363cafef967d32be79ae))
+- correct the image-seeding comment in the release workflow ([412f5c3](https://github.com/somaz94/commit-info-extractor/commit/412f5c395c569c86448644e7695f18266518b99f))
+- retry mirror pushes on transient remote failures ([9cb25ff](https://github.com/somaz94/commit-info-extractor/commit/9cb25ffacad0fa33d294078f4d6e0d5ecf9d4dbc))
+- drop the dead issue-close trigger from changelog generation ([56d146a](https://github.com/somaz94/commit-info-extractor/commit/56d146a501615ccb68aa381990320bd2af145963))
+- skip release-triggered runs on the image-seeding dispatch ([9d58618](https://github.com/somaz94/commit-info-extractor/commit/9d586183699a5b698c3fc64758dba5e4777a037e))
+
+### Chores
+
+- bump the action image to v1.6.0 ([deeb6c8](https://github.com/somaz94/commit-info-extractor/commit/deeb6c8f8849a42620e3bc3f7576298d36b63dc6))
+- drop dead code, unused files and restating comments ([d47a1bd](https://github.com/somaz94/commit-info-extractor/commit/d47a1bd0bbde0e64b2f145c72c1ef3254229a747))
+
+### Contributors
+
+- somaz
+
+<br/>
+
 ## [v1.5.0](https://github.com/somaz94/commit-info-extractor/compare/v1.4.3...v1.5.0) (2026-08-07)
 
 ### Performance Improvements
