@@ -1,7 +1,10 @@
 import subprocess
 from unittest.mock import patch
 
+import pytest
+
 from app.git_client import GIT_SAFE_DIRECTORIES, fetch_commit_messages, configure_git
+from app.logger import ActionError
 
 
 class TestConfigureGit:
@@ -21,10 +24,10 @@ class TestConfigureGit:
 
 
 class TestFetchCommitMessages:
-    def test_no_git_dir(self, tmp_path, monkeypatch):
+    def test_no_git_dir_fails(self, tmp_path, monkeypatch):
         monkeypatch.chdir(tmp_path)
-        result = fetch_commit_messages(10, True, 5)
-        assert result == "No commit messages available."
+        with pytest.raises(ActionError, match="actions/checkout"):
+            fetch_commit_messages(10, True, 5)
 
     @patch("app.git_client.subprocess.run")
     def test_git_file_counts_as_repository(self, mock_run, tmp_path, monkeypatch):

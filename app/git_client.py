@@ -44,8 +44,10 @@ def fetch_commit_messages(
 
     # .git is a file, not a directory, in worktrees and submodules.
     if not os.path.exists(".git"):
-        print("  - No git repository available")
-        return "No commit messages available."
+        fail(
+            "No git repository in the workspace root. Check out the repository "
+            "with actions/checkout (default path) before this action."
+        )
 
     cmd = ["git", "log"]
 

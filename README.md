@@ -344,7 +344,7 @@ JIRA-123,JIRA-456,JIRA-789
 #### Possible Causes:
 - `fail_on_empty: true` is set and no matches found (intended behavior)
 - Invalid regex pattern in `extract_command`
-- Git repository not available
+- No git repository in the workspace root (run `actions/checkout` first, without a custom `path`)
 - Insufficient permissions
 
 #### Debug Steps:
