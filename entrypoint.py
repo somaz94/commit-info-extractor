@@ -15,7 +15,7 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("[ERROR] Process interrupted by user", file=sys.stderr)
         sys.exit(1)
-    except Exception:
+    except Exception:  # noqa: BLE001
         print("[ERROR] Unexpected error:", file=sys.stderr)
         traceback.print_exc(file=sys.stderr)
         sys.exit(1)

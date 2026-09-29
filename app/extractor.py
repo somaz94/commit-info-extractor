@@ -3,7 +3,7 @@
 import re
 import subprocess
 
-from app.logger import print_debug, fail, print_section
+from app.logger import fail, print_debug, print_section
 
 
 def _deduplicate_and_join(items: list[str]) -> str:

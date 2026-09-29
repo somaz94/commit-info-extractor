@@ -3,7 +3,7 @@
 import os
 import subprocess
 
-from app.logger import print_debug, fail, print_section, print_success
+from app.logger import fail, print_debug, print_section, print_success
 
 GIT_SAFE_DIRECTORIES = ["/usr/src", "/github/workspace"]
 

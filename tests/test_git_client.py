@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from app.git_client import GIT_SAFE_DIRECTORIES, fetch_commit_messages, configure_git
+from app.git_client import GIT_SAFE_DIRECTORIES, configure_git, fetch_commit_messages
 from app.logger import ActionError
 
 

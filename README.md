@@ -528,6 +528,9 @@ make venv          # Create virtualenv and install dev dependencies
 make test          # Run unit tests with coverage
 make test-local    # Run local integration test
 make coverage      # Generate HTML coverage report
+make lint          # Lint with ruff (make lint-fix to auto-fix)
+make format        # Format with ruff (make format-check to verify)
+make ci            # Lint + format check + unit tests
 make clean         # Remove venv, cache, and build artifacts
 make help          # Show all available commands
 

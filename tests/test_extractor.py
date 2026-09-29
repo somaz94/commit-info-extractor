@@ -1,6 +1,6 @@
 import pytest
 
-from app.extractor import extract_info, _run_extract_command, _run_extract_pattern
+from app.extractor import _run_extract_command, _run_extract_pattern, extract_info
 from app.logger import ActionError
 
 
@@ -113,7 +113,7 @@ class TestExtractInfo:
         assert count == 0
 
     def test_match_count_multiple(self):
-        result, count = extract_info(
+        _, count = extract_info(
             "feat: a\nfeat: b\nfix: c", None, r"(feat|fix)", False, 10
         )
         assert count == 2

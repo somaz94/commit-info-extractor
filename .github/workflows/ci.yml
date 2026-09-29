@@ -30,6 +30,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements-dev.txt
 
+      - name: Lint
+        run: |
+          ruff check app entrypoint.py tests
+          ruff format --check app entrypoint.py tests
+
       - name: Run tests with coverage
         run: |
           python -m pytest tests/ \

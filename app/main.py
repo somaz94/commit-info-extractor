@@ -4,7 +4,7 @@ from app.config import AppConfig
 from app.extractor import extract_info
 from app.formatter import format_output
 from app.git_client import configure_git, fetch_commit_messages
-from app.logger import print_debug, fail, print_header, set_debug
+from app.logger import fail, print_debug, print_header, set_debug
 from app.output_writer import set_output_variables
 
 

@@ -1,6 +1,6 @@
 import pytest
 
-from app.config import AppConfig, VALID_OUTPUT_FORMATS
+from app.config import VALID_OUTPUT_FORMATS, AppConfig
 
 
 class TestAppConfig:

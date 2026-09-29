@@ -72,5 +72,5 @@ def _write_github_outputs(
             f.write(f"match_count={match_count}\n")
 
         print_success("Variables set in GitHub Actions environment")
-    except IOError as e:
+    except OSError as e:
         fail(f"Failed to write output files: {e}")

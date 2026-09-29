@@ -80,7 +80,7 @@ def run_test(test_name: str, overrides: dict) -> bool:
     with patch.dict(os.environ, {**BASE_ENV, **overrides}):
         try:
             run()
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             print(f"[FAIL] Test failed: {e}")
             return False
     print("[PASS] Test completed successfully")
