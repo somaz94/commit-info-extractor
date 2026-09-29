@@ -68,6 +68,8 @@ cd /path/to/commit-info-extractor
 python tests/test_local.py
 ```
 
+The script exits non-zero if any case fails. It points `GIT_CONFIG_GLOBAL` at a temporary file, so the `git config --global` calls in `configure_git()` never touch your own global git config.
+
 <br/>
 
 ## Integration Test Cases

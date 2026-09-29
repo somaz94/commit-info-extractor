@@ -1,37 +1,94 @@
 #!/usr/bin/env python3
-"""
-Local integration test script for commit-info-extractor.
-Run this directly without Docker to test the full flow.
-Usage: cd /path/to/commit-info-extractor && python3 tests/test_local.py
-"""
+"""Full-flow run without Docker (`make test-local`); pytest collects nothing."""
 
 import os
 import sys
+import tempfile
+from unittest.mock import patch
 
-# Add the project root to the path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+BASE_ENV = {
+    "INPUT_COMMIT_LIMIT": "10",
+    "INPUT_PRETTY": "true",
+    "INPUT_KEY_VARIABLE": "ENVIRONMENT",
+    "INPUT_EXTRACT_COMMAND": "",
+    "INPUT_EXTRACT_PATTERN": "",
+    "INPUT_FAIL_ON_EMPTY": "false",
+    "INPUT_OUTPUT_FORMAT": "text",
+    "INPUT_COMMIT_RANGE": "",
+}
 
-def run_test(test_name: str, env_vars: dict) -> None:
-    """Run a single test case."""
+CASES = [
+    ("Test 1: Basic commit message extraction", {"INPUT_COMMIT_LIMIT": "5"}),
+    (
+        "Test 2: Extract 'chore' keyword",
+        {
+            "INPUT_KEY_VARIABLE": "CHORE_KEYWORD",
+            "INPUT_EXTRACT_COMMAND": "grep -oE 'chore' || true",
+        },
+    ),
+    (
+        "Test 3: JSON output format",
+        {
+            "INPUT_COMMIT_LIMIT": "3",
+            "INPUT_KEY_VARIABLE": "COMMITS_JSON",
+            "INPUT_OUTPUT_FORMAT": "json",
+        },
+    ),
+    (
+        "Test 4: CSV output format",
+        {
+            "INPUT_COMMIT_LIMIT": "3",
+            "INPUT_KEY_VARIABLE": "COMMITS_CSV",
+            "INPUT_OUTPUT_FORMAT": "csv",
+        },
+    ),
+    (
+        "Test 5: Extract 'refactor' commits",
+        {
+            "INPUT_KEY_VARIABLE": "REFACTOR_COMMITS",
+            "INPUT_EXTRACT_COMMAND": "grep -oE 'refactor' || true",
+        },
+    ),
+    (
+        "Test 6: Extract using regex pattern (extract_pattern)",
+        {
+            "INPUT_KEY_VARIABLE": "PATTERN_RESULT",
+            "INPUT_EXTRACT_PATTERN": r"(feat|fix|chore|refactor|docs|ci|test)",
+        },
+    ),
+    (
+        "Test 7: Extract with commit range",
+        {
+            "INPUT_KEY_VARIABLE": "RANGE_RESULT",
+            "INPUT_EXTRACT_PATTERN": r"(feat|fix|chore|refactor)",
+            "INPUT_COMMIT_RANGE": "HEAD~3..HEAD",
+        },
+    ),
+]
+
+
+def run_test(test_name: str, overrides: dict) -> bool:
+    """Run a single test case and report whether it passed."""
     print("\n" + "=" * 50)
     print(f"{test_name}")
     print("=" * 50)
 
-    for key, value in env_vars.items():
-        os.environ[key] = value
-
     from app.main import run
 
-    try:
-        run()
-        print("[PASS] Test completed successfully")
-    except Exception as e:
-        print(f"[FAIL] Test failed: {e}")
+    with patch.dict(os.environ, {**BASE_ENV, **overrides}):
+        try:
+            run()
+        except Exception as e:
+            print(f"[FAIL] Test failed: {e}")
+            return False
+    print("[PASS] Test completed successfully")
+    return True
 
 
-def main():
-    """Run all test cases."""
+def main() -> int:
+    """Run all test cases and return the process exit code."""
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     os.chdir(project_root)
     print(f"Working directory: {os.getcwd()}\n")
@@ -40,108 +97,21 @@ def main():
     print("Local Integration Test Suite")
     print("=" * 50)
 
-    run_test(
-        "Test 1: Basic commit message extraction",
-        {
-            "INPUT_COMMIT_LIMIT": "5",
-            "INPUT_PRETTY": "true",
-            "INPUT_KEY_VARIABLE": "ENVIRONMENT",
-            "INPUT_EXTRACT_COMMAND": "",
-            "INPUT_EXTRACT_PATTERN": "",
-            "INPUT_FAIL_ON_EMPTY": "false",
-            "INPUT_OUTPUT_FORMAT": "text",
-            "INPUT_COMMIT_RANGE": "",
-        },
-    )
+    # configure_git() runs `git config --global`; keep it off the real ~/.gitconfig.
+    with tempfile.TemporaryDirectory() as tmp, patch.dict(
+        os.environ, {"GIT_CONFIG_GLOBAL": os.path.join(tmp, "gitconfig")}
+    ):
+        results = [run_test(name, overrides) for name, overrides in CASES]
 
-    run_test(
-        "Test 2: Extract 'chore' keyword",
-        {
-            "INPUT_COMMIT_LIMIT": "10",
-            "INPUT_PRETTY": "true",
-            "INPUT_KEY_VARIABLE": "CHORE_KEYWORD",
-            "INPUT_EXTRACT_COMMAND": "grep -oE 'chore' || true",
-            "INPUT_EXTRACT_PATTERN": "",
-            "INPUT_FAIL_ON_EMPTY": "false",
-            "INPUT_OUTPUT_FORMAT": "text",
-            "INPUT_COMMIT_RANGE": "",
-        },
-    )
-
-    run_test(
-        "Test 3: JSON output format",
-        {
-            "INPUT_COMMIT_LIMIT": "3",
-            "INPUT_PRETTY": "true",
-            "INPUT_KEY_VARIABLE": "COMMITS_JSON",
-            "INPUT_EXTRACT_COMMAND": "",
-            "INPUT_EXTRACT_PATTERN": "",
-            "INPUT_FAIL_ON_EMPTY": "false",
-            "INPUT_OUTPUT_FORMAT": "json",
-            "INPUT_COMMIT_RANGE": "",
-        },
-    )
-
-    run_test(
-        "Test 4: CSV output format",
-        {
-            "INPUT_COMMIT_LIMIT": "3",
-            "INPUT_PRETTY": "true",
-            "INPUT_KEY_VARIABLE": "COMMITS_CSV",
-            "INPUT_EXTRACT_COMMAND": "",
-            "INPUT_EXTRACT_PATTERN": "",
-            "INPUT_FAIL_ON_EMPTY": "false",
-            "INPUT_OUTPUT_FORMAT": "csv",
-            "INPUT_COMMIT_RANGE": "",
-        },
-    )
-
-    run_test(
-        "Test 5: Extract 'refactor' commits",
-        {
-            "INPUT_COMMIT_LIMIT": "10",
-            "INPUT_PRETTY": "true",
-            "INPUT_KEY_VARIABLE": "REFACTOR_COMMITS",
-            "INPUT_EXTRACT_COMMAND": "grep -oE 'refactor' || true",
-            "INPUT_EXTRACT_PATTERN": "",
-            "INPUT_FAIL_ON_EMPTY": "false",
-            "INPUT_OUTPUT_FORMAT": "text",
-            "INPUT_COMMIT_RANGE": "",
-        },
-    )
-
-    run_test(
-        "Test 6: Extract using regex pattern (extract_pattern)",
-        {
-            "INPUT_COMMIT_LIMIT": "10",
-            "INPUT_PRETTY": "true",
-            "INPUT_KEY_VARIABLE": "PATTERN_RESULT",
-            "INPUT_EXTRACT_COMMAND": "",
-            "INPUT_EXTRACT_PATTERN": r"(feat|fix|chore|refactor|docs|ci|test)",
-            "INPUT_FAIL_ON_EMPTY": "false",
-            "INPUT_OUTPUT_FORMAT": "text",
-            "INPUT_COMMIT_RANGE": "",
-        },
-    )
-
-    run_test(
-        "Test 7: Extract with commit range",
-        {
-            "INPUT_COMMIT_LIMIT": "10",
-            "INPUT_PRETTY": "true",
-            "INPUT_KEY_VARIABLE": "RANGE_RESULT",
-            "INPUT_EXTRACT_COMMAND": "",
-            "INPUT_EXTRACT_PATTERN": r"(feat|fix|chore|refactor)",
-            "INPUT_FAIL_ON_EMPTY": "false",
-            "INPUT_OUTPUT_FORMAT": "text",
-            "INPUT_COMMIT_RANGE": "HEAD~3..HEAD",
-        },
-    )
-
+    failed = results.count(False)
     print("\n" + "=" * 50)
-    print("[PASS] All integration tests completed!")
+    if failed:
+        print(f"[FAIL] {failed} of {len(results)} integration tests failed")
+    else:
+        print("[PASS] All integration tests completed!")
     print("=" * 50)
+    return 1 if failed else 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
