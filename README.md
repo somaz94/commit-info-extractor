@@ -476,6 +476,7 @@ When using this action, keep the following in mind:
 
 #### Command Injection Prevention
 - The `extract_command` executes shell commands — never use untrusted user input
+- `extract_command` is screened by a best-effort denylist (see `app/config.py`), not a sandbox — never build it from untrusted text such as PR titles or commit messages
 - Prefer `extract_pattern` over `extract_command` for safer regex matching (no shell execution)
 - Always validate and sanitize inputs
 

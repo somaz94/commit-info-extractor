@@ -108,14 +108,49 @@ class TestAppConfig:
         safe_commands = [
             "grep -oE 'feat'",
             "grep -oP 'env:\\w+'",
+            'grep -oP "env:\\w+"',
             "awk '/deploy/ {print $2}'",
             "sed -n 's/.*env://p'",
             "head -1",
             "tr '[:upper:]' '[:lower:]'",
             "grep -oE 'feat' || true",
             "grep foo | awk '{print $1}'",
+            "awk '{print $0}'",
+            "grep -oE '[a-z]+\\.sh'",
+            "grep -oE 'push|publish|finish'",
         ]
         for cmd in safe_commands:
+            monkeypatch.setenv("INPUT_EXTRACT_COMMAND", cmd)
+            config = AppConfig.from_env()
+            config.validate()  # should not raise
+
+    def test_validate_evasive_extract_command(self, clean_env, monkeypatch):
+        evasive_commands = [
+            "grep foo\ncat /etc/passwd",
+            "grep foo #|\nid",  # a | inside a comment does not continue the line
+            "r''m -rf /tmp/x",
+            "r\\m -rf /tmp/x",
+            "$'\\x72\\x6d' -rf /tmp/x",  # ANSI-C escapes spell rm
+            "bash -c 'id'",
+            "grep foo | sh",
+            "grep foo | /bin/zsh",
+            '"$0" -c id',
+            "$BASH -c id",
+        ]
+        for cmd in evasive_commands:
+            monkeypatch.setenv("INPUT_EXTRACT_COMMAND", cmd)
+            config = AppConfig.from_env()
+            with pytest.raises(ValueError, match="blocked shell operators"):
+                config.validate()
+
+    def test_validate_multiline_extract_command(self, clean_env, monkeypatch):
+        multiline_commands = [
+            "grep -oE 'feat'\n",  # YAML block scalars end with a newline
+            "grep -oE 'feat|fix' \\\n  | sort -u",
+            "grep -oE 'feat|fix' |\n  sort -u",
+            "awk '\n  /deploy/ { print $2 }\n'",
+        ]
+        for cmd in multiline_commands:
             monkeypatch.setenv("INPUT_EXTRACT_COMMAND", cmd)
             config = AppConfig.from_env()
             config.validate()  # should not raise
