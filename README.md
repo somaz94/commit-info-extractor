@@ -261,7 +261,7 @@ JIRA-123,JIRA-456,JIRA-789
 | Conventional Commits | `(feat\|fix\|chore\|docs):` | `feat:`, `fix:` |
 | PR Numbers | `#(\d+)` | `123` (captured group) |
 
-> **Note**: When using capture groups `()`, only the captured portion is returned. Without groups, the full match is returned.
+> **Note**: When using capture groups `()`, only the captured portion is returned. Without groups, the full match is returned. With several groups, each match returns the first group that took part in it, so `(feat)|(fix)` yields `feat` or `fix`. Use `(?:...)` to group without capturing.
 
 <br/>
 

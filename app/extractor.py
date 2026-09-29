@@ -69,6 +69,9 @@ def extract_info(
 def _run_extract_pattern(commit_messages: str, pattern: str) -> str:
     """Extract matches using Python regex pattern.
 
+    Without capture groups each match is returned whole, with one group the
+    group, and with several the first group that took part in the match.
+
     Args:
         commit_messages: Input text.
         pattern: Regex pattern to match.
@@ -82,7 +85,14 @@ def _run_extract_pattern(commit_messages: str, pattern: str) -> str:
         fail(f"Invalid regex pattern '{pattern}': {e}")
         return ""
 
-    matches = compiled.findall(commit_messages)
+    if compiled.groups > 1:
+        # findall would return tuples here.
+        matches = [
+            next((group for group in match.groups() if group is not None), "")
+            for match in compiled.finditer(commit_messages)
+        ]
+    else:
+        matches = compiled.findall(commit_messages)
     print_debug(f"Pattern matched {len(matches)} times")
 
     return _deduplicate_and_join(matches)

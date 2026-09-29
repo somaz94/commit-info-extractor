@@ -48,6 +48,18 @@ class TestRunExtractPattern:
         with pytest.raises(ActionError):
             _run_extract_pattern("test", r"[invalid")
 
+    def test_alternated_groups_return_the_group_that_matched(self):
+        result = _run_extract_pattern("feat: a\nfix: b", r"(feat)|(fix)")
+        assert result == "feat\nfix"
+
+    def test_nested_groups_return_the_outer_group(self):
+        result = _run_extract_pattern("release v1.2 and v3.4", r"(v(\d+)\.\d+)")
+        assert result == "v1.2\nv3.4"
+
+    def test_several_fields_return_the_first_group(self):
+        result = _run_extract_pattern("env:prod ver:1\nenv:dev ver:2", r"env:(\w+) ver:(\d)")
+        assert result == "dev\nprod"
+
 
 class TestExtractInfo:
     def test_no_command_returns_messages(self):
@@ -83,4 +95,9 @@ class TestExtractInfo:
 
     def test_match_count_multiple(self):
         result, count = extract_info("feat: a\nfeat: b\nfix: c", None, r"(feat|fix)", False, 10)
+        assert count == 2
+
+    def test_match_count_with_several_groups(self):
+        result, count = extract_info("feat: a\nfix: b\nfeat: c", None, r"(feat)|(fix)", False, 10)
+        assert result == "feat\nfix"
         assert count == 2
