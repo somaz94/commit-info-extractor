@@ -21,9 +21,7 @@ class TestRun:
     @patch("app.main.configure_git")
     @patch("app.main.fetch_commit_messages", return_value="feat: login\nfix: bug")
     @patch("app.main.set_output_variables")
-    def test_full_flow_no_extract(
-        self, mock_output, mock_fetch, mock_git, default_env
-    ):
+    def test_full_flow_no_extract(self, mock_output, mock_fetch, mock_git, default_env):
         run()
         mock_git.assert_called_once()
         mock_fetch.assert_called_once()

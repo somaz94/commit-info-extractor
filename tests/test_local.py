@@ -98,8 +98,9 @@ def main() -> int:
     print("=" * 50)
 
     # configure_git() runs `git config --global`; keep it off the real ~/.gitconfig.
-    with tempfile.TemporaryDirectory() as tmp, patch.dict(
-        os.environ, {"GIT_CONFIG_GLOBAL": os.path.join(tmp, "gitconfig")}
+    with (
+        tempfile.TemporaryDirectory() as tmp,
+        patch.dict(os.environ, {"GIT_CONFIG_GLOBAL": os.path.join(tmp, "gitconfig")}),
     ):
         results = [run_test(name, overrides) for name, overrides in CASES]
 

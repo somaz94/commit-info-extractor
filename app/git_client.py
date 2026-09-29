@@ -73,7 +73,11 @@ def fetch_commit_messages(
 
         commit_messages = result.stdout
         if commit_messages:
-            label = f"range {commit_range}" if commit_range else f"last {commit_limit} commits"
+            label = (
+                f"range {commit_range}"
+                if commit_range
+                else f"last {commit_limit} commits"
+            )
             print(f"  - {label}:")
             for line in commit_messages.split("\n"):
                 if line:

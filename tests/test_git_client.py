@@ -17,7 +17,10 @@ class TestConfigureGit:
             for directory in GIT_SAFE_DIRECTORIES
         ]
 
-    @patch("app.git_client.subprocess.run", side_effect=subprocess.CalledProcessError(1, "git"))
+    @patch(
+        "app.git_client.subprocess.run",
+        side_effect=subprocess.CalledProcessError(1, "git"),
+    )
     def test_continues_on_error(self, mock_run):
         # Should not raise even if subprocess fails
         configure_git()

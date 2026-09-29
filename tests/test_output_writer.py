@@ -32,7 +32,9 @@ class TestSetOutputVariables:
 
         # GITHUB_ENV exposes the user-chosen key as a real env var for subsequent steps.
         assert "DEPLOY_ENV<<EOF_" in env_content
-        assert len(env_content.split("EOF_")[1].split("\n")[0]) == 32  # uuid4 hex length
+        assert (
+            len(env_content.split("EOF_")[1].split("\n")[0]) == 32
+        )  # uuid4 hex length
         assert "production" in env_content
         # Step-output keys must NOT leak into GITHUB_ENV.
         assert "key_variable=" not in env_content

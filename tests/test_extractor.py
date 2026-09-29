@@ -6,7 +6,9 @@ from app.logger import ActionError
 
 class TestRunExtractCommand:
     def test_basic_grep(self):
-        result = _run_extract_command("feat: login\nfix: bug\nfeat: signup", "grep -oE 'feat'", 10)
+        result = _run_extract_command(
+            "feat: login\nfix: bug\nfeat: signup", "grep -oE 'feat'", 10
+        )
         assert "feat" in result
 
     def test_no_match_returns_empty(self):
@@ -41,7 +43,9 @@ class TestRunExtractPattern:
         assert "staging" in result
 
     def test_deduplicates_and_sorts(self):
-        result = _run_extract_pattern("apple cherry apple banana cherry", r"\b(apple|banana|cherry)\b")
+        result = _run_extract_pattern(
+            "apple cherry apple banana cherry", r"\b(apple|banana|cherry)\b"
+        )
         assert result == "apple\nbanana\ncherry"
 
     def test_invalid_regex(self):
@@ -57,7 +61,9 @@ class TestRunExtractPattern:
         assert result == "v1.2\nv3.4"
 
     def test_several_fields_return_the_first_group(self):
-        result = _run_extract_pattern("env:prod ver:1\nenv:dev ver:2", r"env:(\w+) ver:(\d)")
+        result = _run_extract_pattern(
+            "env:prod ver:1\nenv:dev ver:2", r"env:(\w+) ver:(\d)"
+        )
         assert result == "dev\nprod"
 
 
@@ -73,13 +79,17 @@ class TestExtractInfo:
         assert count == 2
 
     def test_with_extract_command(self):
-        result, count = extract_info("feat: login\nfix: bug", "grep -oE 'feat|fix'", None, False, 10)
+        result, count = extract_info(
+            "feat: login\nfix: bug", "grep -oE 'feat|fix'", None, False, 10
+        )
         assert "feat" in result
         assert "fix" in result
         assert count == 2
 
     def test_with_extract_pattern(self):
-        result, count = extract_info("feat: login\nfix: bug", None, r"(feat|fix)", False, 10)
+        result, count = extract_info(
+            "feat: login\nfix: bug", None, r"(feat|fix)", False, 10
+        )
         assert "feat" in result
         assert "fix" in result
         assert count == 2
@@ -103,10 +113,14 @@ class TestExtractInfo:
         assert count == 0
 
     def test_match_count_multiple(self):
-        result, count = extract_info("feat: a\nfeat: b\nfix: c", None, r"(feat|fix)", False, 10)
+        result, count = extract_info(
+            "feat: a\nfeat: b\nfix: c", None, r"(feat|fix)", False, 10
+        )
         assert count == 2
 
     def test_match_count_with_several_groups(self):
-        result, count = extract_info("feat: a\nfix: b\nfeat: c", None, r"(feat)|(fix)", False, 10)
+        result, count = extract_info(
+            "feat: a\nfix: b\nfeat: c", None, r"(feat)|(fix)", False, 10
+        )
         assert result == "feat\nfix"
         assert count == 2

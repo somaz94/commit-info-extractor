@@ -56,9 +56,7 @@ def extract_info(
     match_count = len(_non_empty_lines(environment))
 
     if not environment.strip() and fail_on_empty:
-        fail(
-            "No environment information extracted and fail_on_empty is set to true"
-        )
+        fail("No environment information extracted and fail_on_empty is set to true")
 
     if environment.strip():
         if match_count > 1:
@@ -131,9 +129,7 @@ def _run_extract_command(
         environment = _deduplicate_and_join(lines)
 
         if result.returncode > 1 and result.stderr:
-            print_debug(
-                f"Command warning (exit {result.returncode}): {result.stderr}"
-            )
+            print_debug(f"Command warning (exit {result.returncode}): {result.stderr}")
 
         return environment
 

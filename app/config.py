@@ -10,11 +10,11 @@ VALID_OUTPUT_FORMATS = ("text", "json", "csv")
 
 # Best-effort denylist, not a sandbox; | and || stay allowed on purpose
 DANGEROUS_PATTERNS = re.compile(
-    r"[;&`]"          # shell chaining (;, &), backticks
-    r"|\$[\({']"      # $() substitution, ${} expansion, $'' escapes
-    r"|>\s*/"         # redirect to absolute path
+    r"[;&`]"  # shell chaining (;, &), backticks
+    r"|\$[\({']"  # $() substitution, ${} expansion, $'' escapes
+    r"|>\s*/"  # redirect to absolute path
     r"|\brm\b"
-    r"|\bcurl\b"     # network access
+    r"|\bcurl\b"  # network access
     r"|\bwget\b"
     r"|\bnc\b"
     r"|\bchmod\b"
@@ -114,7 +114,9 @@ class AppConfig:
     def from_env(cls) -> "AppConfig":
         """Create configuration from environment variables."""
         try:
-            commit_limit = int(os.getenv("INPUT_COMMIT_LIMIT", str(DEFAULT_COMMIT_LIMIT)))
+            commit_limit = int(
+                os.getenv("INPUT_COMMIT_LIMIT", str(DEFAULT_COMMIT_LIMIT))
+            )
             timeout = int(os.getenv("INPUT_TIMEOUT", str(DEFAULT_TIMEOUT)))
         except ValueError as e:
             raise ValueError(f"Invalid numeric input: {e}") from e
