@@ -3,7 +3,6 @@
 
 import os
 import sys
-import tempfile
 from unittest.mock import patch
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -97,11 +96,8 @@ def main() -> int:
     print("Local Integration Test Suite")
     print("=" * 50)
 
-    # configure_git() runs `git config --global`; keep it off the real ~/.gitconfig.
-    with (
-        tempfile.TemporaryDirectory() as tmp,
-        patch.dict(os.environ, {"GIT_CONFIG_GLOBAL": os.path.join(tmp, "gitconfig")}),
-    ):
+    # configure_git() appends GIT_CONFIG_* entries to os.environ on every run.
+    with patch.dict(os.environ):
         results = [run_test(name, overrides) for name, overrides in CASES]
 
     failed = results.count(False)

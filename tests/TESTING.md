@@ -71,7 +71,7 @@ cd /path/to/commit-info-extractor
 python tests/test_local.py
 ```
 
-The script exits non-zero if any case fails. It points `GIT_CONFIG_GLOBAL` at a temporary file, so the `git config --global` calls in `configure_git()` never touch your own global git config.
+The script exits non-zero if any case fails. `configure_git()` passes its settings to git through `GIT_CONFIG_*` environment variables, never a config file, so running it locally leaves your own git config untouched.
 
 <br/>
 

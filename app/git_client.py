@@ -8,20 +8,27 @@ from app.logger import fail, print_debug, print_section, print_success
 GIT_SAFE_DIRECTORIES = ["/usr/src", "/github/workspace"]
 
 
+def add_config_env(key: str, value: str) -> None:
+    """Append key=value to the git config that child git processes read from the environment.
+
+    Git treats GIT_CONFIG_COUNT/KEY/VALUE as command-scope config, so safe.directory
+    is honoured and ~/.gitconfig is never touched.
+    """
+    count = int(os.environ.get("GIT_CONFIG_COUNT", "0"))
+    if count < 0:
+        raise ValueError(f"Invalid GIT_CONFIG_COUNT: {count}")
+    os.environ[f"GIT_CONFIG_KEY_{count}"] = key
+    os.environ[f"GIT_CONFIG_VALUE_{count}"] = value
+    os.environ["GIT_CONFIG_COUNT"] = str(count + 1)
+
+
 def configure_git() -> None:
-    """Configure git safe directories."""
+    """Trust the checkout directories for this process only; no git config file is written."""
     print_section("Configuring Git")
 
     for directory in GIT_SAFE_DIRECTORIES:
-        try:
-            subprocess.run(
-                ["git", "config", "--global", "--add", "safe.directory", directory],
-                check=True,
-                capture_output=True,
-                timeout=5,
-            )
-        except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as e:
-            print_debug(f"Failed to configure {directory}: {e}")
+        add_config_env("safe.directory", directory)
+        print_debug(f"safe.directory={directory}")
 
     print_success("Git configuration completed")
 

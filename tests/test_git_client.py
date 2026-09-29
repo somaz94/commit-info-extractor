@@ -1,29 +1,64 @@
-import subprocess
+import os
 from unittest.mock import patch
 
 import pytest
 
-from app.git_client import GIT_SAFE_DIRECTORIES, configure_git, fetch_commit_messages
+from app.git_client import (
+    GIT_SAFE_DIRECTORIES,
+    add_config_env,
+    configure_git,
+    fetch_commit_messages,
+)
 from app.logger import ActionError
+
+
+@pytest.fixture
+def git_env():
+    with patch.dict(os.environ):
+        for key in [k for k in os.environ if k.startswith("GIT_CONFIG_")]:
+            del os.environ[key]
+        yield os.environ
+
+
+def env_config(env):
+    return [
+        (env[f"GIT_CONFIG_KEY_{i}"], env[f"GIT_CONFIG_VALUE_{i}"])
+        for i in range(int(env["GIT_CONFIG_COUNT"]))
+    ]
+
+
+class TestAddConfigEnv:
+    def test_first_entry(self, git_env):
+        add_config_env("safe.directory", "/repo")
+        assert env_config(git_env) == [("safe.directory", "/repo")]
+
+    def test_appends_after_existing_entries(self, git_env):
+        git_env.update(
+            GIT_CONFIG_COUNT="1",
+            GIT_CONFIG_KEY_0="core.pager",
+            GIT_CONFIG_VALUE_0="cat",
+        )
+        add_config_env("safe.directory", "/repo")
+        assert env_config(git_env) == [
+            ("core.pager", "cat"),
+            ("safe.directory", "/repo"),
+        ]
+
+    @pytest.mark.parametrize("count", ["abc", "-1"])
+    def test_invalid_count(self, git_env, count):
+        git_env["GIT_CONFIG_COUNT"] = count
+        with pytest.raises(ValueError):
+            add_config_env("safe.directory", "/repo")
 
 
 class TestConfigureGit:
     @patch("app.git_client.subprocess.run")
-    def test_configures_safe_directories(self, mock_run):
+    def test_sets_process_env_without_running_git(self, mock_run, git_env):
         configure_git()
-        commands = [call.args[0] for call in mock_run.call_args_list]
-        assert commands == [
-            ["git", "config", "--global", "--add", "safe.directory", directory]
-            for directory in GIT_SAFE_DIRECTORIES
+        mock_run.assert_not_called()
+        assert env_config(git_env) == [
+            ("safe.directory", directory) for directory in GIT_SAFE_DIRECTORIES
         ]
-
-    @patch(
-        "app.git_client.subprocess.run",
-        side_effect=subprocess.CalledProcessError(1, "git"),
-    )
-    def test_continues_on_error(self, mock_run):
-        # Should not raise even if subprocess fails
-        configure_git()
 
 
 class TestFetchCommitMessages:
