@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v1.6.1](https://github.com/somaz94/commit-info-extractor/compare/v1.6.0...v1.6.1) (2026-09-29)
+
+### Bug Fixes
+
+- configure git through the process environment instead of ~/.gitconfig ([856a34b](https://github.com/somaz94/commit-info-extractor/commit/856a34b2f77d77950b0ab237b4fe9dd8eb16f0a7))
+
+### Continuous Integration
+
+- lint with ruff 0.16 and fix its findings ([5403b4e](https://github.com/somaz94/commit-info-extractor/commit/5403b4ed96d8a604c538e111956f3b5ba3ebd9ce))
+
+### Styles
+
+- apply ruff format ([7a68401](https://github.com/somaz94/commit-info-extractor/commit/7a68401eede97c48e8d489eca521187fb1069336))
+
+### Chores
+
+- bump the action image to v1.6.1 ([e649008](https://github.com/somaz94/commit-info-extractor/commit/e649008053c7a6dfc68f5d010d4175a5e197a3d1))
+
+### Contributors
+
+- somaz
+
+<br/>
+
 ## [v1.6.0](https://github.com/somaz94/commit-info-extractor/compare/v1.5.0...v1.6.0) (2026-09-29)
 
 ### Bug Fixes
