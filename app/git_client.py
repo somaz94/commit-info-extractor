@@ -42,7 +42,8 @@ def fetch_commit_messages(
     """
     print_section("Fetching Commit Messages")
 
-    if not os.path.isdir(".git"):
+    # .git is a file, not a directory, in worktrees and submodules.
+    if not os.path.exists(".git"):
         print("  - No git repository available")
         return "No commit messages available."
 

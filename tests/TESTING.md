@@ -156,7 +156,7 @@ Click on individual files in the browser to visually inspect uncovered lines.
 
 If issues occur, check the following:
 
-1. Verify it is a git repository: check for `.git` directory
+1. Verify it is a git repository: check for `.git` (a directory, or a file in a worktree or submodule)
 2. Check commit history: `git log`
 3. Test grep command: `echo "test fix" | grep -oE '\\bfix\\b'`
 4. Check Python version: `python3 --version` (3.13 or higher recommended)

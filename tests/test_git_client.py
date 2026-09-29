@@ -26,24 +26,31 @@ class TestFetchCommitMessages:
         assert result == "No commit messages available."
 
     @patch("app.git_client.subprocess.run")
-    @patch("app.git_client.os.path.isdir", return_value=True)
-    def test_pretty_format(self, mock_isdir, mock_run):
+    def test_git_file_counts_as_repository(self, mock_run, tmp_path, monkeypatch):
+        monkeypatch.chdir(tmp_path)
+        (tmp_path / ".git").write_text("gitdir: /elsewhere/.git/worktrees/wt\n")
+        mock_run.return_value.stdout = "feat: login\n"
+        assert fetch_commit_messages(5, True, 10) == "feat: login\n"
+
+    @patch("app.git_client.subprocess.run")
+    @patch("app.git_client.os.path.exists", return_value=True)
+    def test_pretty_format(self, mock_exists, mock_run):
         mock_run.return_value.stdout = "feat: add login\n"
         fetch_commit_messages(5, True, 10)
         cmd = mock_run.call_args[0][0]
         assert "--pretty=%B" in cmd
 
     @patch("app.git_client.subprocess.run")
-    @patch("app.git_client.os.path.isdir", return_value=True)
-    def test_no_pretty_format(self, mock_isdir, mock_run):
+    @patch("app.git_client.os.path.exists", return_value=True)
+    def test_no_pretty_format(self, mock_exists, mock_run):
         mock_run.return_value.stdout = "commit abc\n"
         fetch_commit_messages(5, False, 10)
         cmd = mock_run.call_args[0][0]
         assert "--pretty=%B" not in cmd
 
     @patch("app.git_client.subprocess.run")
-    @patch("app.git_client.os.path.isdir", return_value=True)
-    def test_commit_range(self, mock_isdir, mock_run):
+    @patch("app.git_client.os.path.exists", return_value=True)
+    def test_commit_range(self, mock_exists, mock_run):
         mock_run.return_value.stdout = "feat: login\n"
         fetch_commit_messages(5, True, 10, commit_range="HEAD~3..HEAD")
         cmd = mock_run.call_args[0][0]
@@ -51,8 +58,8 @@ class TestFetchCommitMessages:
         assert "-5" not in cmd
 
     @patch("app.git_client.subprocess.run")
-    @patch("app.git_client.os.path.isdir", return_value=True)
-    def test_no_commit_range_uses_limit(self, mock_isdir, mock_run):
+    @patch("app.git_client.os.path.exists", return_value=True)
+    def test_no_commit_range_uses_limit(self, mock_exists, mock_run):
         mock_run.return_value.stdout = "feat: login\n"
         fetch_commit_messages(5, True, 10)
         cmd = mock_run.call_args[0][0]
