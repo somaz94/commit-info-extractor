@@ -1,17 +1,18 @@
-import os
 import subprocess
 from unittest.mock import patch
 
-import pytest
-
-from app.git_client import fetch_commit_messages, configure_git
+from app.git_client import GIT_SAFE_DIRECTORIES, fetch_commit_messages, configure_git
 
 
 class TestConfigureGit:
     @patch("app.git_client.subprocess.run")
     def test_configures_safe_directories(self, mock_run):
         configure_git()
-        assert mock_run.call_count == 2
+        commands = [call.args[0] for call in mock_run.call_args_list]
+        assert commands == [
+            ["git", "config", "--global", "--add", "safe.directory", directory]
+            for directory in GIT_SAFE_DIRECTORIES
+        ]
 
     @patch("app.git_client.subprocess.run", side_effect=subprocess.CalledProcessError(1, "git"))
     def test_continues_on_error(self, mock_run):

@@ -40,6 +40,4 @@ class TestFormatOutput:
         assert parsed == ["value1", "value2"]
 
     def test_json_unicode(self):
-        result = format_output("hello\nworld", "json")
-        parsed = json.loads(result)
-        assert parsed == ["hello", "world"]
+        assert format_output("héllo\nwörld", "json") == '["héllo", "wörld"]'

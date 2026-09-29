@@ -19,10 +19,10 @@ def clean_env(monkeypatch):
 
 @pytest.fixture
 def default_env(monkeypatch, clean_env):
-    """Set default INPUT_* env vars."""
+    """Set INPUT_* vars to the AppConfig defaults."""
     monkeypatch.setenv("INPUT_COMMIT_LIMIT", "10")
     monkeypatch.setenv("INPUT_TIMEOUT", "30")
-    monkeypatch.setenv("INPUT_PRETTY", "true")
+    monkeypatch.setenv("INPUT_PRETTY", "false")
     monkeypatch.setenv("INPUT_KEY_VARIABLE", "ENVIRONMENT")
     monkeypatch.setenv("INPUT_EXTRACT_COMMAND", "")
     monkeypatch.setenv("INPUT_EXTRACT_PATTERN", "")

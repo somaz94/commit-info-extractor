@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 
 from app.output_writer import set_output_variables
 
@@ -27,8 +27,8 @@ class TestSetOutputVariables:
 
         set_output_variables("production", "DEPLOY_ENV", 3)
 
-        env_content = open(env_file).read()
-        output_content = open(output_file).read()
+        env_content = Path(env_file).read_text()
+        output_content = Path(output_file).read_text()
 
         # GITHUB_ENV exposes the user-chosen key as a real env var for subsequent steps.
         assert "DEPLOY_ENV<<EOF_" in env_content
@@ -52,8 +52,8 @@ class TestSetOutputVariables:
 
         set_output_variables("line1\nline2\nline3", "RESULT", 3)
 
-        env_content = open(env_file).read()
-        output_content = open(output_file).read()
+        env_content = Path(env_file).read_text()
+        output_content = Path(output_file).read_text()
 
         assert "RESULT<<EOF_" in env_content
         assert "line1\nline2\nline3" in env_content

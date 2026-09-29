@@ -1,3 +1,4 @@
+import json
 from unittest.mock import patch
 
 import pytest
@@ -52,7 +53,7 @@ class TestRun:
         monkeypatch.setenv("INPUT_EXTRACT_COMMAND", "grep -oE 'feat'")
         run()
         call_args = mock_output.call_args[0]
-        assert "[" in call_args[0]  # JSON array
+        assert json.loads(call_args[0]) == ["feat"]
 
     @patch("app.main.configure_git")
     @patch("app.main.fetch_commit_messages", return_value="feat: login\nfix: bug")
@@ -76,6 +77,4 @@ class TestRun:
     ):
         monkeypatch.setenv("INPUT_COMMIT_RANGE", "HEAD~3..HEAD")
         run()
-        fetch_kwargs = mock_fetch.call_args
-        # commit_range should be passed to fetch_commit_messages
-        assert "HEAD~3..HEAD" in str(fetch_kwargs)
+        mock_fetch.assert_called_once_with(10, False, 30, "HEAD~3..HEAD")

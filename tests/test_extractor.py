@@ -68,7 +68,7 @@ class TestExtractInfo:
         assert count == 1
 
     def test_empty_command_returns_messages(self):
-        result, count = extract_info("line1\nline2", None, None, False, 10)
+        result, count = extract_info("line1\nline2", "", "", False, 10)
         assert result == "line1\nline2"
         assert count == 2
 
