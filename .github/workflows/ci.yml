@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 10 # test_local.py reads HEAD~3..HEAD
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -42,6 +44,9 @@ jobs:
             --cov-report=term-missing \
             --cov-fail-under=90 \
             -v
+
+      - name: Run local integration test
+        run: python tests/test_local.py
 
   # The uses: ./ jobs pull the image pinned in action.yml; only this job runs
   # this commit's Dockerfile and app/.

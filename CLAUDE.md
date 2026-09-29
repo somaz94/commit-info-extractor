@@ -85,7 +85,7 @@ unit-tests ──┬──> docker-build
 ## Testing Notes
 
 - Modular `app/` package with dataclass config, pytest fixtures, 90%+ coverage
-- Local tests in `tests/test_local.py` for manual integration testing
+- Local integration test in `tests/test_local.py`, also run by CI's `unit-tests` job (needs `fetch-depth` of at least 4 for its `HEAD~3..HEAD` case)
 - CI's `uses: ./` jobs pull the image pinned in `action.yml` (the last release); only `docker-build` builds and runs this commit's Dockerfile
 - Smoke tests in `use-action.yml` use `somaz94/commit-info-extractor@v1` (released)
 - Uses `subprocess.run` with shell=True for extract commands
